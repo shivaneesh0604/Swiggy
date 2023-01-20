@@ -112,7 +112,7 @@ public class Database {
         for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
             for (ArrayList<OrderList> list : innerMap.values()) {
                 for (OrderList orderList : list) {
-                    if (orderList.getStatus().equals(Status.PREPARED) || orderList.getStatus().equals(Status.PREPARING) && !orderList.getStatus().equals(Status.CANCELLED))
+                    if (orderList.getStatus().equals(Status.PREPARED) || orderList.getStatus().equals(Status.PREPARING))
                         collection.add(orderList);
                 }
             }

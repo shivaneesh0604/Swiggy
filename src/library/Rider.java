@@ -17,10 +17,9 @@ public class Rider extends User {
         return applicationRaiderController.showAvailableOrders();
     }
 
-
     public String acceptOrder(int orderID) {
         Status status = applicationRaiderController.getStatus(orderID);
-        if (!status.equals(Status.CANCELLED) && status.equals(Status.PREPARING)&& status.equals(Status.PREPARED) ) {
+        if (status.equals(Status.PREPARING) || status.equals(Status.PREPARED) ) {
             this.orderList = applicationRaiderController.acceptOrder(orderID);
             this.riderStatus = RiderStatus.NOT_AVAILABLE;
             return "ACCEPTED BY " + this.getName() + " ";

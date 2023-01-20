@@ -49,12 +49,8 @@ public class RestaurantManager extends User {
     }
 
     public String setStatus(int orderID) {
-        Status status1 = applicationRestaurantManagerController.getStatus(orderID);
-        if (!status1.equals(Status.CANCELLED)) {
-            Status status = applicationRestaurantManagerController.setStatusPREPARED(orderID);
-            if (status != null) {
-                return "status updated as " + status;
-            }
+        if (!applicationRestaurantManagerController.getStatus(orderID).equals(Status.CANCELLED)) {
+            return "status updated as " + applicationRestaurantManagerController.setStatusPREPARED(orderID);
         }
         return "wrong orderID";
     }

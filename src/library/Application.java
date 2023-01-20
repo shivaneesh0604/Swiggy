@@ -23,12 +23,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public ArrayList<Order> viewCartItems(int restaurantID, String customerID) {
-        return cartItems.get(customerID).get(restaurantID).getOrders();
-    }
-
-    @Override
-    public String TakeOrder(String foodName, int quantity, String customerID, int restaurantID) {
+    public String takeOrder(String foodName, int quantity, String customerID, int restaurantID) {
         HashMap<Integer, OrderList> orderList1 = cartItems.get(customerID);
         Order order = new Order(foodName, quantity);
         double price = Database.getInstance().getPrice(foodName, restaurantID);
