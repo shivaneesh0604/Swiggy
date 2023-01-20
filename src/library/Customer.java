@@ -32,7 +32,7 @@ public class Customer extends User {
         return customerApplication.deleteOrder(foodName, quantity, this.getUserID(), restaurantID);
     }
     public ArrayList<Order> viewOrder(int restaurantID){
-        return customerApplication.viewOrder(restaurantID,this.getUserID());
+        return customerApplication.viewCartItems(restaurantID,this.getUserID());
     }
     public Bill getBill(int restaurantID){
         return customerApplication.getBill(this.getUserID(),restaurantID);
@@ -45,6 +45,9 @@ public class Customer extends User {
         return customerApplication.cancelOrder(orderID);
     }
 
+    public OrderList viewOrder(){
+        return customerApplication.viewOrder(this.getUserID());
+    }
     public Status checkStatus(int orderID) {
         return customerApplication.checkStatus(orderID);
     }

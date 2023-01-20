@@ -107,7 +107,7 @@ public class Database {
         }
     }
 
-    ArrayList<OrderList> getOrders() {
+    ArrayList<OrderList> getAllOrders() {
         Collection<OrderList> collection = new ArrayList<>();
         for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
             for (ArrayList<OrderList> list : innerMap.values()) {
@@ -120,6 +120,18 @@ public class Database {
         return (ArrayList<OrderList>) collection;
     }
 
+    OrderList getOrders(String customerID){
+        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
+            for (ArrayList<OrderList> list : innerMap.values()) {
+                for (OrderList orderList : list) {
+                    if(orderList.getCustomerID().equals(customerID) && !orderList.getStatus().equals(Status.CANCELLED) && !orderList.getStatus().equals(Status.DELIVERED)){
+                        return orderList;
+                    }
+                }
+            }
+        }
+        return null;
+    }
     double getPrice(String foodName, int restaurantID) {
         MenuList menuList = listOfRestaurant.get(restaurantID).getMenuList();
         return menuList.getPrice(foodName);
