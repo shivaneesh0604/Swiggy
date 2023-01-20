@@ -1,0 +1,5 @@
+package library;
+
+public enum Status {
+    PENDING,PREPARING,PREPARED, RIDER_ACCEPTED,PICKED,DELIVERED,CANCELLED;
+}
