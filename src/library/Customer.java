@@ -27,12 +27,12 @@ public class Customer extends User {
         return customerApplication.deleteOrder(foodName, quantity, this.getUserID(), restaurantID);
     }
 
-    public Bill getBill(int restaurantID) {
-        return customerApplication.getBill(this.getUserID(), restaurantID);
+    public Bill confirmOrder(int restaurantID) {
+        return customerApplication.confirmOrder(this.getUserID(), restaurantID);
     }
 
-    public Status confirmOrder(int restaurantID) {
-        return customerApplication.confirmOrder(this.getUserID(), restaurantID);
+    public Status placeOrder(int restaurantID) {
+        return customerApplication.placeOrder(this.getUserID(), restaurantID);
     }
 
     public Status cancelOrder(int orderID) {

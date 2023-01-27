@@ -11,9 +11,9 @@ public interface CustomerApplication {
 
     public HashMap<Integer, OrderList> viewItemsInCart(String customerID);
 
-    public Bill getBill(String customerID, int restaurantID);
+    public Bill confirmOrder(String customerID, int restaurantID);
 
-    public Status confirmOrder(String customerID, int restaurantID);
+    public Status placeOrder(String customerID, int restaurantID);
 
     public Status checkStatus(int orderID);
 

@@ -65,7 +65,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public Bill getBill(String customerID, int restaurantID) {
+    public Bill confirmOrder(String customerID, int restaurantID) {
         OrderList orderList = cartItems.get(customerID).get(restaurantID);
         if (orderList != null) {
             Bill bill = orderList.getBill();
@@ -79,7 +79,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public Status confirmOrder(String customerID, int restaurantID) {
+    public Status placeOrder(String customerID, int restaurantID) {
         HashMap<Integer, OrderList> orderList1 = cartItems.get(customerID);
         OrderList orderList2 = orderList1.get(restaurantID);
         if (orderList2 != null) {

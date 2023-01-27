@@ -3,7 +3,7 @@ package library;
 import java.util.ArrayList;
 
 public class Bill {
-    class BillItem {
+    public class BillItem {
         public final String itemName;
         public int quantity;
         public final double price;
