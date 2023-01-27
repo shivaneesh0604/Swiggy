@@ -18,9 +18,9 @@ public class DatabaseManager {
         return database.addUser(user);
     }
 
-    public User addRestaurantManager(String userName, String  passWord, Role role, Application application, String name, int restaurantID){
+    public User addRestaurantManager(String userName, String passWord, Role role, Application application, String name, int restaurantID) {
         Restaurant restaurant = database.getRestaurant(restaurantID);
-        User user = new RestaurantManager(userName,passWord,restaurant,application, role,name);
+        User user = new RestaurantManager(userName, passWord, restaurant, application, role, name);
         return database.addUser(user);
     }
 
@@ -30,11 +30,13 @@ public class DatabaseManager {
 //    }
 
     public User getUser(String username, String password) {
-         User user = database.getUser(username);
-         if(user.getUserID().equals(username) && user.getPassWord().equals(password)){
-             return user;
-         }
-         return null;
+        User user = database.getUser(username);
+        if (user != null) {
+            if (user.getUserID().equals(username) && user.getPassWord().equals(password)) {
+                return user;
+            }
+        }
+        return null;
     }
 
 

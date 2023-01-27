@@ -5,7 +5,7 @@ public class Order {
     private int quantity;
 
     public Order(String foodName, int quantity) {
-        this.foodName = foodName;
+        this.foodName = foodName.toUpperCase();
         this.quantity = quantity;
     }
 

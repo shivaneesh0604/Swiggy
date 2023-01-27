@@ -13,20 +13,28 @@ public class Main {
         DatabaseManager databaseManager = new DatabaseManager();
         Database.getInstance().init(application);
         ApplicationUI applicationUI = new ApplicationUI(databaseManager);
-        while (true) {
-            System.out.println("enter 1 for login 2 for signup");
-            int applicationUIAccess = sc.nextInt();
-            if (applicationUIAccess == 1) {
-                System.out.println("enter user name");
-                String userName = sc.nextLine();
-                System.out.println("enter password");
-                String passWord = sc.nextLine();
-                applicationUI.logIN(userName, passWord);
-                break;
-            } else if (applicationUIAccess == 2) {
-                applicationUI.signUP(application);
-                break;
+        Mainloop : while (true) {
+            while (true) {
+                System.out.println("enter 1 for login 2 for signup other number for exit");
+                int applicationUIAccess = sc.nextInt();
+                if (applicationUIAccess == 1) {
+                    System.out.println("enter user name");
+                    sc.nextLine();
+                    String userName = sc.nextLine();
+                    System.out.println("enter password");
+                    String passWord = sc.nextLine();
+//                    System.out.println("user namr is "+userName+" password is "+passWord);
+                    applicationUI.logIN(userName, passWord);
+                    break;
+                } else if (applicationUIAccess == 2) {
+                    applicationUI.signUP(application);
+                    break;
+                }
+                else{
+                    break Mainloop;
+                }
             }
+
         }
     }
 }

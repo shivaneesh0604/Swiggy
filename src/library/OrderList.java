@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class OrderList {
+
     private Status status;
     private final ArrayList<Order> orders;
     private int orderID;
@@ -14,6 +15,8 @@ public class OrderList {
     private final String customerID;
     private final Bill bill;
 
+    private RiderAcceptance riderAcceptance;
+
     public OrderList(String restaurantName, int restaurantID, String restaurantLocation, String customerLocation, String customerID) {
         this.status = Status.PENDING;
         this.orders = new ArrayList<>();
@@ -23,6 +26,7 @@ public class OrderList {
         this.customerLocation = customerLocation;
         this.customerID = customerID;
         this.bill = new Bill(orderID);
+        this.riderAcceptance = RiderAcceptance.NOT_ACCEPTED;
     }
 
     Bill getBill() {
@@ -92,4 +96,13 @@ public class OrderList {
      void setOrderID(int orderID) {
         this.orderID = orderID;
     }
+
+    void setRiderAcceptance(RiderAcceptance riderAcceptance) {
+        this.riderAcceptance = riderAcceptance;
+    }
+
+    public RiderAcceptance getRiderAcceptance() {
+        return riderAcceptance;
+    }
+
 }

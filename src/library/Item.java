@@ -7,14 +7,14 @@ public class Item {
     private double price;
     private final Dietary dietary;
     private final Course course;
-    private ArrayList<Timing> timings;
+    private ArrayList<Timing> timing = new ArrayList<>();
 
     public Item(String foodName, double price, Dietary dietary, Course course, Timing timing) {
         this.foodName = foodName.toUpperCase();
         this.price = price;
         this.dietary = dietary;
         this.course = course;
-        this.timings.add(timing);
+        this.timing.add(timing);
     }
 
     public String getFoodName() {
@@ -38,11 +38,11 @@ public class Item {
     }
 
     public ArrayList<Timing> getTiming() {
-        return timings;
+        return timing;
     }
 
     public boolean checkTiming(Timing timing) {
-        for (Timing timing1 : this.timings) {
+        for (Timing timing1 : this.timing) {
             if (timing1 == timing) {
                 return true;
             }
@@ -51,6 +51,6 @@ public class Item {
     }
 
     void setTiming(Timing timing) {
-        this.timings.add(timing);
+        this.timing.add(timing);
     }
 }

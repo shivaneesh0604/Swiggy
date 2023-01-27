@@ -1,5 +1,6 @@
 package library;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface CustomerApplication {
@@ -17,7 +18,7 @@ public interface CustomerApplication {
 
     public Status checkStatus(int orderID);
 
-    public OrderList viewOrder(String customerID);
+    public ArrayList<OrderList> viewOrder(String customerID);
 
     public Status cancelOrder(int orderID);
 }

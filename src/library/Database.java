@@ -27,8 +27,8 @@ public class Database {
         Restaurant restaurant = new Restaurant("adayar", "anandha bhavan", 1);
         listOfRestaurant.put(1, restaurant);
         users.put("shiva1234", new Customer("shiva1234", "123456789", application, Role.CUSTOMER, "shiva"));
-        users.put("sathya1234", new Rider("sathya1234", "123456789", application, Role.CUSTOMER, "sathya"));
-        users.put("sankar1234", new RestaurantManager("sankar1234", "123456789", restaurant, application, Role.CUSTOMER, "sankar"));
+        users.put("sathya1234", new Rider("sathya1234", "123456789", application, Role.RIDER, "sathya"));
+        users.put("sankar1234", new RestaurantManager("sankar1234", "123456789", restaurant, application, Role.RESTAURANT_MANAGER, "sankar"));
     }
 
     User addUser(User user) {
@@ -65,7 +65,9 @@ public class Database {
             for (ArrayList<OrderList> list : innerMap.values()) {
                 for (OrderList orderList : list) {
                     if (orderList.getOrderID() == orderID) {
+//                        Restaurant restaurant = findRestaurant(orderID);
                         orderList.setStatus(status);
+//                        restaurant.deleteOrder(orderID);
                         return status;
                     }
                 }
@@ -74,11 +76,11 @@ public class Database {
         return null;
     }
 
-    Status checkStatus(int orderID) {
+    Status getStatus(int orderID) {
         for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
             for (ArrayList<OrderList> list : innerMap.values()) {
                 for (OrderList orderList : list) {
-                    if (orderList.getOrderID() == orderID) {
+                    if (orderList.getOrderID() == orderID && !orderList.getStatus().equals(Status.CANCELLED)) {
                         return orderList.getStatus();
                     }
                 }
@@ -102,9 +104,36 @@ public class Database {
             orders.put(customerID, new HashMap<Integer, ArrayList<OrderList>>());
             HashMap<Integer, ArrayList<OrderList>> orders1 = orders.get(customerID);
             orders1.put(restaurantID, new ArrayList<OrderList>());
-            ArrayList<OrderList> orders3 = orderList1.get(restaurantID);
+            ArrayList<OrderList> orders3 = orders1.get(restaurantID);
             orders3.add(tempOrders);
         }
+    }
+
+//    private Restaurant findRestaurant(int orderID){
+//        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
+//            for (ArrayList<OrderList> list : innerMap.values()) {
+//                for (OrderList orderList : list) {
+//                    if(orderList.getOrderID()==orderID){
+//                        return getRestaurant(orderList.getRestaurantID());
+//                    }
+//                }
+//            }
+//        }
+//        return null;
+//    }
+
+    ArrayList<OrderList> getOrders(String customerID){
+        Collection<OrderList> collection = new ArrayList<>();
+        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
+            for (ArrayList<OrderList> list : innerMap.values()) {
+                for (OrderList orderList : list) {
+                    if(orderList.getCustomerID().equals(customerID) && !orderList.getStatus().equals(Status.CANCELLED) && !orderList.getStatus().equals(Status.DELIVERED)){
+                       collection.add(orderList);
+                    }
+                }
+            }
+        }
+        return (ArrayList<OrderList>) collection;
     }
 
     ArrayList<OrderList> getAllOrders() {
@@ -120,18 +149,6 @@ public class Database {
         return (ArrayList<OrderList>) collection;
     }
 
-    OrderList getOrders(String customerID){
-        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
-            for (ArrayList<OrderList> list : innerMap.values()) {
-                for (OrderList orderList : list) {
-                    if(orderList.getCustomerID().equals(customerID) && !orderList.getStatus().equals(Status.CANCELLED) && !orderList.getStatus().equals(Status.DELIVERED)){
-                        return orderList;
-                    }
-                }
-            }
-        }
-        return null;
-    }
     double getPrice(String foodName, int restaurantID) {
         MenuList menuList = listOfRestaurant.get(restaurantID).getMenuList();
         return menuList.getPrice(foodName);

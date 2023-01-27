@@ -26,7 +26,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     public String takeOrder(String foodName, int quantity, String customerID, int restaurantID) {
         HashMap<Integer, OrderList> orderList1 = cartItems.get(customerID);
         Order order = new Order(foodName, quantity);
-        double price = Database.getInstance().getPrice(foodName, restaurantID);
+        double price = Database.getInstance().getPrice(foodName.toUpperCase(), restaurantID);
         Customer customer = (Customer) Database.getInstance().getUser(customerID);
         Restaurant restaurant = Database.getInstance().getRestaurant(restaurantID);
         if (orderList1 != null) {
@@ -95,7 +95,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public OrderList viewOrder(String customerID){
+    public ArrayList<OrderList> viewOrder(String customerID){
         return Database.getInstance().getOrders(customerID);
     }
 
@@ -106,7 +106,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
 
     @Override
     public Status checkStatus(int orderID) {
-        return Database.getInstance().checkStatus(orderID);
+        return Database.getInstance().getStatus(orderID);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
         ArrayList<OrderList> orderLists = Database.getInstance().getAllOrders();
         for (OrderList order : orderLists) {
             if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED)) {
-                order.setStatus(Status.RIDER_ACCEPTED);
+                order.setRiderAcceptance(RiderAcceptance.ACCEPTED);
                 return order;
             }
         }
@@ -134,12 +134,12 @@ public class Application implements CustomerApplication, RiderApplication, Resta
 
     @Override
     public Status getStatus(int orderID) {
-        return Database.getInstance().checkStatus(orderID);
+        return Database.getInstance().getStatus(orderID);
     }
 
     @Override
     public Status deliverFoodToCustomer(int orderID) {
-        Status status = Database.getInstance().checkStatus(orderID);
+        Status status = Database.getInstance().getStatus(orderID);
         if (!status.equals(Status.CANCELLED)) {
             return Database.getInstance().setStatus(Status.DELIVERED, orderID);
         }

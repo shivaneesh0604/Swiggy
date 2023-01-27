@@ -19,40 +19,49 @@ public class Rider extends User {
 
     public String acceptOrder(int orderID) {
         Status status = applicationRaiderController.getStatus(orderID);
-        if (status.equals(Status.PREPARING) || status.equals(Status.PREPARED) ) {
+        System.out.println(status);
+        if(status==null){
+            return "wrong OrderID";
+        }
+        else if (status.equals(Status.PREPARING) || status.equals(Status.PREPARED) && riderStatus.equals(RiderStatus.AVAILABLE)) {
             this.orderList = applicationRaiderController.acceptOrder(orderID);
             this.riderStatus = RiderStatus.NOT_AVAILABLE;
             return "ACCEPTED BY " + this.getName() + " ";
-        } else if (status==null) {
-            return "wrong OrderID";
         }
         return "NOT ACCEPTED BY " + this.getName() + "";
     }
 
     public String receiveOrderFromRestaurant() {
-        Status status = applicationRaiderController.getStatus(orderList.getOrderID());
-        if (status.equals(Status.PREPARED)) {
-            Status status1 = applicationRaiderController.receiveOrderFromRestaurant(orderList.getOrderID());
-            return "Status changed to " + status1;
-        } else if (status.equals(Status.CANCELLED)) {
-            this.orderList = null;
-            this.riderStatus = RiderStatus.AVAILABLE;
-            return "that order is cancelled so cant process";
-        } else if (status.equals(Status.PREPARING)) {
-            return "wait till the order is prepared";
+        if (orderList != null) {
+            Status status = applicationRaiderController.getStatus(orderList.getOrderID());
+            System.out.println(status);
+            if (status.equals(Status.PREPARED)) {
+                Status status1 = applicationRaiderController.receiveOrderFromRestaurant(orderList.getOrderID());
+                return "Status changed to " + status1;
+            } else if (status.equals(Status.CANCELLED)) {
+                this.orderList = null;
+                this.riderStatus = RiderStatus.AVAILABLE;
+                return "that order is cancelled so cant process";
+            } else if (status.equals(Status.PREPARING)) {
+                return "wait till the order is prepared";
+            }
         }
-        return "didn't receive the order yet since it is in preparation";
+        return "cant receive since no order is accepted by rider";
     }
 
     public String deliverFood() {
+        if(orderList!=null){
         Status status = applicationRaiderController.getStatus(orderList.getOrderID());
-        if (!status.equals(Status.CANCELLED)) {
-            Status status1 = applicationRaiderController.deliverFoodToCustomer(orderList.getOrderID());
-            this.riderStatus = RiderStatus.AVAILABLE;
-            this.orderList = null;
-            return status1 + "";
+            if (status.equals(Status.PICKED)) {
+                Status status1 = applicationRaiderController.deliverFoodToCustomer(orderList.getOrderID());
+                this.riderStatus = RiderStatus.AVAILABLE;
+                this.orderList = null;
+                return status1 + "";
+            } else if (status.equals(Status.CANCELLED)) {
+                return "order is cancelled  ";
+            }
         }
-        return "order is cancelled  ";
+        return "cant deliver since no food picked by this rider";
     }
 
     public RiderStatus getRiderStatus() {

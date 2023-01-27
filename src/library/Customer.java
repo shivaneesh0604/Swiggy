@@ -1,5 +1,6 @@
 package library;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Customer extends User {
@@ -35,12 +36,12 @@ public class Customer extends User {
         return customerApplication.placeOrder(this.getUserID(), restaurantID);
     }
 
-    public Status cancelOrder(int orderID) {
-        return customerApplication.cancelOrder(orderID);
+    public ArrayList<OrderList> viewOrder() {
+        return customerApplication.viewOrder(this.getUserID());
     }
 
-    public OrderList viewOrder() {
-        return customerApplication.viewOrder(this.getUserID());
+    public Status cancelOrder(int orderID) {
+        return customerApplication.cancelOrder(orderID);
     }
 
     public Status checkStatus(int orderID) {
