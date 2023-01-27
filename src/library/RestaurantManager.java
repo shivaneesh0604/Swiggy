@@ -55,6 +55,7 @@ public class RestaurantManager extends User {
         if (status == null) {
             return "wrong orderID";
         }
+        restaurant.completeOrder(orderID);
         return "status updated as " + applicationRestaurantManagerController.setStatusPREPARED(orderID);
     }
 

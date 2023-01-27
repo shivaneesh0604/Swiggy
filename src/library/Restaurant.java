@@ -1,8 +1,5 @@
 package library;
 
-import library.MenuList;
-import library.Order;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,23 +8,29 @@ public class Restaurant {
     private final MenuList menuList;
     private final String restaurantName;
     private final int restaurantID;
-    private final HashMap<Integer, ArrayList<Order>> orders;//orderID mapped with orders
+    private final HashMap<Integer, ArrayList<Order>> ordersGot;//orderID mapped with orders
+    private HashMap<Integer,ArrayList<Order>> ordersCompleted;
 
     public Restaurant(String location, String restaurantName, int restaurantID) {
         this.location = location;
         this.restaurantName = restaurantName;
         this.restaurantID = restaurantID;
         this.menuList = new MenuList();
-        this.orders = new HashMap<>();
+        this.ordersGot = new HashMap<>();
+        this.ordersCompleted = new HashMap<>();
     }
 
     void receiveOrders(int orderID, ArrayList<Order> orders) {
-        this.orders.put(orderID, orders);
+        this.ordersGot.put(orderID, orders);
     }
 
-
+    void completeOrder(int orderID){
+        ArrayList<Order> order = this.ordersGot.get(orderID);
+        ordersCompleted.put(orderID,order);
+        ordersGot.remove(orderID);
+    }
     HashMap<Integer, ArrayList<Order>> viewOrder() {
-        return orders;
+        return ordersGot;
     }
 
     public String getLocation() {

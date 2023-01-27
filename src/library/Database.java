@@ -109,7 +109,7 @@ public class Database {
         }
     }
 
-//    private Restaurant findRestaurant(int orderID){
+//    public Restaurant findRestaurant(int orderID){
 //        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
 //            for (ArrayList<OrderList> list : innerMap.values()) {
 //                for (OrderList orderList : list) {
