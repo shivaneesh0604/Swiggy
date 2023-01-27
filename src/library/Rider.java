@@ -14,6 +14,9 @@ public class Rider extends User {
     }
 
     public ArrayList<OrderList> showAvailableOrders() {
+        if(riderStatus.equals(RiderStatus.NOT_AVAILABLE)){
+            return null;
+        }
         return applicationRaiderController.showAvailableOrders();
     }
 
@@ -23,7 +26,7 @@ public class Rider extends User {
         if(status==null){
             return "wrong OrderID";
         }
-        else if (status.equals(Status.PREPARING) || status.equals(Status.PREPARED) && riderStatus.equals(RiderStatus.AVAILABLE)) {
+        else if ((status.equals(Status.PREPARING) || status.equals(Status.PREPARED)) && riderStatus.equals(RiderStatus.AVAILABLE)) {
             this.orderList = applicationRaiderController.acceptOrder(orderID);
             this.riderStatus = RiderStatus.NOT_AVAILABLE;
             return "ACCEPTED BY " + this.getName() + " ";
@@ -56,12 +59,18 @@ public class Rider extends User {
                 Status status1 = applicationRaiderController.deliverFoodToCustomer(orderList.getOrderID());
                 this.riderStatus = RiderStatus.AVAILABLE;
                 this.orderList = null;
-                return status1 + "";
+                return status1 + " the food";
             } else if (status.equals(Status.CANCELLED)) {
+                this.orderList = null;
+                this.riderStatus = RiderStatus.AVAILABLE;
                 return "order is cancelled  ";
             }
         }
         return "cant deliver since no food picked by this rider";
+    }
+
+    public RiderAcceptance deleteOrder(){
+        return applicationRaiderController.deleteOrder(this.orderList.getOrderID());
     }
 
     public RiderStatus getRiderStatus() {

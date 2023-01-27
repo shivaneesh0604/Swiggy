@@ -11,7 +11,9 @@ public class RestaurantManager extends User {
         super(userID, passWord, role, name);
         this.restaurant = restaurant;
         Item item = new Item("rice", 100, Dietary.VEG, Course.MAINCOURSE, Timing.AFTERNOON);
+        Item item2 = new Item("chicken", 120, Dietary.NON_VEG, Course.MAINCOURSE, Timing.AFTERNOON);
         restaurant.getMenuList().addMenusItems(item);
+        restaurant.getMenuList().addMenusItems(item2);
         this.applicationRestaurantManagerController = applicationUI;
     }
 

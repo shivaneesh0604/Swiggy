@@ -21,11 +21,11 @@ public class Customer extends User {
     }
 
     public String addOrders(String foodName, int quantity, int restaurantID) {
-        return customerApplication.takeOrder(foodName, quantity, this.getUserID(), restaurantID);
+        return customerApplication.takeOrder(foodName.toUpperCase(), quantity, this.getUserID(), restaurantID);
     }
 
     public String deleteOrders(String foodName, int quantity, int restaurantID) {
-        return customerApplication.deleteOrder(foodName, quantity, this.getUserID(), restaurantID);
+        return customerApplication.deleteOrder(foodName.toUpperCase(), quantity, this.getUserID(), restaurantID);
     }
 
     public Bill confirmOrder(int restaurantID) {

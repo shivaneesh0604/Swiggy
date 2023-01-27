@@ -8,4 +8,5 @@ public interface RiderApplication {
     public Status receiveOrderFromRestaurant(int orderID);
     public Status getStatus(int orderID);
     public Status deliverFoodToCustomer(int orderID);
+    public RiderAcceptance deleteOrder(int orderID);
 }

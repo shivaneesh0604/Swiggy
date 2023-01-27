@@ -14,7 +14,6 @@ public class OrderList {
     private final String customerLocation;
     private final String customerID;
     private final Bill bill;
-
     private RiderAcceptance riderAcceptance;
 
     public OrderList(String restaurantName, int restaurantID, String restaurantLocation, String customerLocation, String customerID) {

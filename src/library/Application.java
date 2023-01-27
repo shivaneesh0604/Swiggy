@@ -119,7 +119,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     public OrderList acceptOrder(int orderID) {
         ArrayList<OrderList> orderLists = Database.getInstance().getAllOrders();
         for (OrderList order : orderLists) {
-            if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED)) {
+            if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED) && order.getRiderAcceptance().equals(RiderAcceptance.NOT_ACCEPTED)) {
                 order.setRiderAcceptance(RiderAcceptance.ACCEPTED);
                 return order;
             }
@@ -142,6 +142,18 @@ public class Application implements CustomerApplication, RiderApplication, Resta
         Status status = Database.getInstance().getStatus(orderID);
         if (!status.equals(Status.CANCELLED)) {
             return Database.getInstance().setStatus(Status.DELIVERED, orderID);
+        }
+        return null;
+    }
+
+    @Override
+    public RiderAcceptance deleteOrder(int orderID) {
+        ArrayList<OrderList> orderLists = Database.getInstance().getAllOrders();
+        for (OrderList order : orderLists) {
+            if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED) && order.getRiderAcceptance().equals(RiderAcceptance.ACCEPTED)) {
+                order.setRiderAcceptance(RiderAcceptance.NOT_ACCEPTED);
+                return RiderAcceptance.NOT_ACCEPTED;
+            }
         }
         return null;
     }
