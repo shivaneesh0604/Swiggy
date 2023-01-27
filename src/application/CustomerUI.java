@@ -5,7 +5,7 @@ import library.Database;
 
 import java.util.HashMap;
 
-public class CustomerUI {
+public class CustomerUI implements UI{
     private final Customer customer ;
     public CustomerUI(Customer customer) {
         this.customer = customer;

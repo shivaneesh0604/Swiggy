@@ -2,7 +2,7 @@ package application;
 
 import library.RestaurantManager;
 
-public class RestaurantManagerUI {
+public class RestaurantManagerUI implements UI{
     private final RestaurantManager restaurantManager;
 
     public RestaurantManagerUI(RestaurantManager restaurantManager) {

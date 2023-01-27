@@ -11,12 +11,12 @@ public class Customer extends User {
         this.customerApplication = application;
     }
 
-    public HashMap<Integer, OrderList> viewItemsInCart() {
-        return customerApplication.viewItemsInCart(this.getUserID());
-    }
-
     public HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing) {
         return customerApplication.enterRestaurant(restaurantID, timing);
+    }
+
+    public HashMap<Integer, OrderList> viewItemsInCart() {
+        return customerApplication.viewItemsInCart(this.getUserID());
     }
 
     public String addOrders(String foodName, int quantity, int restaurantID) {

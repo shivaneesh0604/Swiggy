@@ -2,7 +2,7 @@ package application;
 
 import library.Rider;
 
-public class RiderUI {
+public class RiderUI implements UI{
     private  final Rider rider;
 
     public RiderUI(Rider rider) {

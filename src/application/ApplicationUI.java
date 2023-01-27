@@ -46,14 +46,18 @@ public class ApplicationUI {
         switch (role) {
             case CUSTOMER:
                 Customer user = (Customer) databaseManager.addCustomer(userName, passWord, role, application, name);
-                new CustomerUI(user).entersUI();
+                UI ui = new CustomerUI(user);
+                ui.entersUI();
             case RIDER:
                 Rider rider = (Rider) databaseManager.addRider(userName, passWord, role, application, name);
-                new RiderUI(rider).entersUI();
+                UI ui1 = new RiderUI(rider);
+                ui1.entersUI();
+
             case RESTAURANT_MANAGER:
                 int restaurantID = 1;
                 RestaurantManager restaurantManager = (RestaurantManager) databaseManager.addRestaurantManager(userName, passWord, role, application, name, restaurantID);
-                new RestaurantManagerUI(restaurantManager).entersUI();
+                UI ui2 = new RestaurantManagerUI(restaurantManager);
+                ui2.entersUI();
         }
         System.out.println("added successfully");
     }

@@ -23,6 +23,8 @@ public class Rider extends User {
             this.orderList = applicationRaiderController.acceptOrder(orderID);
             this.riderStatus = RiderStatus.NOT_AVAILABLE;
             return "ACCEPTED BY " + this.getName() + " ";
+        } else if (status==null) {
+            return "wrong OrderID";
         }
         return "NOT ACCEPTED BY " + this.getName() + "";
     }
@@ -36,6 +38,8 @@ public class Rider extends User {
             this.orderList = null;
             this.riderStatus = RiderStatus.AVAILABLE;
             return "that order is cancelled so cant process";
+        } else if (status.equals(Status.PREPARING)) {
+            return "wait till the order is prepared";
         }
         return "didn't receive the order yet since it is in preparation";
     }
