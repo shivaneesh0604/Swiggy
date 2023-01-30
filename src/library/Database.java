@@ -66,9 +66,7 @@ public final class Database {
             for (ArrayList<OrderList> list : innerMap.values()) {
                 for (OrderList orderList : list) {
                     if (orderList.getOrderID() == orderID) {
-//                        Restaurant restaurant = findRestaurant(orderID);
                         orderList.setStatus(status);
-//                        restaurant.deleteOrder(orderID);
                         return status;
                     }
                 }
@@ -81,7 +79,7 @@ public final class Database {
         for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
             for (ArrayList<OrderList> list : innerMap.values()) {
                 for (OrderList orderList : list) {
-                    if (orderList.getOrderID() == orderID && !orderList.getStatus().equals(Status.CANCELLED)) {
+                    if (orderList.getOrderID() == orderID) {
                         return orderList.getStatus();
                     }
                 }
@@ -142,7 +140,7 @@ public final class Database {
         for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
             for (ArrayList<OrderList> list : innerMap.values()) {
                 for (OrderList orderList : list) {
-                    if ((orderList.getStatus().equals(Status.PREPARED) || orderList.getStatus().equals(Status.PREPARING)) && orderList.getRiderAcceptance().equals(RiderAcceptance.NOT_ACCEPTED))
+                    if (orderList.getRiderAcceptance().equals(RiderAcceptance.NOT_ACCEPTED))
                         collection.add(orderList);
                 }
             }

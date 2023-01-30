@@ -24,11 +24,6 @@ public class DatabaseManager {
         return database.addUser(user);
     }
 
-//    public void addRestaurant(String restaurantLocation, String restaurantName, int restaurantID) {
-//        Restaurant restaurant = new Restaurant("adayar", "A2B", 1);
-//        database.addRestaurant(restaurant);
-//    }
-
     public User getUser(String username, String password) {
         User user = database.getUser(username);
         if (user != null) {

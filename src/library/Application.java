@@ -14,7 +14,6 @@ public class Application implements CustomerApplication, RiderApplication, Resta
         return restaurant.getMenuList().getItems(timing);
     }
 
-
     @Override
     public String takeOrder(String foodName, int quantity, String customerID, int restaurantID) {
         HashMap<Integer, OrderList> orderList1 = cartItems.get(customerID);
@@ -105,8 +104,9 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public Status checkStatus(int orderID) {
-        return Database.getInstance().getStatus(orderID);
+    public String checkStatus(int orderID) {
+        OrderList orderList = Database.getInstance().getOrderlist(orderID);
+        return "the status of food is " + orderList.getStatus() + " and the rider Acceptance status is " + orderList.getRiderAcceptance();
     }
 
     @Override
@@ -117,7 +117,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     @Override
     public OrderList acceptOrder(int orderID) {
         OrderList order = Database.getInstance().getOrderlist(orderID);
-        if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED) && order.getRiderAcceptance().equals(RiderAcceptance.NOT_ACCEPTED)) {
+        if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED)) {
             order.setRiderAcceptance(RiderAcceptance.ACCEPTED);
             return order;
         }
@@ -146,11 +146,8 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     @Override
     public RiderAcceptance deleteOrder(int orderID) {
         OrderList order = Database.getInstance().getOrderlist(orderID);
-        if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED) && order.getRiderAcceptance().equals(RiderAcceptance.ACCEPTED)) {
-            order.setRiderAcceptance(RiderAcceptance.NOT_ACCEPTED);
-            return RiderAcceptance.NOT_ACCEPTED;
-        }
-        return null;
+        order.setRiderAcceptance(RiderAcceptance.NOT_ACCEPTED);
+        return RiderAcceptance.NOT_ACCEPTED;
     }
 
     @Override

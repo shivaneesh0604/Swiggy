@@ -16,7 +16,7 @@ public interface CustomerApplication {
 
     public Status placeOrder(String customerID, int restaurantID);
 
-    public Status checkStatus(int orderID);
+    public String  checkStatus(int orderID);
 
     public ArrayList<OrderList> viewOrder(String customerID);
 

@@ -46,7 +46,7 @@ public final class Rider extends User {
                 return "wait till the order is prepared";
             }
         }
-        return "cant receive since no order is accepted by rider first accept an order";
+        return "cant receive since no order is accepted by rider.... first accept an order";
     }
 
     public String deliverFood() {

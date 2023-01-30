@@ -16,7 +16,6 @@ public final class Customer extends User {
         return customerApplication.enterRestaurant(restaurantID, timing);
     }
 
-
     public String addOrders(String foodName, int quantity, int restaurantID) {
         return customerApplication.takeOrder(foodName.toUpperCase(), quantity, this.getUserID(), restaurantID);
     }
@@ -33,6 +32,9 @@ public final class Customer extends User {
     }
 
     public Status placeOrder(int restaurantID) {
+        if(this.location==null){
+            return null;
+        }
         return customerApplication.placeOrder(this.getUserID(), restaurantID);
     }
 
@@ -44,7 +46,7 @@ public final class Customer extends User {
         return customerApplication.cancelOrder(orderID);
     }
 
-    public Status checkStatus(int orderID) {
+    public String checkStatus(int orderID) {
         return customerApplication.checkStatus(orderID);
     }
 
