@@ -14,13 +14,6 @@ public class Application implements CustomerApplication, RiderApplication, Resta
         return restaurant.getMenuList().getItems(timing);
     }
 
-    @Override
-    public HashMap<Integer, OrderList> viewItemsInCart(String customerID) {
-        if (cartItems.containsKey(customerID)) {
-            return cartItems.get(customerID);
-        }
-        return null;
-    }
 
     @Override
     public String takeOrder(String foodName, int quantity, String customerID, int restaurantID) {
@@ -65,6 +58,14 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
+    public HashMap<Integer, OrderList> viewItemsInCart(String customerID) {
+        if (cartItems.containsKey(customerID)) {
+            return cartItems.get(customerID);
+        }
+        return null;
+    }
+
+    @Override
     public Bill confirmOrder(String customerID, int restaurantID) {
         OrderList orderList = cartItems.get(customerID).get(restaurantID);
         if (orderList != null) {
@@ -80,8 +81,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
 
     @Override
     public Status placeOrder(String customerID, int restaurantID) {
-        HashMap<Integer, OrderList> orderList1 = cartItems.get(customerID);
-        OrderList orderList2 = orderList1.get(restaurantID);
+        OrderList orderList2 = cartItems.get(customerID).get(restaurantID);
         if (orderList2 != null) {
             orderList2.setOrderID(orderID);
             orderID++;
@@ -95,7 +95,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public ArrayList<OrderList> viewOrder(String customerID){
+    public ArrayList<OrderList> viewOrder(String customerID) {
         return Database.getInstance().getOrders(customerID);
     }
 
@@ -112,17 +112,14 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     @Override
     public ArrayList<OrderList> showAvailableOrders() {
         return Database.getInstance().getAllOrders();
-        //get available orders from database and return orderID
     }
 
     @Override
     public OrderList acceptOrder(int orderID) {
-        ArrayList<OrderList> orderLists = Database.getInstance().getAllOrders();
-        for (OrderList order : orderLists) {
-            if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED) && order.getRiderAcceptance().equals(RiderAcceptance.NOT_ACCEPTED)) {
-                order.setRiderAcceptance(RiderAcceptance.ACCEPTED);
-                return order;
-            }
+        OrderList order = Database.getInstance().getOrderlist(orderID);
+        if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED) && order.getRiderAcceptance().equals(RiderAcceptance.NOT_ACCEPTED)) {
+            order.setRiderAcceptance(RiderAcceptance.ACCEPTED);
+            return order;
         }
         return null;
     }
@@ -148,12 +145,10 @@ public class Application implements CustomerApplication, RiderApplication, Resta
 
     @Override
     public RiderAcceptance deleteOrder(int orderID) {
-        ArrayList<OrderList> orderLists = Database.getInstance().getAllOrders();
-        for (OrderList order : orderLists) {
-            if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED) && order.getRiderAcceptance().equals(RiderAcceptance.ACCEPTED)) {
-                order.setRiderAcceptance(RiderAcceptance.NOT_ACCEPTED);
-                return RiderAcceptance.NOT_ACCEPTED;
-            }
+        OrderList order = Database.getInstance().getOrderlist(orderID);
+        if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED) && order.getRiderAcceptance().equals(RiderAcceptance.ACCEPTED)) {
+            order.setRiderAcceptance(RiderAcceptance.NOT_ACCEPTED);
+            return RiderAcceptance.NOT_ACCEPTED;
         }
         return null;
     }

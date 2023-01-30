@@ -3,7 +3,7 @@ package library;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class RestaurantManager extends User {
+public final class RestaurantManager extends User {
     private final Restaurant restaurant;
     private final RestaurantManagerApplication applicationRestaurantManagerController;
 
@@ -48,6 +48,10 @@ public class RestaurantManager extends User {
 
     public HashMap<Integer, ArrayList<Order>> viewOrder() {
         return restaurant.viewOrder();
+    }
+
+    public RestaurantStatus setRestaurantStatus(RestaurantStatus restaurantStatus){
+        return restaurant.setRestaurantStatus(restaurantStatus);
     }
 
     public String setStatus(int orderID) {

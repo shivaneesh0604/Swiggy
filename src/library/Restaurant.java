@@ -10,6 +10,7 @@ public class Restaurant {
     private final int restaurantID;
     private final HashMap<Integer, ArrayList<Order>> ordersGot;//orderID mapped with orders
     private HashMap<Integer,ArrayList<Order>> ordersCompleted;
+    private RestaurantStatus restaurantStatus;
 
     public Restaurant(String location, String restaurantName, int restaurantID) {
         this.location = location;
@@ -18,6 +19,7 @@ public class Restaurant {
         this.menuList = new MenuList();
         this.ordersGot = new HashMap<>();
         this.ordersCompleted = new HashMap<>();
+        this.restaurantStatus= RestaurantStatus.AVAILABLE;
     }
 
     void receiveOrders(int orderID, ArrayList<Order> orders) {
@@ -49,8 +51,12 @@ public class Restaurant {
         return restaurantID;
     }
 
-//    public String receiveOrders(String foodName, int quantity){
-//        Order order = new Order(foodName,quantity);
-//        orderList.addOrders(order);
-//    }
+    public RestaurantStatus getRestaurantStatus() {
+        return restaurantStatus;
+    }
+
+    public RestaurantStatus setRestaurantStatus(RestaurantStatus restaurantStatus) {
+        this.restaurantStatus = restaurantStatus;
+        return restaurantStatus;
+    }
 }

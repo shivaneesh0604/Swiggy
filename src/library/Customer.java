@@ -3,7 +3,7 @@ package library;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Customer extends User {
+public final class Customer extends User {
     private final CustomerApplication customerApplication;
     private String location;
 
@@ -16,9 +16,6 @@ public class Customer extends User {
         return customerApplication.enterRestaurant(restaurantID, timing);
     }
 
-    public HashMap<Integer, OrderList> viewItemsInCart() {
-        return customerApplication.viewItemsInCart(this.getUserID());
-    }
 
     public String addOrders(String foodName, int quantity, int restaurantID) {
         return customerApplication.takeOrder(foodName.toUpperCase(), quantity, this.getUserID(), restaurantID);
@@ -26,6 +23,9 @@ public class Customer extends User {
 
     public String deleteOrders(String foodName, int quantity, int restaurantID) {
         return customerApplication.deleteOrder(foodName.toUpperCase(), quantity, this.getUserID(), restaurantID);
+    }
+    public HashMap<Integer, OrderList> viewItemsInCart() {
+        return customerApplication.viewItemsInCart(this.getUserID());
     }
 
     public Bill confirmOrder(int restaurantID) {

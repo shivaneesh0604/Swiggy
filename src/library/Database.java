@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 
-public class Database {
+public final class Database {
 
     private static Database database = null;
     private final HashMap<String, User> users = new HashMap<String, User>();
@@ -55,7 +55,8 @@ public class Database {
         HashMap<Integer, String> restaurants = new HashMap<>();
         Collection<Restaurant> restaurants1 = listOfRestaurant.values();
         for (Restaurant restaurant : restaurants1) {
-            restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+            if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE))
+                restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
         }
         return restaurants;
     }
@@ -122,13 +123,13 @@ public class Database {
 //        return null;
 //    }
 
-    ArrayList<OrderList> getOrders(String customerID){
+    ArrayList<OrderList> getOrders(String customerID) {
         Collection<OrderList> collection = new ArrayList<>();
         for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
             for (ArrayList<OrderList> list : innerMap.values()) {
                 for (OrderList orderList : list) {
-                    if(orderList.getCustomerID().equals(customerID) && !orderList.getStatus().equals(Status.CANCELLED) && !orderList.getStatus().equals(Status.DELIVERED)){
-                       collection.add(orderList);
+                    if (orderList.getCustomerID().equals(customerID) && !orderList.getStatus().equals(Status.CANCELLED) && !orderList.getStatus().equals(Status.DELIVERED)) {
+                        collection.add(orderList);
                     }
                 }
             }
@@ -141,12 +142,25 @@ public class Database {
         for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
             for (ArrayList<OrderList> list : innerMap.values()) {
                 for (OrderList orderList : list) {
-                    if (orderList.getStatus().equals(Status.PREPARED) || orderList.getStatus().equals(Status.PREPARING))
+                    if ((orderList.getStatus().equals(Status.PREPARED) || orderList.getStatus().equals(Status.PREPARING)) && orderList.getRiderAcceptance().equals(RiderAcceptance.NOT_ACCEPTED))
                         collection.add(orderList);
                 }
             }
         }
         return (ArrayList<OrderList>) collection;
+    }
+
+    OrderList getOrderlist(int orderID){
+        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
+            for (ArrayList<OrderList> list : innerMap.values()) {
+                for (OrderList orderList : list) {
+                    if(orderList.getOrderID()==orderID){
+                        return orderList;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     double getPrice(String foodName, int restaurantID) {
