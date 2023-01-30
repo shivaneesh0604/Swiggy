@@ -1,6 +1,6 @@
-package application;
-
+import application.ApplicationUI;
 import library.Application;
+import library.Bill;
 import library.Database;
 import library.DatabaseManager;
 
@@ -34,7 +34,6 @@ public class Main {
                     break Mainloop;
                 }
             }
-
         }
     }
 }

@@ -2,7 +2,6 @@ package application;
 
 import library.Order;
 import library.RestaurantManager;
-import library.Status;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,9 +17,10 @@ public class RestaurantManagerUI implements UI {
     }
 
     public void entersUI() {
-        HashMap<Integer, ArrayList<Order>> order = restaurantManager.viewOrder();
+        HashMap<Integer, ArrayList<Order>> order = restaurantManager.viewOrderGot();
+        System.out.println("orders got are");
         viewOrder(order);
-        System.out.println("enter orderID to set status as prepared");
+        System.out.println("enter orderID to prepared");
         int orderID = sc.nextInt();
         System.out.println(restaurantManager.setStatus(orderID));
     }

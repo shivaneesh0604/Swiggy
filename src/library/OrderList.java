@@ -7,7 +7,8 @@ public class OrderList {
 
     private Status status;
     private final ArrayList<Order> orders;
-    private int orderID;
+    private static int orderCount = 1000;
+    private final int orderID;
     private final String restaurantName;
     private final int restaurantID;
     private final String restaurantLocation;
@@ -24,15 +25,17 @@ public class OrderList {
         this.restaurantLocation = restaurantLocation;
         this.customerLocation = customerLocation;
         this.customerID = customerID;
-        this.bill = new Bill(orderID);
         this.riderAcceptance = RiderAcceptance.NOT_ACCEPTED;
+        this.orderID = orderCount;
+        this.bill = new Bill(orderID);
+        orderCount++;
     }
 
     Bill getBill() {
         return bill;
     }
 
-    void addOrders(Order order, double price) {
+    void addOrders(Order order) {
         this.orders.add(order);
     }
 
@@ -90,10 +93,6 @@ public class OrderList {
 
     void setStatus(Status status) {
         this.status = status;
-    }
-
-    void setOrderID(int orderID) {
-        this.orderID = orderID;
     }
 
     void setRiderAcceptance(RiderAcceptance riderAcceptance) {

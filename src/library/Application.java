@@ -6,7 +6,6 @@ import java.util.HashMap;
 public class Application implements CustomerApplication, RiderApplication, RestaurantManagerApplication {
 
     private final HashMap<String, HashMap<Integer, OrderList>> cartItems = new HashMap<>();//customerID->restaurantID,orderList
-    int orderID = 1000;
 
     @Override
     public HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing) {
@@ -18,29 +17,28 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     public String takeOrder(String foodName, int quantity, String customerID, int restaurantID) {
         HashMap<Integer, OrderList> orderList1 = cartItems.get(customerID);
         Order order = new Order(foodName, quantity);
-        double price = Database.getInstance().getPrice(foodName.toUpperCase(), restaurantID);
         Customer customer = (Customer) Database.getInstance().getUser(customerID);
         Restaurant restaurant = Database.getInstance().getRestaurant(restaurantID);
         if (orderList1 != null) {
             OrderList orderList = orderList1.get(restaurantID);
             if (orderList.getRestaurantID() == restaurantID) {
                 if (orderList != null) {
-                    orderList.addOrders(order, price);
+                    orderList.addOrders(order);
                 } else {
                     OrderList orderList2 = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customer.getLocation(), customer.getUserID());
                     orderList1.put(restaurantID, orderList2);
-                    orderList2.addOrders(order, price);
+                    orderList2.addOrders(order);
                 }
             } else {
                 orderList1.clear();
                 OrderList orderList2 = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customer.getLocation(), customer.getUserID());
                 orderList1.put(restaurantID, orderList2);
-                orderList2.addOrders(order, price);
+                orderList2.addOrders(order);
             }
         } else {
             HashMap<Integer, OrderList> orderList2 = new HashMap<>();
             OrderList orderList = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customer.getLocation(), customer.getUserID());
-            orderList.addOrders(order, price);
+            orderList.addOrders(order);
             orderList2.put(restaurantID, orderList);
             cartItems.put(customerID, orderList2);
         }
@@ -82,8 +80,6 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     public Status placeOrder(String customerID, int restaurantID) {
         OrderList orderList2 = cartItems.get(customerID).get(restaurantID);
         if (orderList2 != null) {
-            orderList2.setOrderID(orderID);
-            orderID++;
             Database.getInstance().addOrder(customerID, orderList2, restaurantID);
             cartItems.remove(customerID);
             Restaurant restaurant = Database.getInstance().getRestaurant(restaurantID);
@@ -144,14 +140,19 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public RiderAcceptance deleteOrder(int orderID) {
-        OrderList order = Database.getInstance().getOrderlist(orderID);
-        order.setRiderAcceptance(RiderAcceptance.NOT_ACCEPTED);
+    public RiderAcceptance deleteOrder(OrderList orderList) {
+        orderList.setRiderAcceptance(RiderAcceptance.NOT_ACCEPTED);
+        if (orderList.getStatus().equals(Status.PICKED)) {
+            orderList.setStatus(Status.PREPARED);
+        }
+        else {
+            orderList.setStatus(Status.PREPARING);
+        }
         return RiderAcceptance.NOT_ACCEPTED;
     }
 
     @Override
-    public Status setStatusPREPARED(int orderID) {
+    public Status setStatusPrepared(int orderID) {
         return Database.getInstance().setStatus(Status.PREPARED, orderID);
     }
 

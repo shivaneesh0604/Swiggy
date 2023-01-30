@@ -1,5 +1,7 @@
 package library;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,12 +28,7 @@ public class Restaurant {
         this.ordersGot.put(orderID, orders);
     }
 
-    void completeOrder(int orderID){
-        ArrayList<Order> order = this.ordersGot.get(orderID);
-        ordersCompleted.put(orderID,order);
-        ordersGot.remove(orderID);
-    }
-    HashMap<Integer, ArrayList<Order>> viewOrder() {
+    HashMap<Integer, ArrayList<Order>> viewOrderGot() {
         return ordersGot;
     }
 

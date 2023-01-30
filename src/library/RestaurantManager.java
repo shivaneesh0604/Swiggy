@@ -46,12 +46,12 @@ public final class RestaurantManager extends User {
         return restaurant.getMenuList().getItems();
     }
 
-    public HashMap<Integer, ArrayList<Order>> viewOrder() {
-        return restaurant.viewOrder();
+    public RestaurantStatus setRestaurantStatus(RestaurantStatus restaurantStatus) {
+        return restaurant.setRestaurantStatus(restaurantStatus);
     }
 
-    public RestaurantStatus setRestaurantStatus(RestaurantStatus restaurantStatus){
-        return restaurant.setRestaurantStatus(restaurantStatus);
+    public HashMap<Integer, ArrayList<Order>> viewOrderGot() {
+        return restaurant.viewOrderGot();
     }
 
     public String setStatus(int orderID) {
@@ -59,8 +59,7 @@ public final class RestaurantManager extends User {
         if (status == null) {
             return "wrong orderID";
         }
-        restaurant.completeOrder(orderID);
-        return "status updated as " + applicationRestaurantManagerController.setStatusPREPARED(orderID);
+        return "status updated as " + applicationRestaurantManagerController.setStatusPrepared(orderID);
     }
 
 }

@@ -3,13 +3,13 @@ package library;
 import java.util.ArrayList;
 
 public final class Rider extends User {
-    private final RiderApplication applicationRaiderController;
+    private final RiderApplication riderApplication;
     private RiderStatus riderStatus;
     private OrderList orderList;
 
     public Rider(String userID, String passWord, Application application, Role role, String name) {
         super(userID, passWord, role, name);
-        this.applicationRaiderController = application;
+        this.riderApplication = application;
         this.riderStatus = RiderStatus.AVAILABLE;
     }
 
@@ -17,15 +17,15 @@ public final class Rider extends User {
         if (riderStatus.equals(RiderStatus.NOT_AVAILABLE)) {
             return null;
         }
-        return applicationRaiderController.showAvailableOrders();
+        return riderApplication.showAvailableOrders();
     }
 
     public String acceptOrder(int orderID) {
-        Status status = applicationRaiderController.getStatus(orderID);
+        Status status = riderApplication.getStatus(orderID);
         if (status == null) {
             return "wrong OrderID";
-        } else if ((status.equals(Status.PREPARING) || status.equals(Status.PREPARED)) && riderStatus.equals(RiderStatus.AVAILABLE)) {
-            this.orderList = applicationRaiderController.acceptOrder(orderID);
+        } else if (riderStatus.equals(RiderStatus.AVAILABLE)) {
+            this.orderList = riderApplication.acceptOrder(orderID);
             this.riderStatus = RiderStatus.NOT_AVAILABLE;
             return "ACCEPTED BY " + this.getName() + " ";
         }
@@ -36,8 +36,7 @@ public final class Rider extends User {
         if (orderList != null) {
             Status status = orderList.getStatus();
             if (status.equals(Status.PREPARED)) {
-                Status status1 = applicationRaiderController.receiveOrderFromRestaurant(orderList.getOrderID());
-                return "Status changed to " + status1;
+                return "Status changed to " + riderApplication.receiveOrderFromRestaurant(orderList.getOrderID());
             } else if (status.equals(Status.CANCELLED)) {
                 this.orderList = null;
                 this.riderStatus = RiderStatus.AVAILABLE;
@@ -53,7 +52,7 @@ public final class Rider extends User {
         if (orderList != null) {
             Status status = orderList.getStatus();
             if (status.equals(Status.PICKED)) {
-                Status status1 = applicationRaiderController.deliverFoodToCustomer(orderList.getOrderID());
+                Status status1 = riderApplication.deliverFoodToCustomer(orderList.getOrderID());
                 this.riderStatus = RiderStatus.AVAILABLE;
                 this.orderList = null;
                 return status1 + " the food";
@@ -66,12 +65,12 @@ public final class Rider extends User {
         return "cant deliver since no food picked by this rider...first accept an order";
     }
 
-    public String deleteOrder() {
+    public String cancelOrder() {
         if (orderList != null) {
-            RiderAcceptance riderAcceptance = applicationRaiderController.deleteOrder(orderList.getOrderID());
+            RiderAcceptance riderAcceptance = riderApplication.deleteOrder(orderList);
             this.orderList = null;
-            this.riderStatus= RiderStatus.AVAILABLE;
-            return "the order is cancelled by the rider and changed rider acceptance to "+riderAcceptance;
+            this.riderStatus = RiderStatus.AVAILABLE;
+            return "the order is cancelled by the rider and changed rider acceptance to " + riderAcceptance;
         }
         return null;
     }
