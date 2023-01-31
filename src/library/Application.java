@@ -91,7 +91,11 @@ public class Application implements CustomerApplication, RiderApplication, Resta
 
     @Override
     public ArrayList<OrderList> viewOrder(String customerID) {
-        return Database.getInstance().getOrders(customerID);
+        ArrayList<OrderList> orderLists =  Database.getInstance().getOrders(customerID);
+        if(orderLists!=null){
+            return orderLists;
+        }
+        return null;
     }
 
     @Override
@@ -102,7 +106,10 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     @Override
     public String checkStatus(int orderID) {
         OrderList orderList = Database.getInstance().getOrderlist(orderID);
-        return "the status of food is " + orderList.getStatus() + " and the rider Acceptance status is " + orderList.getRiderAcceptance();
+        if (orderList != null) {
+            return "the status of food is " + orderList.getStatus() + " and the rider Acceptance status is " + orderList.getRiderAcceptance();
+        }
+        return "wrong orderID";
     }
 
     @Override
@@ -144,8 +151,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
         orderList.setRiderAcceptance(RiderAcceptance.NOT_ACCEPTED);
         if (orderList.getStatus().equals(Status.PICKED)) {
             orderList.setStatus(Status.PREPARED);
-        }
-        else {
+        } else {
             orderList.setStatus(Status.PREPARING);
         }
         return RiderAcceptance.NOT_ACCEPTED;
