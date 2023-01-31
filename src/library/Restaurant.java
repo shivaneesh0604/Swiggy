@@ -24,7 +24,7 @@ public class Restaurant {
         this.restaurantStatus= RestaurantStatus.AVAILABLE;
     }
 
-    void receiveOrders(int orderID, ArrayList<Order> orders) {
+    void  receiveOrders(int orderID, ArrayList<Order> orders) {
         this.ordersGot.put(orderID, orders);
     }
 

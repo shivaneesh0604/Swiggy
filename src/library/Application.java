@@ -26,7 +26,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     public String takeOrder(String foodName, int quantity, String customerID, int restaurantID) {
         HashMap<Integer, OrderList> customerOrderList = cartItems.get(customerID);
         Order order = new Order(foodName, quantity);
-        Customer customer = (Customer) Database.getInstance().getUser(customerID);
+        CustomerDetails customerDetails =  Database.getInstance().getCustomerDetails(customerID);
         Restaurant restaurant = Database.getInstance().getRestaurant(restaurantID);
         if (customerOrderList != null) {
             OrderList restaurantOrderList = customerOrderList.get(restaurantID);
@@ -34,19 +34,19 @@ public class Application implements CustomerApplication, RiderApplication, Resta
                 if (restaurantOrderList != null) {
                     restaurantOrderList.addOrders(order);
                 } else {
-                    OrderList orderList2 = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customer.getLocation(), customer.getUserID());
+                    OrderList orderList2 = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
                     customerOrderList.put(restaurantID, orderList2);
                     orderList2.addOrders(order);
                 }
             } else {
                 customerOrderList.clear();
-                OrderList orderList2 = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customer.getLocation(), customer.getUserID());
+                OrderList orderList2 = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
                 customerOrderList.put(restaurantID, orderList2);
                 orderList2.addOrders(order);
             }
         } else {
             HashMap<Integer, OrderList> orderList2 = new HashMap<>();
-            OrderList orderList = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customer.getLocation(), customer.getUserID());
+            OrderList orderList = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
             orderList.addOrders(order);
             orderList2.put(restaurantID, orderList);
             cartItems.put(customerID, orderList2);

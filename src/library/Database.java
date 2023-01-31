@@ -1,5 +1,6 @@
 package library;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,16 +9,20 @@ import java.util.HashMap;
 final class Database {
 
     private static Database database = null;
-    private static final HashMap<String, User> users = new HashMap<String, User>();
+    private static final HashMap<UserCredential,User> users = new HashMap<>();
     private static final HashMap<Integer, Restaurant> listOfRestaurant = new HashMap<Integer, Restaurant>();
     private static final HashMap<String, HashMap<Integer, ArrayList<OrderList>>> orders = new HashMap<>();// customerID->restaurantID,orderList
 
     private Database() {
         Restaurant restaurant = new Restaurant("adayar", "anandha bhavan", 1);
         listOfRestaurant.put(1, restaurant);
-        users.put("shiva1234", new Customer("shiva1234", "123456789",ApplicationFactory.getCustomerApplication() , Role.CUSTOMER, "shiva"));
-        users.put("sathya1234", new Rider("sathya1234", "123456789", ApplicationFactory.getRiderApplication() ,Role.RIDER, "sathya"));
-        users.put("sankar1234", new RestaurantManager("sankar1234", "123456789", restaurant,ApplicationFactory.getRestaurantManagerApplication() , Role.RESTAURANT_MANAGER, "sankar"));
+        users.put(new UserCredential("shiva1234","123456789","CUSTOMER_1001"),new Customer("CUSTOMER_1001",ApplicationFactory.getCustomerApplication() , Role.CUSTOMER, "shiva"));
+        users.put(new UserCredential("sathya1234","123456789","RIDER_1000"),new Rider("RIDER_1000", ApplicationFactory.getRiderApplication() ,Role.RIDER, "sathya"));
+        users.put(new UserCredential("sankar1234","123456789","RESTAURANT_MANAGER_1002"),new RestaurantManager("RESTAURANT_MANAGER_1002",  restaurant,ApplicationFactory.getRestaurantManagerApplication() , Role.RESTAURANT_MANAGER, "sankar"));
+        Item item = new Item("rice", 100, Dietary.VEG, Course.MAINCOURSE, Timing.AFTERNOON);
+        Item item2 = new Item("chicken", 120, Dietary.NON_VEG, Course.MAINCOURSE, Timing.AFTERNOON);
+        restaurant.getMenuList().addMenusItems(item);
+        restaurant.getMenuList().addMenusItems(item2);
     }
 
     static Database getInstance() {
@@ -26,15 +31,30 @@ final class Database {
         }
         return database;
     }
-    User addUser(User user) {
-        this.users.put(user.getUserID(), user);
+    User addUser(User user, String userName, String passWord) {
+        this.users.put(new UserCredential(userName,passWord,user.getUserID()),user);
         return user;
     }
 
-    User getUser(String userName) {
-        if (users.containsKey(userName)) {
-            User user = users.get(userName);
-            return user;
+    User getUser(String userName,String passWord) {
+        Collection<UserCredential> userCredentials = users.keySet();
+        for(UserCredential userCredential:userCredentials){
+            if(userCredential.getUserName().equals(userName)){
+                if(userCredential.getPassWord().equals(passWord)){
+                    return users.get(userCredential);
+                }
+            }
+        }
+        return null;
+    }
+
+    CustomerDetails getCustomerDetails(String customerID){
+        Collection<User> users1 = users.values();
+        for(User user:users1){
+            if(user.getUserID().equals(customerID)){
+                Customer customer = (Customer) user;
+                return new CustomerDetails(customer.getLocation(),customer.getUserID());
+            }
         }
         return null;
     }

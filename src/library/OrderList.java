@@ -17,7 +17,7 @@ public class OrderList {
     private final Bill bill;
     private RiderAcceptance riderAcceptance;
 
-    public OrderList(String restaurantName, int restaurantID, String restaurantLocation, String customerLocation, String customerID) {
+    OrderList(String restaurantName, int restaurantID, String restaurantLocation, String customerLocation, String customerID) {
         this.status = Status.PENDING;
         this.orders = new HashMap<>();
         this.restaurantID = restaurantID;

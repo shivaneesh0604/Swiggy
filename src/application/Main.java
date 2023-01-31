@@ -19,7 +19,6 @@ final class Main {
                     String userName = sc.nextLine();
                     System.out.println("enter password");
                     String passWord = sc.nextLine();
-//                    System.out.println("user namr is "+userName+" password is "+passWord);
                     applicationUI.logIN(userName, passWord);
                     break;
                 } else if (applicationUIAccess == 2) {
