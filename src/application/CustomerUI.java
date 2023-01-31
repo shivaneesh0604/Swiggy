@@ -31,9 +31,9 @@ public class CustomerUI implements UI {
             String foodName = "chicken";
             String foodName2 = "rice";
             int quantity = 2;
-            System.out.println(customer.addOrders(foodName, quantity, restaurantID));
-            System.out.println(customer.addOrders(foodName2, quantity, restaurantID));
-            System.out.println(customer.deleteOrders(foodName, 1, restaurantID));
+            System.out.println(customer.addOrder(foodName, quantity, restaurantID));
+            System.out.println(customer.addOrder(foodName2, quantity, restaurantID));
+            System.out.println(customer.deleteOrder(foodName, 1, restaurantID));
             Bill bill = customer.confirmOrder(restaurantID);
             showBill(bill);
             System.out.println(customer.placeOrder(restaurantID));
@@ -68,8 +68,9 @@ public class CustomerUI implements UI {
     private void viewOrder(ArrayList<OrderList> order) {
         for (OrderList orderList : order) {
             System.out.println("orderID is " + orderList.getOrderID());
-            ArrayList<Order> orderInOrderList = orderList.getOrders();
-            for (Order order1 : orderInOrderList) {
+            HashMap<String, Order> orderInOrderList = orderList.getOrders();
+            Collection<Order> orderCollection = orderInOrderList.values();
+            for (Order order1 : orderCollection) {
                 System.out.println(" ordered food are " + order1.getFoodName() + " quantity is " + order1.getQuantity());
             }
         }

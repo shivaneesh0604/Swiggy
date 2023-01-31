@@ -57,7 +57,7 @@ public class MenuList {
         return availableTimingItems;
     }
 
-    public HashMap<String, Item> getItems() {
+    HashMap<String, Item> getItems() {
         return totalItems;
     }
 }

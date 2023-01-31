@@ -16,11 +16,11 @@ public final class Customer extends User {
         return customerApplication.enterRestaurant(restaurantID, timing);
     }
 
-    public String addOrders(String foodName, int quantity, int restaurantID) {
+    public String addOrder(String foodName, int quantity, int restaurantID) {
         return customerApplication.takeOrder(foodName.toUpperCase(), quantity, this.getUserID(), restaurantID);
     }
 
-    public String deleteOrders(String foodName, int quantity, int restaurantID) {
+    public String deleteOrder(String foodName, int quantity, int restaurantID) {
         return customerApplication.deleteOrder(foodName.toUpperCase(), quantity, this.getUserID(), restaurantID);
     }
     public HashMap<Integer, OrderList> viewItemsInCart() {
@@ -46,8 +46,8 @@ public final class Customer extends User {
         return customerApplication.cancelOrder(orderID);
     }
 
-    public String checkStatus(int orderID) {
-        return customerApplication.checkStatus(orderID);
+    public String checkStatusOfOrder(int orderID) {
+        return customerApplication.checkStatusOfOrder(orderID);
     }
 
     public String getLocation() {

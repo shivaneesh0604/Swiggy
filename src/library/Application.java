@@ -1,6 +1,7 @@
 package library;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class Application implements CustomerApplication, RiderApplication, RestaurantManagerApplication {
@@ -70,7 +71,9 @@ public class Application implements CustomerApplication, RiderApplication, Resta
         OrderList orderList = cartItems.get(customerID).get(restaurantID);
         if (orderList != null) {
             Bill bill = orderList.getBill();
-            for (Order order : orderList.getOrders()) {
+            HashMap<String, Order> orderInOrderList = orderList.getOrders();
+            Collection<Order> orderCollection = orderInOrderList.values();
+            for (Order order : orderCollection) {
                 double price = Database.getInstance().getPrice(order.getFoodName(), restaurantID);
                 bill.addItem(order.getFoodName(), order.getQuantity(), price);
             }
@@ -86,7 +89,9 @@ public class Application implements CustomerApplication, RiderApplication, Resta
             Database.getInstance().addOrder(customerID, orderList2, restaurantID);
             cartItems.remove(customerID);
             Restaurant restaurant = Database.getInstance().getRestaurant(restaurantID);
-            restaurant.receiveOrders(orderList2.getOrderID(), orderList2.getOrders());
+            HashMap<String, Order> orderInOrderList = orderList2.getOrders();
+            Collection<Order> orderCollection = orderInOrderList.values();
+            restaurant.receiveOrders(orderList2.getOrderID(), (ArrayList<Order>) orderCollection);
             return Database.getInstance().setStatus(Status.PREPARING, orderList2.getOrderID());
         }
         return null;
@@ -107,7 +112,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public String checkStatus(int orderID) {
+    public String checkStatusOfOrder(int orderID) {
         OrderList orderList = Database.getInstance().getOrderlist(orderID);
         if (orderList != null) {
             return "the status of food is " + orderList.getStatus() + " and the rider Acceptance status is " + orderList.getRiderAcceptance();
