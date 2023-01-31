@@ -15,24 +15,24 @@ public class Application implements CustomerApplication, RiderApplication, Resta
 
     @Override
     public String takeOrder(String foodName, int quantity, String customerID, int restaurantID) {
-        HashMap<Integer, OrderList> orderList1 = cartItems.get(customerID);
+        HashMap<Integer, OrderList> customerOrderList = cartItems.get(customerID);
         Order order = new Order(foodName, quantity);
         Customer customer = (Customer) Database.getInstance().getUser(customerID);
         Restaurant restaurant = Database.getInstance().getRestaurant(restaurantID);
-        if (orderList1 != null) {
-            OrderList orderList = orderList1.get(restaurantID);
-            if (orderList.getRestaurantID() == restaurantID) {
-                if (orderList != null) {
-                    orderList.addOrders(order);
+        if (customerOrderList != null) {
+            OrderList restaurantOrderList = customerOrderList.get(restaurantID);
+            if (restaurantOrderList.getRestaurantID() == restaurantID) {
+                if (restaurantOrderList != null) {
+                    restaurantOrderList.addOrders(order);
                 } else {
                     OrderList orderList2 = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customer.getLocation(), customer.getUserID());
-                    orderList1.put(restaurantID, orderList2);
+                    customerOrderList.put(restaurantID, orderList2);
                     orderList2.addOrders(order);
                 }
             } else {
-                orderList1.clear();
+                customerOrderList.clear();
                 OrderList orderList2 = new OrderList(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customer.getLocation(), customer.getUserID());
-                orderList1.put(restaurantID, orderList2);
+                customerOrderList.put(restaurantID, orderList2);
                 orderList2.addOrders(order);
             }
         } else {
@@ -51,7 +51,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
         if (orders != null) {
             return orders.deleteOrder(foodName, quantity);
         }
-        return "no orders found with this foodName";
+        return "no orders found in this restaurant for this customer";
     }
 
     @Override
