@@ -7,7 +7,7 @@ public final class Rider extends User {
     private RiderStatus riderStatus;
     private OrderList orderList;
 
-    public Rider(String userID, String passWord, Application application, Role role, String name) {
+    public Rider(String userID, String passWord, RiderApplication application, Role role, String name) {
         super(userID, passWord, role, name);
         this.riderApplication = application;
         this.riderStatus = RiderStatus.AVAILABLE;

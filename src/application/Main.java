@@ -1,15 +1,13 @@
-import application.ApplicationUI;
-import library.Application;
+package application;
+
 import library.DatabaseManager;
 
 import java.util.Scanner;
 
-public class Main {
+final class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Application application = new Application();
         DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.init(application);
         ApplicationUI applicationUI = new ApplicationUI(databaseManager);
         Mainloop : while (true) {
             while (true) {
@@ -25,7 +23,7 @@ public class Main {
                     applicationUI.logIN(userName, passWord);
                     break;
                 } else if (applicationUIAccess == 2) {
-                    applicationUI.signUP(application);
+                    applicationUI.signUP();
                     break;
                 }
                 else{

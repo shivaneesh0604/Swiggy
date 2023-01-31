@@ -7,7 +7,7 @@ public final class RestaurantManager extends User {
     private final Restaurant restaurant;
     private final RestaurantManagerApplication applicationRestaurantManagerController;
 
-    public RestaurantManager(String userID, String passWord, Restaurant restaurant, Application applicationUI, Role role, String name) {
+    public RestaurantManager(String userID, String passWord, Restaurant restaurant, RestaurantManagerApplication applicationUI, Role role, String name) {
         super(userID, passWord, role, name);
         this.restaurant = restaurant;
         Item item = new Item("rice", 100, Dietary.VEG, Course.MAINCOURSE, Timing.AFTERNOON);

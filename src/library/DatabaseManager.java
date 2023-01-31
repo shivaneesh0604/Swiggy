@@ -1,26 +1,24 @@
 package library;
 
+import java.util.HashMap;
+
 public class DatabaseManager {
 
     Database database = Database.getInstance();
 
-    public User addCustomer(String userName, String passWord, Role role, Application application, String name) {
-        User user = new Customer(userName, passWord, application, role, name);
+    public User addCustomer(String userName, String passWord, Role role, String name) {
+        User user = new Customer(userName, passWord, ApplicationFactory.getCustomerApplication(), role, name);
         return database.addUser(user);
     }
 
-    public void init(Application application) {
-        database.init(application);
-    }
-
-    public User addRider(String userName, String passWord, Role role, Application application, String name) {
-        User user = new Rider(userName, passWord, application, role, name);
+    public User addRider(String userName, String passWord, Role role, String name) {
+        User user = new Rider(userName, passWord, ApplicationFactory.getRiderApplication(), role, name);
         return database.addUser(user);
     }
 
-    public User addRestaurantManager(String userName, String passWord, Role role, Application application, String name, int restaurantID) {
+    public User addRestaurantManager(String userName, String passWord, Role role, String name, int restaurantID) {
         Restaurant restaurant = database.getRestaurant(restaurantID);
-        User user = new RestaurantManager(userName, passWord, restaurant, application, role, name);
+        User user = new RestaurantManager(userName, passWord, restaurant, ApplicationFactory.getRestaurantManagerApplication(), role, name);
         return database.addUser(user);
     }
 

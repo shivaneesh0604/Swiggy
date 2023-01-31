@@ -10,27 +10,22 @@ final class Database {
     private static Database database = null;
     private static final HashMap<String, User> users = new HashMap<String, User>();
     private static final HashMap<Integer, Restaurant> listOfRestaurant = new HashMap<Integer, Restaurant>();
-    private final HashMap<String, HashMap<Integer, ArrayList<OrderList>>> orders = new HashMap<>();// customerID->restaurantID,orderList
+    private static final HashMap<String, HashMap<Integer, ArrayList<OrderList>>> orders = new HashMap<>();// customerID->restaurantID,orderList
 
     private Database() {
-
+        Restaurant restaurant = new Restaurant("adayar", "anandha bhavan", 1);
+        listOfRestaurant.put(1, restaurant);
+        users.put("shiva1234", new Customer("shiva1234", "123456789",ApplicationFactory.getCustomerApplication() , Role.CUSTOMER, "shiva"));
+        users.put("sathya1234", new Rider("sathya1234", "123456789", ApplicationFactory.getRiderApplication() ,Role.RIDER, "sathya"));
+        users.put("sankar1234", new RestaurantManager("sankar1234", "123456789", restaurant,ApplicationFactory.getRestaurantManagerApplication() , Role.RESTAURANT_MANAGER, "sankar"));
     }
 
-    public static Database getInstance() {
+    static Database getInstance() {
         if (database == null) {
             database = new Database();
         }
         return database;
     }
-
-    public void init(Application application) {
-        Restaurant restaurant = new Restaurant("adayar", "anandha bhavan", 1);
-        listOfRestaurant.put(1, restaurant);
-        users.put("shiva1234", new Customer("shiva1234", "123456789", application, Role.CUSTOMER, "shiva"));
-        users.put("sathya1234", new Rider("sathya1234", "123456789", application, Role.RIDER, "sathya"));
-        users.put("sankar1234", new RestaurantManager("sankar1234", "123456789", restaurant, application, Role.RESTAURANT_MANAGER, "sankar"));
-    }
-
     User addUser(User user) {
         this.users.put(user.getUserID(), user);
         return user;
@@ -51,7 +46,7 @@ final class Database {
         return null;
     }
 
-    public HashMap<Integer, String> getAllRestaurant() {
+    HashMap<Integer, String> getAllRestaurant() {
         HashMap<Integer, String> restaurants = new HashMap<>();
         Collection<Restaurant> restaurants1 = listOfRestaurant.values();
         for (Restaurant restaurant : restaurants1) {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 public interface CustomerApplication {
     public HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing);
+    HashMap<Integer, String> getAllRestaurant();
 
     public String takeOrder(String foodName, int quantity, String customerID, int restaurantID);
 

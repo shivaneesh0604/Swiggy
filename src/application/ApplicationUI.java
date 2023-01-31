@@ -41,26 +41,26 @@ public class ApplicationUI {
         }
     }
 
-    public void signUP(Application application) {
+    public void signUP() {
         String userName = "shiva123";
         String passWord = "password";
         Role role = Role.CUSTOMER;
         String name = "shiva";
         switch (role) {
             case CUSTOMER:
-                Customer user = (Customer) databaseManager.addCustomer(userName, passWord, role, application, name);
+                Customer user = (Customer) databaseManager.addCustomer(userName, passWord, role, name);
                 UI ui = new CustomerUI(user);
                 ui.entersUI();
                 break;
             case RIDER:
-                Rider rider = (Rider) databaseManager.addRider(userName, passWord, role, application, name);
+                Rider rider = (Rider) databaseManager.addRider(userName, passWord, role, name);
                 UI ui1 = new RiderUI(rider);
                 ui1.entersUI();
                 break;
 
             case RESTAURANT_MANAGER:
                 int restaurantID = 1;
-                RestaurantManager restaurantManager = (RestaurantManager) databaseManager.addRestaurantManager(userName, passWord, role, application, name, restaurantID);
+                RestaurantManager restaurantManager = (RestaurantManager) databaseManager.addRestaurantManager(userName, passWord, role, name, restaurantID);
                 UI ui2 = new RestaurantManagerUI(restaurantManager);
                 ui2.entersUI();
                 break;

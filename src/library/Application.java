@@ -18,6 +18,11 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
+    public HashMap<Integer, String> getAllRestaurant() {
+        return Database.getInstance().getAllRestaurant();
+    }
+
+    @Override
     public String takeOrder(String foodName, int quantity, String customerID, int restaurantID) {
         HashMap<Integer, OrderList> customerOrderList = cartItems.get(customerID);
         Order order = new Order(foodName, quantity);

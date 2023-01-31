@@ -7,9 +7,13 @@ public final class Customer extends User {
     private final CustomerApplication customerApplication;
     private String location;
 
-    public Customer(String userID, String passWord, Application application, Role role, String name) {
+    public Customer(String userID, String passWord, CustomerApplication application, Role role, String name) {
         super(userID, passWord, role, name);
         this.customerApplication = application;
+    }
+
+    public HashMap<Integer, String> getAllRestaurant(){
+        return customerApplication.getAllRestaurant();
     }
 
     public HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing) {

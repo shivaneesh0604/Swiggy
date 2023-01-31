@@ -21,7 +21,7 @@ public class CustomerUI implements UI {
             System.out.println("enter from which location you are from");
             String location = "adayar";
             customer.setLocation(location);
-            HashMap<Integer, String> listOfRestaurants = Database.getInstance().getAllRestaurant();
+            HashMap<Integer, String> listOfRestaurants = customer.getAllRestaurant();
             showAllRestaurant(listOfRestaurants);
             System.out.println("enter which restaurantID to enter");
             int restaurantID = 1;
