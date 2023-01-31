@@ -2,15 +2,15 @@ package library;
 
 public class DatabaseManager {
 
-    public DatabaseManager() {
-
-    }
-
     Database database = Database.getInstance();
 
     public User addCustomer(String userName, String passWord, Role role, Application application, String name) {
         User user = new Customer(userName, passWord, application, role, name);
         return database.addUser(user);
+    }
+
+    public void init(Application application) {
+        database.init(application);
     }
 
     public User addRider(String userName, String passWord, Role role, Application application, String name) {

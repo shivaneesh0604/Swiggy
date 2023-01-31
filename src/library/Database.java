@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.HashMap;
 
 
-public final class Database {
+final class Database {
 
     private static Database database = null;
-    private final HashMap<String, User> users = new HashMap<String, User>();
-    private final HashMap<Integer, Restaurant> listOfRestaurant = new HashMap<Integer, Restaurant>();
+    private static final HashMap<String, User> users = new HashMap<String, User>();
+    private static final HashMap<Integer, Restaurant> listOfRestaurant = new HashMap<Integer, Restaurant>();
     private final HashMap<String, HashMap<Integer, ArrayList<OrderList>>> orders = new HashMap<>();// customerID->restaurantID,orderList
 
     private Database() {

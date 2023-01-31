@@ -1,7 +1,5 @@
 import application.ApplicationUI;
 import library.Application;
-import library.Bill;
-import library.Database;
 import library.DatabaseManager;
 
 import java.util.Scanner;
@@ -11,7 +9,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         Application application = new Application();
         DatabaseManager databaseManager = new DatabaseManager();
-        Database.getInstance().init(application);
+        databaseManager.init(application);
         ApplicationUI applicationUI = new ApplicationUI(databaseManager);
         Mainloop : while (true) {
             while (true) {
