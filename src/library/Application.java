@@ -10,7 +10,10 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     @Override
     public HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing) {
         Restaurant restaurant = Database.getInstance().getRestaurant(restaurantID);
-        return restaurant.getMenuList().getItems(timing);
+        if (restaurant != null) {
+            return restaurant.getMenuList().getItems(timing);
+        }
+        return null;
     }
 
     @Override
@@ -90,9 +93,9 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public ArrayList<OrderList> viewOrder(String customerID) {
-        ArrayList<OrderList> orderLists =  Database.getInstance().getOrders(customerID);
-        if(orderLists!=null){
+    public ArrayList<OrderList> viewOrdersPlaced(String customerID) {
+        ArrayList<OrderList> orderLists = Database.getInstance().getOrders(customerID);
+        if (orderLists != null) {
             return orderLists;
         }
         return null;

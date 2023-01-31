@@ -37,7 +37,7 @@ public class CustomerUI implements UI {
             Bill bill = customer.confirmOrder(restaurantID);
             showBill(bill);
             System.out.println(customer.placeOrder(restaurantID));
-            ArrayList<OrderList> orders = customer.viewOrder();
+            ArrayList<OrderList> orders = customer.viewOrdersPlaced();
             viewOrder(orders);
             break ;
 //        System.out.println("enter orderID to cancel");

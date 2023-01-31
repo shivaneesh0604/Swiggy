@@ -22,7 +22,7 @@ public class RestaurantManagerUI implements UI {
         viewOrder(order);
         System.out.println("enter orderID to prepared");
         int orderID = sc.nextInt();
-        System.out.println(restaurantManager.setStatus(orderID));
+        System.out.println(restaurantManager.setStatusOfOrder(orderID));
     }
 
     private void viewOrder(HashMap<Integer, ArrayList<Order>> order) {

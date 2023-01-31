@@ -38,8 +38,8 @@ public final class Customer extends User {
         return customerApplication.placeOrder(this.getUserID(), restaurantID);
     }
 
-    public ArrayList<OrderList> viewOrder() {
-        return customerApplication.viewOrder(this.getUserID());
+    public ArrayList<OrderList> viewOrdersPlaced() {
+        return customerApplication.viewOrdersPlaced(this.getUserID());
     }
 
     public Status cancelOrder(int orderID) {

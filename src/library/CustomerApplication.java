@@ -18,7 +18,7 @@ public interface CustomerApplication {
 
     public String  checkStatus(int orderID);
 
-    public ArrayList<OrderList> viewOrder(String customerID);
+    public ArrayList<OrderList> viewOrdersPlaced(String customerID);
 
     public Status cancelOrder(int orderID);
 }

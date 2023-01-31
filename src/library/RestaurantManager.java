@@ -54,7 +54,7 @@ public final class RestaurantManager extends User {
         return restaurant.viewOrderGot();
     }
 
-    public String setStatus(int orderID) {
+    public String setStatusOfOrder(int orderID) {
         Status status = applicationRestaurantManagerController.getStatus(orderID);
         if (status == null) {
             return "wrong orderID";
