@@ -1,5 +1,6 @@
 package application;
 
+import library.Notification;
 import library.Order;
 import library.Rider;
 
@@ -15,24 +16,34 @@ public class RiderUI implements UI {
     }
 
     public void entersUI() {
+        ArrayList<Notification> notification = rider.getNotification();
+        showAvailableNotifications(notification);
         System.out.println("enter orderID to accept");
         int orderID = sc.nextInt();
-//        System.out.println(rider.acceptOrder(orderID));
-        System.out.println(rider.receiveOrderFromRestaurant());
-//        System.out.println(rider.declineOrder());
-        System.out.println("enter orderID to accept");
-        int orderID2 = sc.nextInt();
-//        System.out.println(rider.acceptOrder(orderID2));
+        System.out.println("press 1 to accept and 2 to decline");
+        int acceptance = sc.nextInt();
+        if (acceptance == 1) {
+            for (Notification notification1 : notification) {
+                if (notification1.getOrderList().getOrderID() == orderID) {
+                    System.out.println(rider.acceptOrder(notification1));
+                    break;
+                }
+            }
+        } else if (acceptance == 2) {
+            for (Notification notification1 : notification) {
+                if (notification1.getOrderList().getOrderID() == orderID) {
+                    System.out.println(rider.declineOrder(notification1));
+                    break;
+                }
+            }
+        }
         System.out.println(rider.receiveOrderFromRestaurant());
         System.out.println(rider.deliverFood());
     }
 
-    private void showAvailableOrders(ArrayList<Order> availableOrder) {
-        if(availableOrder==null){
-            System.out.println("cant accept order since you have already accepted one...delete that one to accept new order");
-            return;
-        }
-        for (Order order : availableOrder) {
+    private void showAvailableNotifications(ArrayList<Notification> notifications) {
+        for (Notification notification : notifications) {
+            Order order = notification.getOrderList();
             System.out.println(order.getOrderID() + " is the order ID " + order.getRestaurantID() + " is the restaurant ID " + order.getCustomerLocation() + " is the location of customer " + order.getRestaurantLocation() + " is the location of the restaurant " + order.getRestaurantName() + " is the name of the restaurant");
         }
     }

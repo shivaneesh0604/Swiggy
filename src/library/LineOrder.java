@@ -1,16 +1,16 @@
 package library;
 
 public class LineOrder {
-    private final String foodName;
+    private final Item item;
     private int quantity;
 
-    public LineOrder(String foodName, int quantity) {
-        this.foodName = foodName.toUpperCase();
+    public LineOrder(Item item, int quantity) {
+        this.item = item;
         this.quantity = quantity;
     }
 
-    public String getFoodName() {
-        return foodName;
+    public Item getItem() {
+        return item;
     }
 
     public int getQuantity() {

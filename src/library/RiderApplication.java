@@ -1,9 +1,8 @@
 package library;
 
 public interface RiderApplication {
-    public RiderAcceptance acceptOrder(int orderID);
-    public RiderAcceptance declineOrder(Order order, Rider rider);
-    public OrderStatus getStatus(int orderID);
-    public RiderAcceptance receiveOrderFromRestaurant(int orderID);
-    public RiderAcceptance deliverFoodToCustomer(int orderID);
+    public RiderFunctionalityStatus acceptOrder(int orderID);
+    public RiderFunctionalityStatus declineOrder(Order order, Rider rider,Notification notification);
+    public RiderFunctionalityStatus changeStatusToPicked(int orderID);
+    public RiderFunctionalityStatus changeStatusToDelivered(int orderID);
 }

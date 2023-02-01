@@ -20,12 +20,12 @@ public final class Customer extends User {
         return customerApplication.enterRestaurant(restaurantID, timing);
     }
 
-    public String addOrder(String foodName, int quantity, int restaurantID) {
-        return customerApplication.takeOrder(foodName.toUpperCase(), quantity, this.getUserID(), restaurantID);
+    public String addOrder(Item item, int quantity, int restaurantID) {
+        return customerApplication.takeOrder(item, quantity, this.getUserID(), restaurantID);
     }
 
-    public String deleteOrder(String foodName, int quantity, int restaurantID) {
-        return customerApplication.deleteOrder(foodName.toUpperCase(), quantity, this.getUserID(), restaurantID);
+    public String deleteOrder(Item item, int quantity, int restaurantID) {
+        return customerApplication.deleteOrder(item, quantity, this.getUserID(), restaurantID);
     }
     public HashMap<Integer, Order> viewItemsInCart() {
         return customerApplication.viewItemsInCart(this.getUserID());

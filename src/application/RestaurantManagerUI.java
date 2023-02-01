@@ -34,7 +34,6 @@ public class RestaurantManagerUI implements UI {
             ArrayList<LineOrder> lineOrder1 = entry.getValue();
             System.out.println("orderID is : " + entry.getKey());
             for (LineOrder lineOrder2 : lineOrder1) {
-                System.out.println(" foodName is: " + lineOrder2.getFoodName()+" quantity is "+ lineOrder2.getQuantity());
             }
         }
     }

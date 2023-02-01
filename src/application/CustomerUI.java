@@ -2,6 +2,7 @@ package application;
 
 import library.*;
 
+import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,19 +28,33 @@ public class CustomerUI implements UI {
             int restaurantID = 1;
             System.out.println("enter Which Timing you are entering");
             Timing timing = Timing.AFTERNOON;
-            showAvailableMenu(customer.enterRestaurant(restaurantID, timing));
+            HashMap<String, Item> items = customer.enterRestaurant(restaurantID, timing);
+            Collection<Item> items2 = items.values();
+            showAvailableMenu(items2);
             String foodName = "chicken";
             String foodName2 = "rice";
             int quantity = 2;
-            System.out.println(customer.addOrder(foodName, quantity, restaurantID));
-            System.out.println(customer.addOrder(foodName2, quantity, restaurantID));
-            System.out.println(customer.deleteOrder(foodName, 1, restaurantID));
+            for (Item item : items2) {
+                if (item.getFoodName().equals(foodName.toUpperCase())) {
+                    System.out.println(customer.addOrder(item, quantity, restaurantID));
+                }
+            }
+            for (Item item : items2) {
+                if (item.getFoodName().equals(foodName2.toUpperCase())) {
+                    System.out.println(customer.addOrder(item, quantity, restaurantID));
+                }
+            }
+            for (Item item : items2) {
+                if (item.getFoodName().equals(foodName)) {
+                    System.out.println(customer.deleteOrder(item, quantity, restaurantID));
+                }
+            }
             Bill bill = customer.confirmOrder(restaurantID);
             showBill(bill);
             System.out.println(customer.placeOrder(restaurantID));
             ArrayList<Order> orders = customer.viewOrdersPlaced();
             viewOrder(orders);
-            break ;
+            break;
 //        System.out.println("enter orderID to cancel");
 //        int orderID = sc.nextInt();
 //        System.out.println(customer.cancelOrder(orderID));
@@ -50,9 +65,8 @@ public class CustomerUI implements UI {
         System.out.println(listOfRestaurants);
     }
 
-    private void showAvailableMenu(HashMap<String, Item> availableItems) {
-        Collection<Item> items = availableItems.values();
-        for (Item item : items) {
+    private void showAvailableMenu(Collection<Item> availableItems) {
+        for (Item item : availableItems) {
             System.out.println(item.getFoodName() + " " + item.getPrice());
         }
     }
@@ -70,8 +84,8 @@ public class CustomerUI implements UI {
             System.out.println("orderID is " + orderList.getOrderID());
             HashMap<String, LineOrder> orderInOrderList = orderList.getOrders();
             Collection<LineOrder> lineOrderCollection = orderInOrderList.values();
-            for (LineOrder lineOrder1 : lineOrderCollection) {
-                System.out.println(" ordered food are " + lineOrder1.getFoodName() + " quantity is " + lineOrder1.getQuantity());
+            for (LineOrder lineOrder : lineOrderCollection) {
+                System.out.println(" ordered food are " + lineOrder.getItem().getFoodName() + " quantity is " + lineOrder.getQuantity());
             }
         }
     }

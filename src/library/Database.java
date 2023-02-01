@@ -11,24 +11,35 @@ final class Database {
     private static final HashMap<UserCredential, User> users = new HashMap<>();
     private static final HashMap<Integer, Restaurant> listOfRestaurant = new HashMap<Integer, Restaurant>();
     private static final HashMap<String, HashMap<Integer, ArrayList<Order>>> orders = new HashMap<>();// customerID->restaurantID,orderList
-    static final ArrayList<Location> routes = new ArrayList<Location>();
+    static final ArrayList<Location> locations = new ArrayList<Location>();
 
     private Database() {
         Restaurant restaurant = new Restaurant(Location.AREA1, "anandha bhavan", 1);
         listOfRestaurant.put(1, restaurant);
         users.put(new UserCredential("shiva1234", "123456789", "CUSTOMER_1001"), new Customer("CUSTOMER_1001", ApplicationFactory.getCustomerApplication(), Role.CUSTOMER, "shiva"));
-        users.put(new UserCredential("sathya1234", "123456789", "RIDER_1000"), new Rider("RIDER_1000", ApplicationFactory.getRiderApplication(), Role.RIDER, "sathya"));
+        Rider rider =  new Rider("RIDER_1000", ApplicationFactory.getRiderApplication(), Role.RIDER, "sathya");
+        rider.setLocation(Location.AREA1);
+        users.put(new UserCredential("sathya1234", "123456789", "RIDER_1000"),rider);
         users.put(new UserCredential("sankar1234", "123456789", "RESTAURANT_MANAGER_1002"), new RestaurantManager("RESTAURANT_MANAGER_1002", restaurant, ApplicationFactory.getRestaurantManagerApplication(), Role.RESTAURANT_MANAGER, "sankar"));
-        users.put(new UserCredential("dd1234", "123456789", "RIDER_1003"), new Rider("RIDER_1003", ApplicationFactory.getRiderApplication(), Role.RIDER, "devi"));
+        Rider rider1 = new Rider("RIDER_1003", ApplicationFactory.getRiderApplication(), Role.RIDER, "durga_devi");
+        rider1.setLocation(Location.AREA2);
+        users.put(new UserCredential("dd1234", "123456789", "RIDER_1003"), rider1);
+        Rider rider2 = new Rider("RIDER_1004", ApplicationFactory.getRiderApplication(), Role.RIDER, "devi");
+        rider2.setLocation(Location.AREA2);
+        users.put(new UserCredential("devi1234", "123456789", "RIDER_1003"), rider2);
         Item item = new Item("rice", 100, Dietary.VEG, Course.MAINCOURSE, Timing.AFTERNOON);
         Item item2 = new Item("chicken", 120, Dietary.NON_VEG, Course.MAINCOURSE, Timing.AFTERNOON);
-        routes.add(Location.AREA1);
-        routes.add(Location.AREA2);
-        routes.add(Location.AREA3);
-        routes.add(Location.AREA4);
-        routes.add(Location.AREA5);
+        locations.add(Location.AREA1);
+        locations.add(Location.AREA2);
+        locations.add(Location.AREA3);
+        locations.add(Location.AREA4);
+        locations.add(Location.AREA5);
         restaurant.getMenuList().addMenusItems(item);
         restaurant.getMenuList().addMenusItems(item2);
+    }
+
+    ArrayList<Location> getLocations(){
+        return this.locations;
     }
 
     public static Database getInstanceDatabase() {
@@ -83,6 +94,10 @@ final class Database {
         return null;
     }
 
+    Collection<User> getAllUsers(){
+        return  users.values();
+    }
+
     void addOrder(String customerID, Order tempOrders, int restaurantID, Location location) {
         HashMap<Integer, ArrayList<Order>> orderList1 = orders.get(customerID);
         if (orderList1 != null) {
@@ -100,20 +115,6 @@ final class Database {
             orders1.put(restaurantID, new ArrayList<Order>());
             ArrayList<Order> orders3 = orders1.get(restaurantID);
             orders3.add(tempOrders);
-        }
-        Collection<User> users1 = users.values();
-        for (User user : users1) {
-            if (user.getRole().equals(Role.RIDER)) {
-                Rider rider = (Rider) user;
-                int index = routes.indexOf(location);
-                Location beforeIndex = routes.get(index - 1);
-                Location afterIndex = routes.get(index + 1);
-                Location thatIndex = routes.get(index);
-                if (rider.getLocation().equals(thatIndex) || rider.getLocation().equals(beforeIndex) || rider.getLocation().equals(afterIndex)) {
-                    rider.addNotification(new Notification(tempOrders));
-                    break;
-                }
-            }
         }
     }
 
@@ -136,7 +137,7 @@ final class Database {
                 }
             }
         }
-        return null;
+        return orderStatus;
     }
 
     ArrayList<Order> getOrders(String customerID) {
@@ -144,7 +145,7 @@ final class Database {
         for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
             for (ArrayList<Order> list : innerMap.values()) {
                 for (Order order : list) {
-                    if (order.getCustomerID().equals(customerID) && !order.getStatus().equals(OrderStatus.CANCELLED) && !order.getRiderAcceptance().equals(RiderAcceptance.DELIVERED)) {
+                    if (order.getCustomerID().equals(customerID) && !order.getStatus().equals(OrderStatus.CANCELLED) && !order.getRiderFunctionalityStatus().equals(RiderFunctionalityStatus.DELIVERED)) {
                         collection.add(order);
                     }
                 }
@@ -153,13 +154,13 @@ final class Database {
         return (ArrayList<Order>) collection;
     }
 
-    RiderAcceptance setStatusByRider(RiderAcceptance riderAcceptance, int orderID) {
+    RiderFunctionalityStatus setStatusByRider(RiderFunctionalityStatus riderFunctionalityStatus, int orderID) {
         for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
             for (ArrayList<Order> list : innerMap.values()) {
                 for (Order order : list) {
                     if (order.getOrderID() == orderID) {
-                        order.setRiderAcceptance(riderAcceptance);
-                        return riderAcceptance;
+                        order.setRiderAcceptance(riderFunctionalityStatus);
+                        return riderFunctionalityStatus;
                     }
                 }
             }

@@ -7,9 +7,9 @@ public interface CustomerApplication {
     public HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing);
     HashMap<Integer, String> getAllRestaurant();
 
-    public String takeOrder(String foodName, int quantity, String customerID, int restaurantID);
+    public String takeOrder(Item item, int quantity, String customerID, int restaurantID);
 
-    public String deleteOrder(String foodName, int quantity, String customerID, int restaurantID);
+    public String deleteOrder(Item item, int quantity, String customerID, int restaurantID);
 
     public HashMap<Integer, Order> viewItemsInCart(String customerID);
 
