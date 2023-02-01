@@ -1,7 +1,5 @@
 package library;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,8 +8,8 @@ public class Restaurant {
     private final MenuList menuList;
     private final String restaurantName;
     private final int restaurantID;
-    private final HashMap<Integer, ArrayList<Order>> ordersGot;//orderID mapped with orders
-    private HashMap<Integer,ArrayList<Order>> ordersCompleted;
+    private final HashMap<Integer, ArrayList<LineOrder>> ordersGot;//orderID mapped with orders
+    private HashMap<Integer,ArrayList<LineOrder>> ordersCompleted;
     private RestaurantStatus restaurantStatus;
 
     public Restaurant(Location location, String restaurantName, int restaurantID) {
@@ -24,11 +22,11 @@ public class Restaurant {
         this.restaurantStatus= RestaurantStatus.AVAILABLE;
     }
 
-    void  receiveOrders(int orderID, ArrayList<Order> orders) {
-        this.ordersGot.put(orderID, orders);
+    void  receiveOrders(int orderID, ArrayList<LineOrder> lineOrders) {
+        this.ordersGot.put(orderID, lineOrders);
     }
 
-    HashMap<Integer, ArrayList<Order>> viewOrderGot() {
+    HashMap<Integer, ArrayList<LineOrder>> viewOrderGot() {
         return ordersGot;
     }
 

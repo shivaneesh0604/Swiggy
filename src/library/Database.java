@@ -10,8 +10,8 @@ final class Database {
     private static Database database = null;
     private static final HashMap<UserCredential,User> users = new HashMap<>();
     private static final HashMap<Integer, Restaurant> listOfRestaurant = new HashMap<Integer, Restaurant>();
-    private static final HashMap<String, HashMap<Integer, ArrayList<OrderList>>> orders = new HashMap<>();// customerID->restaurantID,orderList
-    private static final ArrayList<Location> routes = new ArrayList<Location>();
+    private static final HashMap<String, HashMap<Integer, ArrayList<Order>>> orders = new HashMap<>();// customerID->restaurantID,orderList
+    static final ArrayList<Location> routes = new ArrayList<Location>();
     private Database() {
         Restaurant restaurant = new Restaurant(Location.AREA1, "anandha bhavan", 1);
         listOfRestaurant.put(1, restaurant);
@@ -53,6 +53,16 @@ final class Database {
         return null;
     }
 
+    HashMap<Integer, String> getAllRestaurant() {
+        HashMap<Integer, String> restaurants = new HashMap<>();
+        Collection<Restaurant> restaurants1 = listOfRestaurant.values();
+        for (Restaurant restaurant : restaurants1) {
+            if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE))
+                restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+        }
+        return restaurants;
+    }
+
     CustomerDetails getCustomerDetails(String customerID){
         Collection<User> users1 = users.values();
         for(User user:users1){
@@ -71,59 +81,22 @@ final class Database {
         return null;
     }
 
-    HashMap<Integer, String> getAllRestaurant() {
-        HashMap<Integer, String> restaurants = new HashMap<>();
-        Collection<Restaurant> restaurants1 = listOfRestaurant.values();
-        for (Restaurant restaurant : restaurants1) {
-            if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE))
-                restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
-        }
-        return restaurants;
-    }
-
-    Status setStatus(Status status, int orderID) {
-        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
-            for (ArrayList<OrderList> list : innerMap.values()) {
-                for (OrderList orderList : list) {
-                    if (orderList.getOrderID() == orderID) {
-                        orderList.setStatus(status);
-                        return status;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    Status getStatus(int orderID) {
-        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
-            for (ArrayList<OrderList> list : innerMap.values()) {
-                for (OrderList orderList : list) {
-                    if (orderList.getOrderID() == orderID) {
-                        return orderList.getStatus();
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    void addOrder(String customerID, OrderList tempOrders, int restaurantID,Location location) {
-        HashMap<Integer, ArrayList<OrderList>> orderList1 = orders.get(customerID);
+    void addOrder(String customerID, Order tempOrders, int restaurantID, Location location) {
+        HashMap<Integer, ArrayList<Order>> orderList1 = orders.get(customerID);
         if (orderList1 != null) {
-            ArrayList<OrderList> orderList2 = orderList1.get(restaurantID);
-            if (orderList2 != null) {
-                orderList2.add(tempOrders);
+            ArrayList<Order> order2 = orderList1.get(restaurantID);
+            if (order2 != null) {
+                order2.add(tempOrders);
             } else {
-                orderList1.put(restaurantID, new ArrayList<OrderList>());
-                ArrayList<OrderList> orderList3 = orderList1.get(restaurantID);
-                orderList3.add(tempOrders);
+                orderList1.put(restaurantID, new ArrayList<Order>());
+                ArrayList<Order> order3 = orderList1.get(restaurantID);
+                order3.add(tempOrders);
             }
         } else {
-            orders.put(customerID, new HashMap<Integer, ArrayList<OrderList>>());
-            HashMap<Integer, ArrayList<OrderList>> orders1 = orders.get(customerID);
-            orders1.put(restaurantID, new ArrayList<OrderList>());
-            ArrayList<OrderList> orders3 = orders1.get(restaurantID);
+            orders.put(customerID, new HashMap<Integer, ArrayList<Order>>());
+            HashMap<Integer, ArrayList<Order>> orders1 = orders.get(customerID);
+            orders1.put(restaurantID, new ArrayList<Order>());
+            ArrayList<Order> orders3 = orders1.get(restaurantID);
             orders3.add(tempOrders);
         }
         Collection<User> users1 = users.values();
@@ -142,6 +115,59 @@ final class Database {
         }
     }
 
+    ArrayList<Order> getOrders(String customerID) {
+        Collection<Order> collection = new ArrayList<>();
+        for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
+            for (ArrayList<Order> list : innerMap.values()) {
+                for (Order order : list) {
+                    if (order.getCustomerID().equals(customerID) && !order.getStatus().equals(Status.CANCELLED) && !order.getStatus().equals(Status.DELIVERED)) {
+                        collection.add(order);
+                    }
+                }
+            }
+        }
+        return (ArrayList<Order>) collection;
+    }
+
+    Status setStatus(Status status, int orderID) {
+        for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
+            for (ArrayList<Order> list : innerMap.values()) {
+                for (Order order : list) {
+                    if (order.getOrderID() == orderID) {
+                        order.setStatus(status);
+                        return status;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    ArrayList<Rider> getAllRiders(){
+        Collection<User> users1 = users.values();
+        Collection<Rider> users2 = new ArrayList<>();
+        for(User user:users1){
+            if(user.getRole().equals(Role.RIDER)){
+                users2.add((Rider) user);
+            }
+        }
+        return (ArrayList<Rider>) users2;
+    }
+
+    Status getStatus(int orderID) {
+        for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
+            for (ArrayList<Order> list : innerMap.values()) {
+                for (Order order : list) {
+                    if (order.getOrderID() == orderID) {
+                        return order.getStatus();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
 //    public Restaurant findRestaurant(int orderID){
 //        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
 //            for (ArrayList<OrderList> list : innerMap.values()) {
@@ -155,39 +181,25 @@ final class Database {
 //        return null;
 //    }
 
-    ArrayList<OrderList> getOrders(String customerID) {
-        Collection<OrderList> collection = new ArrayList<>();
-        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
-            for (ArrayList<OrderList> list : innerMap.values()) {
-                for (OrderList orderList : list) {
-                    if (orderList.getCustomerID().equals(customerID) && !orderList.getStatus().equals(Status.CANCELLED) && !orderList.getStatus().equals(Status.DELIVERED)) {
-                        collection.add(orderList);
-                    }
-                }
-            }
-        }
-        return (ArrayList<OrderList>) collection;
-    }
+//    ArrayList<OrderList> getAllOrders() {
+//        Collection<OrderList> collection = new ArrayList<>();
+//        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
+//            for (ArrayList<OrderList> list : innerMap.values()) {
+//                for (OrderList orderList : list) {
+//                    if (orderList.getRiderAcceptance().equals(RiderAcceptance.NOT_ACCEPTED))
+//                        collection.add(orderList);
+//                }
+//            }
+//        }
+//        return (ArrayList<OrderList>) collection;
+//    }
 
-    ArrayList<OrderList> getAllOrders() {
-        Collection<OrderList> collection = new ArrayList<>();
-        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
-            for (ArrayList<OrderList> list : innerMap.values()) {
-                for (OrderList orderList : list) {
-                    if (orderList.getRiderAcceptance().equals(RiderAcceptance.NOT_ACCEPTED))
-                        collection.add(orderList);
-                }
-            }
-        }
-        return (ArrayList<OrderList>) collection;
-    }
-
-    OrderList getOrderlist(int orderID){
-        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
-            for (ArrayList<OrderList> list : innerMap.values()) {
-                for (OrderList orderList : list) {
-                    if(orderList.getOrderID()==orderID){
-                        return orderList;
+    Order getOrderlist(int orderID){
+        for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
+            for (ArrayList<Order> list : innerMap.values()) {
+                for (Order order : list) {
+                    if(order.getOrderID()==orderID){
+                        return order;
                     }
                 }
             }

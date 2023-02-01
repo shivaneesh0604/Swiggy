@@ -37,7 +37,7 @@ public class CustomerUI implements UI {
             Bill bill = customer.confirmOrder(restaurantID);
             showBill(bill);
             System.out.println(customer.placeOrder(restaurantID));
-            ArrayList<OrderList> orders = customer.viewOrdersPlaced();
+            ArrayList<Order> orders = customer.viewOrdersPlaced();
             viewOrder(orders);
             break ;
 //        System.out.println("enter orderID to cancel");
@@ -65,13 +65,13 @@ public class CustomerUI implements UI {
         System.out.println("the total is " + bill.total());
     }
 
-    private void viewOrder(ArrayList<OrderList> order) {
-        for (OrderList orderList : order) {
+    private void viewOrder(ArrayList<Order> order) {
+        for (Order orderList : order) {
             System.out.println("orderID is " + orderList.getOrderID());
-            HashMap<String, Order> orderInOrderList = orderList.getOrders();
-            Collection<Order> orderCollection = orderInOrderList.values();
-            for (Order order1 : orderCollection) {
-                System.out.println(" ordered food are " + order1.getFoodName() + " quantity is " + order1.getQuantity());
+            HashMap<String, LineOrder> orderInOrderList = orderList.getOrders();
+            Collection<LineOrder> lineOrderCollection = orderInOrderList.values();
+            for (LineOrder lineOrder1 : lineOrderCollection) {
+                System.out.println(" ordered food are " + lineOrder1.getFoodName() + " quantity is " + lineOrder1.getQuantity());
             }
         }
     }

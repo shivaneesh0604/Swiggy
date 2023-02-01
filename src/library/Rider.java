@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public final class Rider extends User {
     private final RiderApplication riderApplication;
     private RiderStatus riderStatus;
-    private OrderList orderList;
+    private Order order;
     private ArrayList<Notification> notification;
     private Location location;
 
@@ -17,12 +17,12 @@ public final class Rider extends User {
 
     public RiderAcceptance acceptOrder(Notification notification1) {
         if (!notification1.getOrderList().getStatus().equals(Status.CANCELLED)) {
-            RiderAcceptance riderAcceptance = riderApplication.acceptOrder(orderList.getOrderID());
+            RiderAcceptance riderAcceptance = riderApplication.acceptOrder(order.getOrderID());
             if (riderAcceptance.equals(RiderAcceptance.ACCEPTED)) {
-                this.orderList = notification1.getOrderList();
+                this.order = notification1.getOrderList();
                 this.notification.clear();
                 this.riderStatus = RiderStatus.NOT_AVAILABLE;
-                return orderList.getRiderAcceptance();
+                return order.getRiderAcceptance();
             }
             else {
                 return RiderAcceptance.NOT_ACCEPTED;
@@ -32,16 +32,17 @@ public final class Rider extends User {
     }
 
     public void declineOrder(Notification notification) {
+        riderApplication.declineOrder(notification.getOrderList(),this);
         this.notification.remove(notification);
     }
 
     public String receiveOrderFromRestaurant() {
-        if (orderList != null) {
-            Status status = orderList.getStatus();
+        if (order != null) {
+            Status status = order.getStatus();
             if (status.equals(Status.PREPARED)) {
-                return "Status changed to " + riderApplication.receiveOrderFromRestaurant(orderList.getOrderID());
+                return "Status changed to " + riderApplication.receiveOrderFromRestaurant(order.getOrderID());
             } else if (status.equals(Status.CANCELLED)) {
-                this.orderList = null;
+                this.order = null;
                 this.riderStatus = RiderStatus.AVAILABLE;
                 return "that order is cancelled so cant process";
             } else if (status.equals(Status.PREPARING)) {
@@ -52,31 +53,30 @@ public final class Rider extends User {
     }
 
     public String deliverFood() {
-        if (orderList != null) {
-            Status status = orderList.getStatus();
+        if (order != null) {
+            Status status = order.getStatus();
             if (status.equals(Status.PICKED)) {
-                Status status1 = riderApplication.deliverFoodToCustomer(orderList.getOrderID());
+                Status status1 = riderApplication.deliverFoodToCustomer(order.getOrderID());
                 this.riderStatus = RiderStatus.AVAILABLE;
-                this.orderList = null;
+                this.order = null;
                 return status1 + " the food";
             } else if (status.equals(Status.CANCELLED)) {
-                this.orderList = null;
+                this.order = null;
                 this.riderStatus = RiderStatus.AVAILABLE;
                 return "order is cancelled  ";
             }
         }
         return "cant deliver since no food picked by this rider...first accept an order";
     }
-
-    public String cancelOrder() {
-        if (orderList != null) {
-            RiderAcceptance riderAcceptance = riderApplication.declineOrder(orderList);
-            this.orderList = null;
-            this.riderStatus = RiderStatus.AVAILABLE;
-            return "the order is cancelled by the rider and changed rider acceptance to " + riderAcceptance;
-        }
-        return null;
-    }
+//    public String cancelOrder() {
+//        if (orderList != null) {
+//            RiderAcceptance riderAcceptance = riderApplication.declineOrder(orderList);
+//            this.orderList = null;
+//            this.riderStatus = RiderStatus.AVAILABLE;
+//            return "the order is cancelled by the rider and changed rider acceptance to " + riderAcceptance;
+//        }
+//        return null;
+//    }
 
     void addNotification(Notification notification) {
         if (riderStatus.equals(RiderStatus.AVAILABLE))

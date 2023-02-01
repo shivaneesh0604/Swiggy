@@ -1,6 +1,6 @@
 package application;
 
-import library.Order;
+import library.LineOrder;
 import library.RestaurantManager;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class RestaurantManagerUI implements UI {
     }
 
     public void entersUI() {
-        HashMap<Integer, ArrayList<Order>> order = restaurantManager.viewOrderGot();
+        HashMap<Integer, ArrayList<LineOrder>> order = restaurantManager.viewOrderGot();
         System.out.println("orders got are");
         viewOrder(order);
         System.out.println("enter orderID to prepared");
@@ -25,16 +25,16 @@ public class RestaurantManagerUI implements UI {
         System.out.println(restaurantManager.setStatusOfOrder(orderID));
     }
 
-    private void viewOrder(HashMap<Integer, ArrayList<Order>> order) {
+    private void viewOrder(HashMap<Integer, ArrayList<LineOrder>> order) {
         if(order==null){
             System.out.println("no orders found ");
             return;
         }
-        for (Map.Entry<Integer, ArrayList<Order>> entry : order.entrySet()) {
-            ArrayList<Order> order1 = entry.getValue();
+        for (Map.Entry<Integer, ArrayList<LineOrder>> entry : order.entrySet()) {
+            ArrayList<LineOrder> lineOrder1 = entry.getValue();
             System.out.println("orderID is : " + entry.getKey());
-            for (Order order2 : order1) {
-                System.out.println(" foodName is: " + order2.getFoodName()+" quantity is "+order2.getQuantity());
+            for (LineOrder lineOrder2 : lineOrder1) {
+                System.out.println(" foodName is: " + lineOrder2.getFoodName()+" quantity is "+ lineOrder2.getQuantity());
             }
         }
     }

@@ -11,7 +11,7 @@ public interface CustomerApplication {
 
     public String deleteOrder(String foodName, int quantity, String customerID, int restaurantID);
 
-    public HashMap<Integer, OrderList> viewItemsInCart(String customerID);
+    public HashMap<Integer, Order> viewItemsInCart(String customerID);
 
     public Bill confirmOrder(String customerID, int restaurantID);
 
@@ -19,7 +19,7 @@ public interface CustomerApplication {
 
     public String checkStatusOfOrder(int orderID);
 
-    public ArrayList<OrderList> viewOrdersPlaced(String customerID);
+    public ArrayList<Order> viewOrdersPlaced(String customerID);
 
     public Status cancelOrder(int orderID);
 }

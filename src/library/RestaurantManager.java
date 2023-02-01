@@ -46,16 +46,16 @@ public final class RestaurantManager extends User {
         return restaurant.setRestaurantStatus(restaurantStatus);
     }
 
-    public HashMap<Integer, ArrayList<Order>> viewOrderGot() {
+    public HashMap<Integer, ArrayList<LineOrder>> viewOrderGot() {
         return restaurant.viewOrderGot();
     }
 
     public String setStatusOfOrder(int orderID) {
-        Status status = applicationRestaurantManagerController.getStatus(orderID);
-        if (status == null) {
-            return "wrong orderID";
+        Status status = applicationRestaurantManagerController.setStatusPrepared(orderID);
+        if(status!=null){
+            return "status updated as " +status;
         }
-        return "status updated as " + applicationRestaurantManagerController.setStatusPrepared(orderID);
+        return "wrong OrderID";
     }
 
 }

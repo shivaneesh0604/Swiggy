@@ -1,13 +1,13 @@
 package library;
 
 public class Notification {
-    private final OrderList orderList;
+    private final Order order;
 
-    public Notification(OrderList orderList) {
-        this.orderList = orderList;
+    public Notification(Order order) {
+        this.order = order;
     }
 
-    public OrderList getOrderList() {
-        return orderList;
+    public Order getOrderList() {
+        return order;
     }
 }

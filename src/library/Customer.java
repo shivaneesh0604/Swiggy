@@ -27,7 +27,7 @@ public final class Customer extends User {
     public String deleteOrder(String foodName, int quantity, int restaurantID) {
         return customerApplication.deleteOrder(foodName.toUpperCase(), quantity, this.getUserID(), restaurantID);
     }
-    public HashMap<Integer, OrderList> viewItemsInCart() {
+    public HashMap<Integer, Order> viewItemsInCart() {
         return customerApplication.viewItemsInCart(this.getUserID());
     }
 
@@ -42,7 +42,7 @@ public final class Customer extends User {
         return customerApplication.placeOrder(this.getUserID(), restaurantID,this.location);
     }
 
-    public ArrayList<OrderList> viewOrdersPlaced() {
+    public ArrayList<Order> viewOrdersPlaced() {
         return customerApplication.viewOrdersPlaced(this.getUserID());
     }
 
