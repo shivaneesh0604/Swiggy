@@ -8,7 +8,7 @@ import library.Rider;
 import library.User;
 import library.Role;
 
-public class ApplicationUI {
+ final class ApplicationUI {
 
     private final DatabaseManager databaseManager;
 

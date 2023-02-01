@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class RestaurantManagerUI implements UI {
+ final class RestaurantManagerUI implements UI {
     Scanner sc = new Scanner(System.in);
     private final RestaurantManager restaurantManager;
 

@@ -7,7 +7,7 @@ import library.Rider;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class RiderUI implements UI {
+ final class RiderUI implements UI {
     Scanner sc = new Scanner(System.in);
     private final Rider rider;
 

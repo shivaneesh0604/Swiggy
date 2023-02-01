@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class CustomerUI implements UI {
+ final class CustomerUI implements UI {
     private final Customer customer;
     Scanner sc = new Scanner(System.in);
 

@@ -1,5 +1,5 @@
 package application;
 
-public interface UI {
+ interface UI {
     void entersUI();
 }
