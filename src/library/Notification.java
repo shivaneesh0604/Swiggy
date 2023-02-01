@@ -7,4 +7,7 @@ public class Notification {
         this.orderList = orderList;
     }
 
+    public OrderList getOrderList() {
+        return orderList;
+    }
 }

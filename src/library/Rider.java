@@ -7,6 +7,7 @@ public final class Rider extends User {
     private RiderStatus riderStatus;
     private OrderList orderList;
     private ArrayList<Notification> notification;
+    private Location location;
 
     Rider(String userID, RiderApplication application, Role role, String name) {
         super(userID, role, name);
@@ -14,16 +15,24 @@ public final class Rider extends User {
         this.riderStatus = RiderStatus.AVAILABLE;
     }
 
-    public String acceptOrder(int orderID) {
-        Status status = riderApplication.getStatus(orderID);
-        if (status == null) {
-            return "wrong OrderID";
-        } else if (riderStatus.equals(RiderStatus.AVAILABLE)) {
-            this.orderList = riderApplication.acceptOrder(orderID);
-            this.riderStatus = RiderStatus.NOT_AVAILABLE;
-            return "ACCEPTED BY " + this.getName() + " ";
+    public RiderAcceptance acceptOrder(Notification notification1) {
+        if (!notification1.getOrderList().getStatus().equals(Status.CANCELLED)) {
+            RiderAcceptance riderAcceptance = riderApplication.acceptOrder(orderList.getOrderID());
+            if (riderAcceptance.equals(RiderAcceptance.ACCEPTED)) {
+                this.orderList = notification1.getOrderList();
+                this.notification.clear();
+                this.riderStatus = RiderStatus.NOT_AVAILABLE;
+                return orderList.getRiderAcceptance();
+            }
+            else {
+                return RiderAcceptance.NOT_ACCEPTED;
+            }
         }
-        return "NOT ACCEPTED BY " + this.getName() + "";
+        return null;
+    }
+
+    public void declineOrder(Notification notification) {
+        this.notification.remove(notification);
     }
 
     public String receiveOrderFromRestaurant() {
@@ -61,7 +70,7 @@ public final class Rider extends User {
 
     public String cancelOrder() {
         if (orderList != null) {
-            RiderAcceptance riderAcceptance = riderApplication.deleteOrder(orderList);
+            RiderAcceptance riderAcceptance = riderApplication.declineOrder(orderList);
             this.orderList = null;
             this.riderStatus = RiderStatus.AVAILABLE;
             return "the order is cancelled by the rider and changed rider acceptance to " + riderAcceptance;
@@ -70,7 +79,12 @@ public final class Rider extends User {
     }
 
     void addNotification(Notification notification) {
-        this.notification.add(notification);
+        if (riderStatus.equals(RiderStatus.AVAILABLE))
+            this.notification.add(notification);
+    }
+
+    void setLocation(Location location){
+        this.location = location;
     }
 
     public ArrayList<Notification> getNotification() {
@@ -79,5 +93,9 @@ public final class Rider extends User {
 
     public RiderStatus getRiderStatus() {
         return riderStatus;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 }

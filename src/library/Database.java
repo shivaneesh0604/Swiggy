@@ -11,15 +11,21 @@ final class Database {
     private static final HashMap<UserCredential,User> users = new HashMap<>();
     private static final HashMap<Integer, Restaurant> listOfRestaurant = new HashMap<Integer, Restaurant>();
     private static final HashMap<String, HashMap<Integer, ArrayList<OrderList>>> orders = new HashMap<>();// customerID->restaurantID,orderList
-
+    private static final ArrayList<Location> routes = new ArrayList<Location>();
     private Database() {
         Restaurant restaurant = new Restaurant(Location.AREA1, "anandha bhavan", 1);
         listOfRestaurant.put(1, restaurant);
         users.put(new UserCredential("shiva1234","123456789","CUSTOMER_1001"),new Customer("CUSTOMER_1001",ApplicationFactory.getCustomerApplication() , Role.CUSTOMER, "shiva"));
         users.put(new UserCredential("sathya1234","123456789","RIDER_1000"),new Rider("RIDER_1000", ApplicationFactory.getRiderApplication() ,Role.RIDER, "sathya"));
         users.put(new UserCredential("sankar1234","123456789","RESTAURANT_MANAGER_1002"),new RestaurantManager("RESTAURANT_MANAGER_1002",  restaurant,ApplicationFactory.getRestaurantManagerApplication() , Role.RESTAURANT_MANAGER, "sankar"));
+        users.put(new UserCredential("dd1234","123456789","RIDER_1003"),new Rider("RIDER_1003", ApplicationFactory.getRiderApplication() ,Role.RIDER, "devi"));
         Item item = new Item("rice", 100, Dietary.VEG, Course.MAINCOURSE, Timing.AFTERNOON);
         Item item2 = new Item("chicken", 120, Dietary.NON_VEG, Course.MAINCOURSE, Timing.AFTERNOON);
+        routes.add(Location.AREA1);
+        routes.add(Location.AREA2);
+        routes.add(Location.AREA3);
+        routes.add(Location.AREA4);
+        routes.add(Location.AREA5);
         restaurant.getMenuList().addMenusItems(item);
         restaurant.getMenuList().addMenusItems(item2);
     }
@@ -102,7 +108,7 @@ final class Database {
         return null;
     }
 
-    void addOrder(String customerID, OrderList tempOrders, int restaurantID) {
+    void addOrder(String customerID, OrderList tempOrders, int restaurantID,Location location) {
         HashMap<Integer, ArrayList<OrderList>> orderList1 = orders.get(customerID);
         if (orderList1 != null) {
             ArrayList<OrderList> orderList2 = orderList1.get(restaurantID);
@@ -119,6 +125,20 @@ final class Database {
             orders1.put(restaurantID, new ArrayList<OrderList>());
             ArrayList<OrderList> orders3 = orders1.get(restaurantID);
             orders3.add(tempOrders);
+        }
+        Collection<User> users1 = users.values();
+        for(User user:users1){
+            if(user.getRole().equals(Role.RIDER)){
+                Rider rider = (Rider) user;
+                int index = routes.indexOf(location);
+                Location beforeIndex = routes.get(index-1);
+                Location afterIndex = routes.get(index+1);
+                Location thatIndex = routes.get(index);
+                if(rider.getLocation().equals(thatIndex) || rider.getLocation().equals(beforeIndex) || rider.getLocation().equals(afterIndex)){
+                    rider.addNotification(new Notification(tempOrders));
+                    break;
+                }
+            }
         }
     }
 

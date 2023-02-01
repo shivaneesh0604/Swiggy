@@ -15,7 +15,7 @@ public interface CustomerApplication {
 
     public Bill confirmOrder(String customerID, int restaurantID);
 
-    public Status placeOrder(String customerID, int restaurantID);
+    public Status placeOrder(String customerID, int restaurantID,Location location);
 
     public String checkStatusOfOrder(int orderID);
 

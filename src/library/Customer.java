@@ -2,7 +2,7 @@ package library;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+//todo: customer can acd orders only that are available in particular location
 public final class Customer extends User {
     private final CustomerApplication customerApplication;
     private Location location;
@@ -39,7 +39,7 @@ public final class Customer extends User {
         if(this.location==null){
             return null;
         }
-        return customerApplication.placeOrder(this.getUserID(), restaurantID);
+        return customerApplication.placeOrder(this.getUserID(), restaurantID,this.location);
     }
 
     public ArrayList<OrderList> viewOrdersPlaced() {

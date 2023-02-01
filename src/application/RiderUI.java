@@ -17,12 +17,12 @@ public class RiderUI implements UI {
     public void entersUI() {
         System.out.println("enter orderID to accept");
         int orderID = sc.nextInt();
-        System.out.println(rider.acceptOrder(orderID));
+//        System.out.println(rider.acceptOrder(orderID));
         System.out.println(rider.receiveOrderFromRestaurant());
         System.out.println(rider.cancelOrder());
         System.out.println("enter orderID to accept");
         int orderID2 = sc.nextInt();
-        System.out.println(rider.acceptOrder(orderID2));
+//        System.out.println(rider.acceptOrder(orderID2));
         System.out.println(rider.receiveOrderFromRestaurant());
         System.out.println(rider.deliverFood());
     }

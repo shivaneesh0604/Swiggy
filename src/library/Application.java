@@ -88,10 +88,10 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public Status placeOrder(String customerID, int restaurantID) {
+    public Status placeOrder(String customerID, int restaurantID,Location location) {
         OrderList orderList2 = cartItems.get(customerID).get(restaurantID);
         if (orderList2 != null) {
-            Database.getInstanceDatabase().addOrder(customerID, orderList2, restaurantID);
+            Database.getInstanceDatabase().addOrder(customerID, orderList2, restaurantID,location);
             cartItems.remove(customerID);
             Restaurant restaurant = Database.getInstanceDatabase().getRestaurant(restaurantID);
             HashMap<String, Order> orderInOrderList = orderList2.getOrders();
@@ -126,16 +126,11 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public ArrayList<OrderList> showAvailableOrders() {
-        return Database.getInstanceDatabase().getAllOrders();
-    }
-
-    @Override
-    public OrderList acceptOrder(int orderID) {
+    public RiderAcceptance acceptOrder(int orderID) {
         OrderList order = Database.getInstanceDatabase().getOrderlist(orderID);
         if (order.getOrderID() == orderID && !order.getStatus().equals(Status.CANCELLED)) {
             order.setRiderAcceptance(RiderAcceptance.ACCEPTED);
-            return order;
+            return order.getRiderAcceptance();
         }
         return null;
     }
@@ -160,7 +155,7 @@ public class Application implements CustomerApplication, RiderApplication, Resta
     }
 
     @Override
-    public RiderAcceptance deleteOrder(OrderList orderList) {
+    public RiderAcceptance declineOrder(OrderList orderList) {
         orderList.setRiderAcceptance(RiderAcceptance.NOT_ACCEPTED);
         if (orderList.getStatus().equals(Status.PICKED)) {
             orderList.setStatus(Status.PREPARED);
