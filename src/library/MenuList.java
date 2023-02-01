@@ -3,7 +3,7 @@ package library;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class MenuList {
+class MenuList {
     private HashMap<String, Item> totalItems;
 
     public MenuList() {

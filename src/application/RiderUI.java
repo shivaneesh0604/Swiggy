@@ -37,8 +37,8 @@ public class RiderUI implements UI {
                 }
             }
         }
-        System.out.println(rider.receiveOrderFromRestaurant());
-        System.out.println(rider.deliverFood());
+        System.out.println(rider.changeStatusToPicked());
+        System.out.println(rider.changedStatusToDelivered());
     }
 
     private void showAvailableNotifications(ArrayList<Notification> notifications) {

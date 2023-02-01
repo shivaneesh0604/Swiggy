@@ -1,6 +1,6 @@
 package library;
 
-public final class ApplicationFactory {
+final class ApplicationFactory {
     static CustomerApplication getCustomerApplication(){
         return new Application();
     }

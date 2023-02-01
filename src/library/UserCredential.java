@@ -1,11 +1,11 @@
 package library;
 
-public class UserCredential {
+class UserCredential {
     private final String userName;
     private final String passWord;
     private final String userID;
 
-    public UserCredential(String userName, String passWord, String userID) {
+    UserCredential(String userName, String passWord, String userID) {
         this.userName = userName;
         this.passWord = passWord;
         this.userID = userID;

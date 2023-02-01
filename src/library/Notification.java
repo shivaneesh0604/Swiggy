@@ -7,7 +7,7 @@ public class Notification {
 
     private ArrayList<String> cancelledRiderIds;
 
-    public Notification(Order order) {
+    Notification(Order order) {
         this.order = order;
         cancelledRiderIds = new ArrayList<>();
     }
@@ -23,7 +23,7 @@ public class Notification {
         return cancelledRiderIds;
     }
 
-    public void setCancelledRiderIds(String cancelledRiderIds) {
+    void setCancelledRiderIds(String cancelledRiderIds) {
         this.cancelledRiderIds.add(cancelledRiderIds);
     }
 

@@ -1,6 +1,6 @@
 package library;
 
-public class CustomerDetails {
+class CustomerDetails {
     private final Location location;
     private final String userID;
 

@@ -9,7 +9,7 @@ public class Item {
     private final Course course;
     private ArrayList<Timing> timing = new ArrayList<>();
 
-    public Item(String foodName, double price, Dietary dietary, Course course, Timing timing) {
+    Item(String foodName, double price, Dietary dietary, Course course, Timing timing) {
         this.foodName = foodName.toUpperCase();
         this.price = price;
         this.dietary = dietary;

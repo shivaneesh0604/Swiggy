@@ -3,7 +3,7 @@ package library;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Restaurant {
+class Restaurant {
     private final Location location;
     private final MenuList menuList;
     private final String restaurantName;
@@ -12,7 +12,7 @@ public class Restaurant {
     private HashMap<Integer,ArrayList<LineOrder>> ordersCompleted;
     private RestaurantStatus restaurantStatus;
 
-    public Restaurant(Location location, String restaurantName, int restaurantID) {
+    Restaurant(Location location, String restaurantName, int restaurantID) {
         this.location = location;
         this.restaurantName = restaurantName;
         this.restaurantID = restaurantID;

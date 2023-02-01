@@ -1,5 +1,5 @@
 package library;
 
-public interface RestaurantManagerApplication {
+ interface RestaurantManagerApplication {
     OrderStatus setStatusPrepared(int orderID);
 }

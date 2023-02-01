@@ -37,7 +37,7 @@ public final class Rider extends User {
         return RiderFunctionalityStatus.NOT_ACCEPTED;
     }
 
-    public String receiveOrderFromRestaurant() {
+    public String changeStatusToPicked() {
         if (order != null) {
             OrderStatus orderStatus = order.getStatus();
             if (orderStatus.equals(OrderStatus.PREPARED)) {
@@ -53,7 +53,7 @@ public final class Rider extends User {
         return "cant receive since no order is accepted by rider.... first accept an order";
     }
 
-    public String deliverFood() {
+    public String changedStatusToDelivered() {
         if (order != null) {
             RiderFunctionalityStatus riderFunctionalityStatus = order.getRiderFunctionalityStatus();
             if (riderFunctionalityStatus.equals(RiderFunctionalityStatus.PICKED)) {

@@ -1,5 +1,5 @@
 package library;
 
-public enum RiderFunctionalityStatus {
+enum RiderFunctionalityStatus {
     ACCEPTED,NOT_ACCEPTED,PICKED,DELIVERED;
 }

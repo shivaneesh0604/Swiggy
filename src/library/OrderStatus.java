@@ -1,5 +1,5 @@
 package library;
 
-public enum OrderStatus {
+enum OrderStatus {
     PREPARING,PREPARED,CANCELLED;
 }

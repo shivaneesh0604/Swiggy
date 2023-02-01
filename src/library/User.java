@@ -6,7 +6,7 @@ public abstract class User {
     private final String name;
     private final String userID;
 
-    public User(String userID, Role role, String name) {
+    User(String userID, Role role, String name) {
         this.userID = userID;
         this.role = role;
         this.name = name;

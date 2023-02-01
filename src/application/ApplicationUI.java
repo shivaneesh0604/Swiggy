@@ -2,7 +2,6 @@ package application;
 
 
 import library.Customer;
-import library.Application;
 import library.DatabaseManager;
 import library.RestaurantManager;
 import library.Rider;

@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class Application implements CustomerApplication, RiderApplication, RestaurantManagerApplication {
+class Application implements CustomerApplication, RiderApplication, RestaurantManagerApplication {
 
     private final HashMap<String, HashMap<Integer, Order>> cartItems = new HashMap<>();//customerID->restaurantID,orderList
+
+    public Application() {
+    }
 
     @Override
     public HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing) {

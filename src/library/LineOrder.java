@@ -4,7 +4,7 @@ public class LineOrder {
     private final Item item;
     private int quantity;
 
-    public LineOrder(Item item, int quantity) {
+    LineOrder(Item item, int quantity) {
         this.item = item;
         this.quantity = quantity;
     }
