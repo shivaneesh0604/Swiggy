@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public final class Customer extends User {
     private final CustomerApplication customerApplication;
-    private String location;
+    private Location location;
 
     public Customer(String userID, CustomerApplication application, Role role, String name) {
         super(userID, role, name);
@@ -54,11 +54,11 @@ public final class Customer extends User {
         return customerApplication.checkStatusOfOrder(orderID);
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 

@@ -11,13 +11,13 @@ public class OrderList {
     private final int orderID;
     private final String restaurantName;
     private final int restaurantID;
-    private final String restaurantLocation;
-    private final String customerLocation;
+    private final Location restaurantLocation;
+    private final Location customerLocation;
     private final String customerID;
     private final Bill bill;
     private RiderAcceptance riderAcceptance;
 
-    OrderList(String restaurantName, int restaurantID, String restaurantLocation, String customerLocation, String customerID) {
+    OrderList(String restaurantName, int restaurantID, Location restaurantLocation, Location customerLocation, String customerID) {
         this.status = Status.PENDING;
         this.orders = new HashMap<>();
         this.restaurantID = restaurantID;
@@ -60,7 +60,7 @@ public class OrderList {
         return "no order found with this foodName";
     }
 
-    public String getCustomerLocation() {
+    public Location getCustomerLocation() {
         return customerLocation;
     }
 
@@ -76,7 +76,7 @@ public class OrderList {
         return restaurantID;
     }
 
-    public String getRestaurantLocation() {
+    public Location getRestaurantLocation() {
         return restaurantLocation;
     }
 

@@ -19,7 +19,7 @@ public class CustomerUI implements UI {
         MainLoop:
         while (true) {
             System.out.println("enter from which location you are from");
-            String location = "adayar";
+            Location location = Location.AREA1;
             customer.setLocation(location);
             HashMap<Integer, String> listOfRestaurants = customer.getAllRestaurant();
             showAllRestaurant(listOfRestaurants);

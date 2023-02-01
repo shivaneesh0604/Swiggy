@@ -6,18 +6,12 @@ public final class Rider extends User {
     private final RiderApplication riderApplication;
     private RiderStatus riderStatus;
     private OrderList orderList;
+    private ArrayList<Notification> notification;
 
-    public Rider(String userID, RiderApplication application, Role role, String name) {
+    Rider(String userID, RiderApplication application, Role role, String name) {
         super(userID, role, name);
         this.riderApplication = application;
         this.riderStatus = RiderStatus.AVAILABLE;
-    }
-
-    public ArrayList<OrderList> showAvailableOrders() {
-        if (riderStatus.equals(RiderStatus.NOT_AVAILABLE)) {
-            return null;
-        }
-        return riderApplication.showAvailableOrders();
     }
 
     public String acceptOrder(int orderID) {
@@ -73,6 +67,14 @@ public final class Rider extends User {
             return "the order is cancelled by the rider and changed rider acceptance to " + riderAcceptance;
         }
         return null;
+    }
+
+    void addNotification(Notification notification) {
+        this.notification.add(notification);
+    }
+
+    public ArrayList<Notification> getNotification() {
+        return notification;
     }
 
     public RiderStatus getRiderStatus() {

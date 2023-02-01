@@ -1,6 +1,5 @@
 package library;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,7 +13,7 @@ final class Database {
     private static final HashMap<String, HashMap<Integer, ArrayList<OrderList>>> orders = new HashMap<>();// customerID->restaurantID,orderList
 
     private Database() {
-        Restaurant restaurant = new Restaurant("adayar", "anandha bhavan", 1);
+        Restaurant restaurant = new Restaurant(Location.AREA1, "anandha bhavan", 1);
         listOfRestaurant.put(1, restaurant);
         users.put(new UserCredential("shiva1234","123456789","CUSTOMER_1001"),new Customer("CUSTOMER_1001",ApplicationFactory.getCustomerApplication() , Role.CUSTOMER, "shiva"));
         users.put(new UserCredential("sathya1234","123456789","RIDER_1000"),new Rider("RIDER_1000", ApplicationFactory.getRiderApplication() ,Role.RIDER, "sathya"));
@@ -25,7 +24,7 @@ final class Database {
         restaurant.getMenuList().addMenusItems(item2);
     }
 
-    static Database getInstance() {
+    public static Database getInstanceDatabase() {
         if (database == null) {
             database = new Database();
         }

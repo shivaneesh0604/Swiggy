@@ -1,15 +1,15 @@
 package library;
 
 public class CustomerDetails {
-    private final String location;
+    private final Location location;
     private final String userID;
 
-    public CustomerDetails(String location, String userID) {
+    public CustomerDetails(Location location, String userID) {
         this.location = location;
         this.userID = userID;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 

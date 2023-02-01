@@ -1,10 +1,8 @@
 package library;
 
-import java.util.HashMap;
-
 public class DatabaseManager {
 
-    Database database = Database.getInstance();
+    Database database = Database.getInstanceDatabase();
     private int userID =1000;
     public User addCustomer(String userName, String passWord, Role role, String name) {
         User user = new Customer("CUSTOMER_"+userID++,ApplicationFactory.getCustomerApplication(), role, name);

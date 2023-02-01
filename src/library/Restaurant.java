@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Restaurant {
-    private final String location;
+    private final Location location;
     private final MenuList menuList;
     private final String restaurantName;
     private final int restaurantID;
@@ -14,7 +14,7 @@ public class Restaurant {
     private HashMap<Integer,ArrayList<Order>> ordersCompleted;
     private RestaurantStatus restaurantStatus;
 
-    public Restaurant(String location, String restaurantName, int restaurantID) {
+    public Restaurant(Location location, String restaurantName, int restaurantID) {
         this.location = location;
         this.restaurantName = restaurantName;
         this.restaurantID = restaurantID;
@@ -32,7 +32,7 @@ public class Restaurant {
         return ordersGot;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
