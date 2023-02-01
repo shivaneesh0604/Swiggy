@@ -15,11 +15,11 @@ public interface CustomerApplication {
 
     public Bill confirmOrder(String customerID, int restaurantID);
 
-    public Status placeOrder(String customerID, int restaurantID,Location location);
+    public OrderStatus placeOrder(String customerID, int restaurantID, Location location);
 
     public String checkStatusOfOrder(int orderID);
 
     public ArrayList<Order> viewOrdersPlaced(String customerID);
 
-    public Status cancelOrder(int orderID);
+    public OrderStatus cancelOrder(int orderID);
 }

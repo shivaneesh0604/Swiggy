@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Order {
 
-    private Status status;
+    private OrderStatus orderStatus;
     private final HashMap<String, LineOrder> orders;
     private static int orderCount = 1000;
     private final int orderID;
@@ -17,7 +17,6 @@ public class Order {
     private RiderAcceptance riderAcceptance;
 
     Order(String restaurantName, int restaurantID, Location restaurantLocation, Location customerLocation, String customerID) {
-        this.status = Status.PENDING;
         this.orders = new HashMap<>();
         this.restaurantID = restaurantID;
         this.restaurantName = restaurantName;
@@ -87,12 +86,12 @@ public class Order {
         return orderID;
     }
 
-    public Status getStatus() {
-        return status;
+    public OrderStatus getStatus() {
+        return orderStatus;
     }
 
-    void setStatus(Status status) {
-        this.status = status;
+    void setStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     void setRiderAcceptance(RiderAcceptance riderAcceptance) {

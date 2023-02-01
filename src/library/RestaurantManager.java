@@ -51,9 +51,9 @@ public final class RestaurantManager extends User {
     }
 
     public String setStatusOfOrder(int orderID) {
-        Status status = applicationRestaurantManagerController.setStatusPrepared(orderID);
-        if(status!=null){
-            return "status updated as " +status;
+        OrderStatus orderStatus = applicationRestaurantManagerController.setStatusPrepared(orderID);
+        if(orderStatus !=null){
+            return "status updated as " + orderStatus;
         }
         return "wrong OrderID";
     }

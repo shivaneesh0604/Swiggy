@@ -35,7 +35,7 @@ public final class Customer extends User {
         return customerApplication.confirmOrder(this.getUserID(), restaurantID);
     }
 
-    public Status placeOrder(int restaurantID) {
+    public OrderStatus placeOrder(int restaurantID) {
         if(this.location==null){
             return null;
         }
@@ -46,7 +46,7 @@ public final class Customer extends User {
         return customerApplication.viewOrdersPlaced(this.getUserID());
     }
 
-    public Status cancelOrder(int orderID) {
+    public OrderStatus cancelOrder(int orderID) {
         return customerApplication.cancelOrder(orderID);
     }
 

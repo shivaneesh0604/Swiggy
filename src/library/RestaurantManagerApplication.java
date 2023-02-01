@@ -1,5 +1,5 @@
 package library;
 
 public interface RestaurantManagerApplication {
-    Status setStatusPrepared(int orderID);
+    OrderStatus setStatusPrepared(int orderID);
 }
