@@ -49,7 +49,7 @@ public class Order {
                 return "changed the quantity to "+lineOrder1;
             }
             else if(lineOrder1.getQuantity()==quantity1) {
-                orders.remove(item);
+                orders.remove(item.getFoodName());
                 return item.getFoodName()+" is totally deleted";
             }
             else if(lineOrder1.getQuantity()<quantity1){

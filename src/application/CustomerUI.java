@@ -11,24 +11,24 @@ final class CustomerUI implements UI {
     private final Customer customer;
     Scanner sc = new Scanner(System.in);
 
-    public CustomerUI(Customer customer) {
+    CustomerUI(Customer customer) {
         this.customer = customer;
     }
 
     public void entersUI() {
         MainLoop:
+        System.out.println("enter from which location you are from");
+        Location location = Location.AREA1;
+        customer.setLocation(location);
         while (true) {
-            System.out.println("enter from which location you are from");
-            Location location = Location.AREA1;
-            customer.setLocation(location);
-            HashMap<Integer, String> listOfRestaurants = customer.getAllRestaurant(location);
+            HashMap<Integer, Restaurant> listOfRestaurants = customer.getAllRestaurant(location);
             showAllRestaurant(listOfRestaurants);
             System.out.println("enter which restaurantID to enter");
             int restaurantID = 1;
             if (listOfRestaurants.containsKey(restaurantID)) {
                 System.out.println("enter Which Timing you are entering");
                 Timing timing = Timing.AFTERNOON;
-                HashMap<String, Item> items = customer.enterRestaurant(restaurantID, timing);
+                HashMap<String, Item> items = customer.enterRestaurant(listOfRestaurants.get(restaurantID), timing);
                 Collection<Item> items2 = items.values();
                 showAvailableMenu(items2);
                 String foodName = "chicken";
@@ -36,22 +36,24 @@ final class CustomerUI implements UI {
                 int quantity = 2;
                 for (Item item : items2) {
                     if (item.getFoodName().equals(foodName.toUpperCase())) {
-                        System.out.println(customer.addOrder(item, quantity, restaurantID));
+                        System.out.println(customer.addOrder(item, quantity, listOfRestaurants.get(restaurantID)));
                     }
                 }
                 for (Item item : items2) {
                     if (item.getFoodName().equals(foodName2.toUpperCase())) {
-                        System.out.println(customer.addOrder(item, quantity, restaurantID));
+                        System.out.println(customer.addOrder(item, quantity, listOfRestaurants.get(restaurantID)));
                     }
                 }
+                System.out.println("deleting orders");
                 for (Item item : items2) {
-                    if (item.getFoodName().equals(foodName)) {
-                        System.out.println(customer.removeOrder(item, quantity, restaurantID));
+                    if (item.getFoodName().equals(foodName.toUpperCase())) {
+                        System.out.println(customer.removeOrder(item, quantity, listOfRestaurants.get(restaurantID)));
                     }
                 }
-                Bill bill = customer.confirmOrder(restaurantID);
+                System.out.println("bill is");
+                Bill bill = customer.confirmOrder(listOfRestaurants.get(restaurantID));
                 showBill(bill);
-                System.out.println(customer.placeOrder(restaurantID));
+                System.out.println(customer.placeOrder(listOfRestaurants.get(restaurantID)));
                 ArrayList<Order> orders = customer.viewOrdersPlaced();
                 viewOrder(orders);
                 break;
@@ -62,8 +64,11 @@ final class CustomerUI implements UI {
         }
     }
 
-    private void showAllRestaurant(HashMap<Integer, String> listOfRestaurants) {
-        System.out.println(listOfRestaurants);
+    private void showAllRestaurant(HashMap<Integer, Restaurant> listOfRestaurant) {
+        Collection<Restaurant> listOfRestaurants = listOfRestaurant.values();
+        for (Restaurant restaurant : listOfRestaurants) {
+            System.out.println(restaurant.getRestaurantID() + " " + restaurant.getRestaurantName() + " " + restaurant.getLocation());
+        }
     }
 
     private void showAvailableMenu(Collection<Item> availableItems) {
@@ -80,10 +85,10 @@ final class CustomerUI implements UI {
         System.out.println("the total is " + bill.total());
     }
 
-    private void viewOrder(ArrayList<Order> order) {
-        for (Order orderList : order) {
-            System.out.println("orderID is " + orderList.getOrderID());
-            HashMap<String, LineOrder> orderInOrderList = orderList.getOrders();
+    private void viewOrder(ArrayList<Order> orders) {
+        for (Order order : orders) {
+            System.out.println("orderID is " + order.getOrderID());
+            HashMap<String, LineOrder> orderInOrderList = order.getOrders();
             Collection<LineOrder> lineOrderCollection = orderInOrderList.values();
             for (LineOrder lineOrder : lineOrderCollection) {
                 System.out.println(" ordered food are " + lineOrder.getItem().getFoodName() + " quantity is " + lineOrder.getQuantity());

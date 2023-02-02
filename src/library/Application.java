@@ -12,9 +12,9 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     }
 
     @Override
-    public HashMap<Integer, String> getAllRestaurant(Location location) {
+    public HashMap<Integer, Restaurant> getAllRestaurant(Location location) {
         HashMap<Integer, Restaurant> listOfRestaurant = Database.getInstanceDatabase().getAllRestaurant();
-        HashMap<Integer, String> restaurants = new HashMap<>();
+        HashMap<Integer, Restaurant> restaurants = new HashMap<>();
         Collection<Restaurant> restaurants1 = listOfRestaurant.values();
         ArrayList<Location> locations = Database.getInstanceDatabase().getLocations();
         int index = locations.indexOf(location);
@@ -23,62 +23,50 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         for (Restaurant restaurant : restaurants1) {
             if (previousIndex == null) {
                 if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && (restaurant.getLocation().equals(location) || restaurant.getLocation().equals(nextIndex))) {
-                    restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+                    restaurants.put(restaurant.getRestaurantID(), restaurant);
                 }
             } else if (nextIndex == null) {
                 if ((restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && (restaurant.getLocation().equals(location) || restaurant.getLocation().equals(previousIndex)))) {
-                    restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+                    restaurants.put(restaurant.getRestaurantID(), restaurant);
                 }
-            } else {
-                restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+            } else if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE)) {
+                restaurants.put(restaurant.getRestaurantID(), restaurant);
             }
         }
         return restaurants;
     }
 
     @Override
-    public HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing) {
-        Restaurant restaurant = Database.getInstanceDatabase().getRestaurant(restaurantID);
-        if (restaurant != null) {
-            return restaurant.getMenuList().getItems(timing);
-        }
-        return null;
+    public HashMap<String, Item> enterRestaurant(Restaurant restaurant, Timing timing) {
+        return restaurant.getMenuList().getItems(timing);
     }
 
     @Override
-    public String takeOrder(Item item, int quantity, String customerID, int restaurantID) {
+    public String takeOrder(Item item, int quantity, String customerID, Restaurant restaurant) {
         HashMap<Integer, Order> customerOrder = cartItems.get(customerID);
         CustomerDetails customerDetails = Database.getInstanceDatabase().getCustomerDetails(customerID);
-        Restaurant restaurant = Database.getInstanceDatabase().getRestaurant(restaurantID);
         if (customerOrder != null) {
-            Order restaurantOrder = customerOrder.get(restaurantID);
-            if (restaurantOrder.getRestaurantID() == restaurantID) {
-                if (restaurantOrder != null) {
-                    restaurantOrder.addOrders(item, quantity);
-                } else {
-                    Order order2 = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
-                    customerOrder.put(restaurantID, order2);
-                    order2.addOrders(item, quantity);
-                }
+            Order restaurantOrder = customerOrder.get(restaurant.getRestaurantID());
+            if (restaurantOrder != null) {
+                restaurantOrder.addOrders(item, quantity);
             } else {
-                customerOrder.clear();
                 Order order2 = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
-                customerOrder.put(restaurantID, order2);
                 order2.addOrders(item, quantity);
+                customerOrder.put(restaurant.getRestaurantID(), order2);
             }
         } else {
             HashMap<Integer, Order> orderList2 = new HashMap<>();
             Order order = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
             order.addOrders(item, quantity);
-            orderList2.put(restaurantID, order);
+            orderList2.put(restaurant.getRestaurantID(), order);
             cartItems.put(customerID, orderList2);
         }
         return "order added with name " + item.getFoodName() + " with quantity " + quantity;
     }
 
     @Override
-    public String removeOrder(Item item, int quantity, String customerID, int restaurantID) {
-        Order orders = cartItems.get(customerID).get(restaurantID);
+    public String removeOrder(Item item, int quantity, String customerID, Restaurant restaurant) {
+        Order orders = cartItems.get(customerID).get(restaurant.getRestaurantID());
         if (orders != null) {
             return orders.deleteOrder(item, quantity);
         }
@@ -87,15 +75,12 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public HashMap<Integer, Order> viewItemsInCart(String customerID) {
-        if (cartItems.containsKey(customerID)) {
-            return cartItems.get(customerID);
-        }
-        return null;
+        return cartItems.get(customerID);
     }
 
     @Override
-    public Bill confirmOrder(String customerID, int restaurantID) {
-        Order order = cartItems.get(customerID).get(restaurantID);
+    public Bill confirmOrder(String customerID, Restaurant restaurant) {
+        Order order = cartItems.get(customerID).get(restaurant.getRestaurantID());
         if (order != null) {
             Bill bill = order.getBill();
             HashMap<String, LineOrder> orderInOrderList = order.getOrders();
@@ -109,10 +94,10 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     }
 
     @Override
-    public OrderStatus placeOrder(String customerID, int restaurantID, Location location) {
-        Order order2 = cartItems.get(customerID).get(restaurantID);
+    public OrderStatus placeOrder(String customerID, Restaurant restaurant, Location location) {
+        Order order2 = cartItems.get(customerID).get(restaurant.getRestaurantID());
         if (order2 != null) {
-            Database.getInstanceDatabase().addOrder(customerID, order2, restaurantID, location);
+            Database.getInstanceDatabase().addOrder(customerID, order2, restaurant.getRestaurantID());
             Collection<User> users1 = Database.getInstanceDatabase().getAllUsers();
             ArrayList<Location> locations = Database.getInstanceDatabase().getLocations();
             int index = locations.indexOf(location);
@@ -136,11 +121,10 @@ final class Application implements CustomerApplication, RiderApplication, Restau
                 }
             }
             cartItems.remove(customerID);
-            Restaurant restaurant = Database.getInstanceDatabase().getRestaurant(restaurantID);
             HashMap<String, LineOrder> orderInOrderList = order2.getOrders();
             ArrayList<LineOrder> lineOrderCollection = new ArrayList<>(orderInOrderList.values());
             restaurant.receiveOrders(order2.getOrderID(), lineOrderCollection);
-            order2.setStatus(OrderStatus.PREPARED);
+            order2.setStatus(OrderStatus.PREPARING);
             return OrderStatus.PREPARING;
         }
         return null;
@@ -148,11 +132,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public ArrayList<Order> viewOrdersPlaced(String customerID) {
-        ArrayList<Order> orders = Database.getInstanceDatabase().getOrdersPlaced(customerID);
-        if (orders != null) {
-            return orders;
-        }
-        return null;
+        return Database.getInstanceDatabase().getOrdersPlaced(customerID);
     }
 
     @Override

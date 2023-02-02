@@ -3,7 +3,7 @@ package library;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-class Restaurant {
+public class Restaurant {
     private final Location location;
     private final MenuList menuList;
     private final String restaurantName;
@@ -46,11 +46,11 @@ class Restaurant {
         return restaurantID;
     }
 
-    public RestaurantStatus getRestaurantStatus() {
+    RestaurantStatus getRestaurantStatus() {
         return restaurantStatus;
     }
 
-    public RestaurantStatus setRestaurantStatus(RestaurantStatus restaurantStatus) {
+    RestaurantStatus setRestaurantStatus(RestaurantStatus restaurantStatus) {
         this.restaurantStatus = restaurantStatus;
         return restaurantStatus;
     }

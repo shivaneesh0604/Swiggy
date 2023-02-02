@@ -19,10 +19,12 @@ public final class Rider extends User {
     public RiderFunctionalityStatus acceptOrder(Notification notification1) {
         if (!notification1.getOrderList().getStatus().equals(OrderStatus.CANCELLED)) {
             this.order = notification1.getOrderList();
+            System.out.println(order.getStatus());
             RiderFunctionalityStatus riderFunctionalityStatus = riderApplication.acceptOrder(order.getOrderID());
             if (riderFunctionalityStatus.equals(RiderFunctionalityStatus.ACCEPTED)) {
                 this.notification.clear();
                 this.riderStatus = RiderStatus.NOT_AVAILABLE;
+                System.out.println(order.getStatus());
                 return order.getRiderFunctionalityStatus();
             } else {
                 return RiderFunctionalityStatus.NOT_ACCEPTED;

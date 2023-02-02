@@ -92,7 +92,7 @@ final class Database {
         return users.values();
     }
 
-    void addOrder(String customerID, Order tempOrders, int restaurantID, Location location) {
+    void addOrder(String customerID, Order tempOrders, int restaurantID) {
         HashMap<Integer, ArrayList<Order>> orderList1 = orders.get(customerID);
         if (orderList1 != null) {
             ArrayList<Order> order2 = orderList1.get(restaurantID);

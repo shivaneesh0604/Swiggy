@@ -12,34 +12,34 @@ public final class Customer extends User {
         this.customerApplication = application;
     }
 
-    public HashMap<Integer, String> getAllRestaurant(Location location){
+    public HashMap<Integer, Restaurant> getAllRestaurant(Location location){
         return customerApplication.getAllRestaurant(location);
     }
 
-    public HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing) {
-        return customerApplication.enterRestaurant(restaurantID, timing);
+    public HashMap<String, Item> enterRestaurant(Restaurant restaurant, Timing timing) {
+        return customerApplication.enterRestaurant(restaurant, timing);
     }
 
-    public String addOrder(Item item, int quantity, int restaurantID) {
-        return customerApplication.takeOrder(item, quantity, this.getUserID(), restaurantID);
+    public String addOrder(Item item, int quantity, Restaurant restaurant) {
+        return customerApplication.takeOrder(item, quantity, this.getUserID(), restaurant);
     }
 
-    public String removeOrder(Item item, int quantity, int restaurantID) {
-        return customerApplication.removeOrder(item, quantity, this.getUserID(), restaurantID);
+    public String removeOrder(Item item, int quantity, Restaurant restaurant) {
+        return customerApplication.removeOrder(item, quantity, this.getUserID(), restaurant);
     }
     public HashMap<Integer, Order> viewItemsInCart() {
         return customerApplication.viewItemsInCart(this.getUserID());
     }
 
-    public Bill confirmOrder(int restaurantID) {
-        return customerApplication.confirmOrder(this.getUserID(), restaurantID);
+    public Bill confirmOrder(Restaurant restaurant) {
+        return customerApplication.confirmOrder(this.getUserID(), restaurant);
     }
 
-    public OrderStatus placeOrder(int restaurantID) {
+    public OrderStatus placeOrder(Restaurant restaurant) {
         if(this.location==null){
             return null;
         }
-        return customerApplication.placeOrder(this.getUserID(), restaurantID,this.location);
+        return customerApplication.placeOrder(this.getUserID(), restaurant,this.location);
     }
 
     public ArrayList<Order> viewOrdersPlaced() {

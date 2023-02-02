@@ -12,7 +12,7 @@ import java.util.Scanner;
     Scanner sc = new Scanner(System.in);
     private final RestaurantManager restaurantManager;
 
-    public RestaurantManagerUI(RestaurantManager restaurantManager) {
+    RestaurantManagerUI(RestaurantManager restaurantManager) {
         this.restaurantManager = restaurantManager;
     }
 

@@ -11,26 +11,26 @@ import java.util.Scanner;
     Scanner sc = new Scanner(System.in);
     private final Rider rider;
 
-    public RiderUI(Rider rider) {
+    RiderUI(Rider rider) {
         this.rider = rider;
     }
 
     public void entersUI() {
-        ArrayList<Notification> notification = rider.getNotification();
-        showAvailableNotifications(notification);
+        ArrayList<Notification> notifications = rider.getNotification();
+        showAvailableNotifications(notifications);
         System.out.println("enter orderID to accept");
         int orderID = sc.nextInt();
         System.out.println("press 1 to accept and 2 to decline");
         int acceptance = sc.nextInt();
         if (acceptance == 1) {
-            for (Notification notification1 : notification) {
+            for (Notification notification1 : notifications) {
                 if (notification1.getOrderList().getOrderID() == orderID) {
                     System.out.println(rider.acceptOrder(notification1));
                     break;
                 }
             }
         } else if (acceptance == 2) {
-            for (Notification notification1 : notification) {
+            for (Notification notification1 : notifications) {
                 if (notification1.getOrderList().getOrderID() == orderID) {
                     System.out.println(rider.declineOrder(notification1));
                     break;
