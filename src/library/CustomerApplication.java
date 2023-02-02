@@ -4,22 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 interface CustomerApplication {
-     HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing);
-    HashMap<Integer, String> getAllRestaurant();
+    HashMap<Integer, String> getAllRestaurant(Location location);
 
-     String takeOrder(Item item, int quantity, String customerID, int restaurantID);
+    HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing);
 
-     String deleteOrder(Item item, int quantity, String customerID, int restaurantID);
+    String takeOrder(Item item, int quantity, String customerID, int restaurantID);
 
-     HashMap<Integer, Order> viewItemsInCart(String customerID);
+    String removeOrder(Item item, int quantity, String customerID, int restaurantID);
 
-     Bill confirmOrder(String customerID, int restaurantID);
+    HashMap<Integer, Order> viewItemsInCart(String customerID);
 
-     OrderStatus placeOrder(String customerID, int restaurantID, Location location);
+    Bill confirmOrder(String customerID, int restaurantID);
 
-     String checkStatusOfOrder(int orderID);
+    OrderStatus placeOrder(String customerID, int restaurantID, Location location);
 
-     ArrayList<Order> viewOrdersPlaced(String customerID);
+    String checkStatusOfOrder(int orderID);
 
-     OrderStatus cancelOrder(int orderID);
+    ArrayList<Order> viewOrdersPlaced(String customerID);
+
+    OrderStatus cancelOrder(int orderID);
 }

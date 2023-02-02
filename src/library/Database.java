@@ -14,12 +14,12 @@ final class Database {
     static final ArrayList<Location> locations = new ArrayList<Location>();
 
     private Database() {
-        Restaurant restaurant = new Restaurant(Location.AREA1, "anandha bhavan", 1);
+        Restaurant restaurant = new Restaurant(Location.AREA2, "anandha bhavan", 1);
         listOfRestaurant.put(1, restaurant);
         users.put(new UserCredential("shiva1234", "123456789", "CUSTOMER_1001"), new Customer("CUSTOMER_1001", ApplicationFactory.getCustomerApplication(), Role.CUSTOMER, "shiva"));
-        Rider rider =  new Rider("RIDER_1000", ApplicationFactory.getRiderApplication(), Role.RIDER, "sathya");
+        Rider rider = new Rider("RIDER_1000", ApplicationFactory.getRiderApplication(), Role.RIDER, "sathya");
         rider.setLocation(Location.AREA1);
-        users.put(new UserCredential("sathya1234", "123456789", "RIDER_1000"),rider);
+        users.put(new UserCredential("sathya1234", "123456789", "RIDER_1000"), rider);
         users.put(new UserCredential("sankar1234", "123456789", "RESTAURANT_MANAGER_1002"), new RestaurantManager("RESTAURANT_MANAGER_1002", restaurant, ApplicationFactory.getRestaurantManagerApplication(), Role.RESTAURANT_MANAGER, "sankar"));
         Rider rider1 = new Rider("RIDER_1003", ApplicationFactory.getRiderApplication(), Role.RIDER, "durga_devi");
         rider1.setLocation(Location.AREA2);
@@ -38,7 +38,7 @@ final class Database {
         restaurant.getMenuList().addMenusItems(item2);
     }
 
-    ArrayList<Location> getLocations(){
+    ArrayList<Location> getLocations() {
         return this.locations;
     }
 
@@ -66,12 +66,25 @@ final class Database {
         return null;
     }
 
-    HashMap<Integer, String> getAllRestaurant() {
+    HashMap<Integer, String> getAllRestaurant(Location location) {
         HashMap<Integer, String> restaurants = new HashMap<>();
         Collection<Restaurant> restaurants1 = listOfRestaurant.values();
+        int index = locations.indexOf(location);
+        Location previousIndex = index < 1 ? null : locations.get(index - 1);
+        Location nextIndex = index > locations.size() - 2 ? null :  locations.get(index + 1);
         for (Restaurant restaurant : restaurants1) {
-            if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE))
+            if (previousIndex == null) {
+                if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && (restaurant.getLocation().equals(location) || restaurant.getLocation().equals(nextIndex))) {
+                    restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+                }
+            } else if (nextIndex == null) {
+                if ((restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && (restaurant.getLocation().equals(location) || restaurant.getLocation().equals(previousIndex)))) {
+                    restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+                }
+            }
+            else {
                 restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+            }
         }
         return restaurants;
     }
@@ -94,8 +107,8 @@ final class Database {
         return null;
     }
 
-    Collection<User> getAllUsers(){
-        return  users.values();
+    Collection<User> getAllUsers() {
+        return users.values();
     }
 
     void addOrder(String customerID, Order tempOrders, int restaurantID, Location location) {

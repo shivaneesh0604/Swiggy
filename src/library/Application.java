@@ -21,30 +21,29 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     }
 
     @Override
-    public HashMap<Integer, String> getAllRestaurant() {
-        return Database.getInstanceDatabase().getAllRestaurant();
+    public HashMap<Integer, String> getAllRestaurant(Location location) {
+        return Database.getInstanceDatabase().getAllRestaurant(location);//todo: get all restaurant and process here
     }
 
     @Override
     public String takeOrder(Item item, int quantity, String customerID, int restaurantID) {
-        HashMap<Integer, Order> customerOrderList = cartItems.get(customerID);
-        LineOrder lineOrder = new LineOrder(item, quantity);
+        HashMap<Integer, Order> customerOrder = cartItems.get(customerID);
         CustomerDetails customerDetails = Database.getInstanceDatabase().getCustomerDetails(customerID);
         Restaurant restaurant = Database.getInstanceDatabase().getRestaurant(restaurantID);
-        if (customerOrderList != null) {
-            Order restaurantOrder = customerOrderList.get(restaurantID);
+        if (customerOrder != null) {
+            Order restaurantOrder = customerOrder.get(restaurantID);
             if (restaurantOrder.getRestaurantID() == restaurantID) {
                 if (restaurantOrder != null) {
                     restaurantOrder.addOrders(item, quantity);
                 } else {
                     Order order2 = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
-                    customerOrderList.put(restaurantID, order2);
+                    customerOrder.put(restaurantID, order2);
                     order2.addOrders(item, quantity);
                 }
             } else {
-                customerOrderList.clear();
+                customerOrder.clear();
                 Order order2 = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
-                customerOrderList.put(restaurantID, order2);
+                customerOrder.put(restaurantID, order2);
                 order2.addOrders(item, quantity);
             }
         } else {
@@ -58,7 +57,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     }
 
     @Override
-    public String deleteOrder(Item item, int quantity, String customerID, int restaurantID) {
+    public String removeOrder(Item item, int quantity, String customerID, int restaurantID) {
         Order orders = cartItems.get(customerID).get(restaurantID);
         if (orders != null) {
             return orders.deleteOrder(item, quantity);
@@ -96,14 +95,24 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         if (order2 != null) {
             Database.getInstanceDatabase().addOrder(customerID, order2, restaurantID, location);
             Collection<User> users1 = Database.getInstanceDatabase().getAllUsers();
+            ArrayList<Location> locations = Database.getInstanceDatabase().getLocations();
+            int index = locations.indexOf(location);
+            Location previousIndex = index < 1 ? null : locations.get(index - 1);
+            Location nextIndex = index > locations.size() - 2 ? null : locations.get(index + 1);
             for (User user : users1) {
                 if (user.getRole().equals(Role.RIDER)) {
                     Rider rider = (Rider) user;
-                    ArrayList<Location> locations = Database.getInstanceDatabase().getLocations();
-                    int index = locations.indexOf(location);
-                    if (rider.getLocation().equals(locations.get(index)) || rider.getLocation().equals(locations.get(index - 1)) || rider.getLocation().equals(locations.get(index + 1))) {
+                    if (previousIndex == null) {
+                        if (rider.getLocation().equals(location) || rider.getLocation().equals(nextIndex)) {
+                            rider.addNotification(new Notification(order2));
+                            break;
+                        }
+                    } else if (nextIndex == null) {
+                        if (rider.getLocation().equals(location) || rider.getLocation().equals(previousIndex)) {
+                            rider.addNotification(new Notification(order2));
+                        }
+                    } else {
                         rider.addNotification(new Notification(order2));
-                        break;
                     }
                 }
             }
@@ -112,7 +121,8 @@ final class Application implements CustomerApplication, RiderApplication, Restau
             HashMap<String, LineOrder> orderInOrderList = order2.getOrders();
             ArrayList<LineOrder> lineOrderCollection = new ArrayList<>(orderInOrderList.values());
             restaurant.receiveOrders(order2.getOrderID(), lineOrderCollection);
-            return Database.getInstanceDatabase().setStatus(OrderStatus.PREPARING, order2.getOrderID());
+            order2.setStatus(OrderStatus.PREPARED);
+            return OrderStatus.PREPARING;
         }
         return null;
     }
@@ -158,11 +168,25 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     public RiderFunctionalityStatus declineOrder(Order order, Rider rider, Notification notification) {
         ArrayList<Rider> riders = Database.getInstanceDatabase().getAllRiders();
         ArrayList<Location> locations = Database.getInstanceDatabase().getLocations();
-        int index = locations.indexOf(order.getRestaurantLocation());
         notification.setCancelledRiderIds(rider.getUserID());
+        int index = locations.indexOf(order.getRestaurantLocation());
+        Location previousIndex = index < 1 ? null : locations.get(index - 1);
+        Location nextIndex = index > locations.size() - 2 ? null : locations.get(index + 1);
         for (Rider rider1 : riders) {
-            if ((rider1.getLocation().equals(locations.get(index)) || rider1.getLocation().equals(locations.get(index + 1))
-                    || rider1.getLocation().equals(locations.get(index - 1))) && !notification.checkCancelledRiderIds(rider1.getUserID())) {
+            if (previousIndex == null) {
+                if ((rider1.getLocation().equals(locations.get(index)) || rider1.getLocation().equals(nextIndex))
+                         && !notification.checkCancelledRiderIds(rider1.getUserID())) {
+                    rider1.addNotification(notification);
+                    break;
+                }
+            } else if (nextIndex==null) {
+                if ((rider1.getLocation().equals(locations.get(index)) || rider1.getLocation().equals(previousIndex))
+                        && !notification.checkCancelledRiderIds(rider1.getUserID())) {
+                    rider1.addNotification(notification);
+                    break;
+                }
+            } else if ((rider1.getLocation().equals(locations.get(index)) || rider1.getLocation().equals(nextIndex) || rider1.getLocation().equals(previousIndex))
+                    && !notification.checkCancelledRiderIds(rider1.getUserID())) {
                 rider1.addNotification(notification);
                 break;
             }
@@ -172,7 +196,11 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public RiderFunctionalityStatus changeStatusToPicked(int orderID) {
-        return Database.getInstanceDatabase().setStatusByRider(RiderFunctionalityStatus.PICKED, orderID);
+        OrderStatus orderStatus = Database.getInstanceDatabase().getStatus(orderID);
+        if (!orderStatus.equals(OrderStatus.CANCELLED)) {
+            return Database.getInstanceDatabase().setStatusByRider(RiderFunctionalityStatus.PICKED, orderID);
+        }
+        return null;
     }
 
     @Override

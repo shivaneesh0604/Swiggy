@@ -7,13 +7,13 @@ public final class Customer extends User {
     private final CustomerApplication customerApplication;
     private Location location;
 
-    public Customer(String userID, CustomerApplication application, Role role, String name) {
+    Customer(String userID, CustomerApplication application, Role role, String name) {
         super(userID, role, name);
         this.customerApplication = application;
     }
 
-    public HashMap<Integer, String> getAllRestaurant(){
-        return customerApplication.getAllRestaurant();
+    public HashMap<Integer, String> getAllRestaurant(Location location){
+        return customerApplication.getAllRestaurant(location);
     }
 
     public HashMap<String, Item> enterRestaurant(int restaurantID, Timing timing) {
@@ -24,8 +24,8 @@ public final class Customer extends User {
         return customerApplication.takeOrder(item, quantity, this.getUserID(), restaurantID);
     }
 
-    public String deleteOrder(Item item, int quantity, int restaurantID) {
-        return customerApplication.deleteOrder(item, quantity, this.getUserID(), restaurantID);
+    public String removeOrder(Item item, int quantity, int restaurantID) {
+        return customerApplication.removeOrder(item, quantity, this.getUserID(), restaurantID);
     }
     public HashMap<Integer, Order> viewItemsInCart() {
         return customerApplication.viewItemsInCart(this.getUserID());

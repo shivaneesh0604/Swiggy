@@ -2,13 +2,12 @@ package application;
 
 import library.*;
 
-import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Scanner;
 
- final class CustomerUI implements UI {
+final class CustomerUI implements UI {
     private final Customer customer;
     Scanner sc = new Scanner(System.in);
 
@@ -22,39 +21,41 @@ import java.util.Scanner;
             System.out.println("enter from which location you are from");
             Location location = Location.AREA1;
             customer.setLocation(location);
-            HashMap<Integer, String> listOfRestaurants = customer.getAllRestaurant();
+            HashMap<Integer, String> listOfRestaurants = customer.getAllRestaurant(location);
             showAllRestaurant(listOfRestaurants);
             System.out.println("enter which restaurantID to enter");
             int restaurantID = 1;
-            System.out.println("enter Which Timing you are entering");
-            Timing timing = Timing.AFTERNOON;
-            HashMap<String, Item> items = customer.enterRestaurant(restaurantID, timing);
-            Collection<Item> items2 = items.values();
-            showAvailableMenu(items2);
-            String foodName = "chicken";
-            String foodName2 = "rice";
-            int quantity = 2;
-            for (Item item : items2) {
-                if (item.getFoodName().equals(foodName.toUpperCase())) {
-                    System.out.println(customer.addOrder(item, quantity, restaurantID));
+            if (listOfRestaurants.containsKey(restaurantID)) {
+                System.out.println("enter Which Timing you are entering");
+                Timing timing = Timing.AFTERNOON;
+                HashMap<String, Item> items = customer.enterRestaurant(restaurantID, timing);
+                Collection<Item> items2 = items.values();
+                showAvailableMenu(items2);
+                String foodName = "chicken";
+                String foodName2 = "rice";
+                int quantity = 2;
+                for (Item item : items2) {
+                    if (item.getFoodName().equals(foodName.toUpperCase())) {
+                        System.out.println(customer.addOrder(item, quantity, restaurantID));
+                    }
                 }
-            }
-            for (Item item : items2) {
-                if (item.getFoodName().equals(foodName2.toUpperCase())) {
-                    System.out.println(customer.addOrder(item, quantity, restaurantID));
+                for (Item item : items2) {
+                    if (item.getFoodName().equals(foodName2.toUpperCase())) {
+                        System.out.println(customer.addOrder(item, quantity, restaurantID));
+                    }
                 }
-            }
-            for (Item item : items2) {
-                if (item.getFoodName().equals(foodName)) {
-                    System.out.println(customer.deleteOrder(item, quantity, restaurantID));
+                for (Item item : items2) {
+                    if (item.getFoodName().equals(foodName)) {
+                        System.out.println(customer.removeOrder(item, quantity, restaurantID));
+                    }
                 }
+                Bill bill = customer.confirmOrder(restaurantID);
+                showBill(bill);
+                System.out.println(customer.placeOrder(restaurantID));
+                ArrayList<Order> orders = customer.viewOrdersPlaced();
+                viewOrder(orders);
+                break;
             }
-            Bill bill = customer.confirmOrder(restaurantID);
-            showBill(bill);
-            System.out.println(customer.placeOrder(restaurantID));
-            ArrayList<Order> orders = customer.viewOrdersPlaced();
-            viewOrder(orders);
-            break;
 //        System.out.println("enter orderID to cancel");
 //        int orderID = sc.nextInt();
 //        System.out.println(customer.cancelOrder(orderID));

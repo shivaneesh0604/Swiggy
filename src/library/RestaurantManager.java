@@ -7,7 +7,7 @@ public final class RestaurantManager extends User {
     private final Restaurant restaurant;
     private final RestaurantManagerApplication applicationRestaurantManagerController;
 
-    public RestaurantManager(String userID,Restaurant restaurant, RestaurantManagerApplication applicationUI, Role role, String name) {
+    RestaurantManager(String userID,Restaurant restaurant, RestaurantManagerApplication applicationUI, Role role, String name) {
         super(userID, role, name);
         this.restaurant = restaurant;
         this.applicationRestaurantManagerController = applicationUI;
