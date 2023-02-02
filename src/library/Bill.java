@@ -34,7 +34,7 @@ public class Bill {
     private final ArrayList<BillItem> items;
     private final int orderID;
 
-    public Bill(int orderID) {
+    Bill(int orderID) {
         items = new ArrayList<>();
         this.orderID = orderID;
     }
@@ -49,6 +49,10 @@ public class Bill {
             total += item.price * item.quantity;
         }
         return total;
+    }
+
+    public int getOrderID() {
+        return orderID;
     }
 
     public ArrayList<BillItem> getItems() {

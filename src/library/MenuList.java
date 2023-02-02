@@ -6,7 +6,7 @@ import java.util.HashMap;
 class MenuList {
     private HashMap<String, Item> totalItems;
 
-    public MenuList() {
+    MenuList() {
         this.totalItems  = new HashMap<>();
     }
 

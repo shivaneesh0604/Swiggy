@@ -8,7 +8,32 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     private final HashMap<String, HashMap<Integer, Order>> cartItems = new HashMap<>();//customerID->restaurantID,orderList
 
-    public Application() {
+    Application() {
+    }
+
+    @Override
+    public HashMap<Integer, String> getAllRestaurant(Location location) {
+        HashMap<Integer, Restaurant> listOfRestaurant = Database.getInstanceDatabase().getAllRestaurant();
+        HashMap<Integer, String> restaurants = new HashMap<>();
+        Collection<Restaurant> restaurants1 = listOfRestaurant.values();
+        ArrayList<Location> locations = Database.getInstanceDatabase().getLocations();
+        int index = locations.indexOf(location);
+        Location previousIndex = index < 1 ? null : locations.get(index - 1);
+        Location nextIndex = index > locations.size() - 2 ? null : locations.get(index + 1);
+        for (Restaurant restaurant : restaurants1) {
+            if (previousIndex == null) {
+                if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && (restaurant.getLocation().equals(location) || restaurant.getLocation().equals(nextIndex))) {
+                    restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+                }
+            } else if (nextIndex == null) {
+                if ((restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && (restaurant.getLocation().equals(location) || restaurant.getLocation().equals(previousIndex)))) {
+                    restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+                }
+            } else {
+                restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
+            }
+        }
+        return restaurants;
     }
 
     @Override
@@ -18,11 +43,6 @@ final class Application implements CustomerApplication, RiderApplication, Restau
             return restaurant.getMenuList().getItems(timing);
         }
         return null;
-    }
-
-    @Override
-    public HashMap<Integer, String> getAllRestaurant(Location location) {
-        return Database.getInstanceDatabase().getAllRestaurant(location);//todo: get all restaurant and process here
     }
 
     @Override
@@ -81,8 +101,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
             HashMap<String, LineOrder> orderInOrderList = order.getOrders();
             Collection<LineOrder> lineOrderCollection = orderInOrderList.values();
             for (LineOrder lineOrder : lineOrderCollection) {
-                double price = Database.getInstanceDatabase().getPrice(lineOrder.getItem().getFoodName(), restaurantID);
-                bill.addItem(lineOrder.getItem().getFoodName(), lineOrder.getQuantity(), price);
+                bill.addItem(lineOrder.getItem().getFoodName(), lineOrder.getQuantity(), lineOrder.getItem().getPrice());
             }
             return bill;
         }
@@ -129,7 +148,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public ArrayList<Order> viewOrdersPlaced(String customerID) {
-        ArrayList<Order> orders = Database.getInstanceDatabase().getOrders(customerID);
+        ArrayList<Order> orders = Database.getInstanceDatabase().getOrdersPlaced(customerID);
         if (orders != null) {
             return orders;
         }
@@ -138,12 +157,23 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public OrderStatus cancelOrder(int orderID) {
-        return Database.getInstanceDatabase().cancelOrder(OrderStatus.CANCELLED, orderID);
+        Order order = Database.getInstanceDatabase().cancelOrder(orderID);
+        order.setStatus(OrderStatus.CANCELLED);
+        ArrayList<Rider> riders = Database.getInstanceDatabase().getAllRiders();
+        for (Rider rider : riders) {
+            ArrayList<Notification> notifications = rider.getNotification();
+            for (Notification notification : notifications) {
+                if (rider.getNotification().contains(notification)) {
+                    rider.getNotification().remove(notification);
+                }
+            }
+        }
+        return OrderStatus.CANCELLED;
     }
 
     @Override
     public String checkStatusOfOrder(int orderID) {
-        Order order = Database.getInstanceDatabase().getOrderlist(orderID);
+        Order order = Database.getInstanceDatabase().getOrder(orderID);
         if (order != null) {
             if (!order.getStatus().equals(OrderStatus.CANCELLED)) {
                 return "the status of food is " + order.getStatus() + " and the rider Acceptance status is " + order.getRiderFunctionalityStatus();
@@ -156,7 +186,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public RiderFunctionalityStatus acceptOrder(int orderID) {
-        Order order = Database.getInstanceDatabase().getOrderlist(orderID);
+        Order order = Database.getInstanceDatabase().getOrder(orderID);
         if (order.getOrderID() == orderID && !order.getStatus().equals(OrderStatus.CANCELLED)) {
             order.setRiderAcceptance(RiderFunctionalityStatus.ACCEPTED);
             return order.getRiderFunctionalityStatus();
@@ -175,11 +205,11 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         for (Rider rider1 : riders) {
             if (previousIndex == null) {
                 if ((rider1.getLocation().equals(locations.get(index)) || rider1.getLocation().equals(nextIndex))
-                         && !notification.checkCancelledRiderIds(rider1.getUserID())) {
+                        && !notification.checkCancelledRiderIds(rider1.getUserID())) {
                     rider1.addNotification(notification);
                     break;
                 }
-            } else if (nextIndex==null) {
+            } else if (nextIndex == null) {
                 if ((rider1.getLocation().equals(locations.get(index)) || rider1.getLocation().equals(previousIndex))
                         && !notification.checkCancelledRiderIds(rider1.getUserID())) {
                     rider1.addNotification(notification);

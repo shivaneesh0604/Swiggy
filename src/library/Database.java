@@ -42,7 +42,7 @@ final class Database {
         return this.locations;
     }
 
-    public static Database getInstanceDatabase() {
+    static Database getInstanceDatabase() {
         if (database == null) {
             database = new Database();
         }
@@ -66,27 +66,8 @@ final class Database {
         return null;
     }
 
-    HashMap<Integer, String> getAllRestaurant(Location location) {
-        HashMap<Integer, String> restaurants = new HashMap<>();
-        Collection<Restaurant> restaurants1 = listOfRestaurant.values();
-        int index = locations.indexOf(location);
-        Location previousIndex = index < 1 ? null : locations.get(index - 1);
-        Location nextIndex = index > locations.size() - 2 ? null :  locations.get(index + 1);
-        for (Restaurant restaurant : restaurants1) {
-            if (previousIndex == null) {
-                if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && (restaurant.getLocation().equals(location) || restaurant.getLocation().equals(nextIndex))) {
-                    restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
-                }
-            } else if (nextIndex == null) {
-                if ((restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && (restaurant.getLocation().equals(location) || restaurant.getLocation().equals(previousIndex)))) {
-                    restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
-                }
-            }
-            else {
-                restaurants.put(restaurant.getRestaurantID(), restaurant.getRestaurantName());
-            }
-        }
-        return restaurants;
+    HashMap<Integer, Restaurant> getAllRestaurant() {
+        return listOfRestaurant;
     }
 
     CustomerDetails getCustomerDetails(String customerID) {
@@ -131,29 +112,20 @@ final class Database {
         }
     }
 
-    OrderStatus cancelOrder(OrderStatus orderStatus, int orderID) {
+    Order cancelOrder( int orderID) {
         for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
             for (ArrayList<Order> list : innerMap.values()) {
                 for (Order order : list) {
                     if (order.getOrderID() == orderID) {
-                        order.setStatus(orderStatus);
-                        ArrayList<Rider> riders = getAllRiders();
-                        for (Rider rider : riders) {
-                            ArrayList<Notification> notifications = rider.getNotification();
-                            for (Notification notification : notifications) {
-                                if (rider.getNotification().contains(notification)) {
-                                    rider.getNotification().remove(notification);
-                                }
-                            }
-                        }
+                        return order;
                     }
                 }
             }
         }
-        return orderStatus;
+        return null;
     }
 
-    ArrayList<Order> getOrders(String customerID) {
+    ArrayList<Order> getOrdersPlaced(String customerID) {
         Collection<Order> collection = new ArrayList<>();
         for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
             for (ArrayList<Order> list : innerMap.values()) {
@@ -246,7 +218,7 @@ final class Database {
 //        return (ArrayList<OrderList>) collection;
 //    }
 
-    Order getOrderlist(int orderID) {
+    Order getOrder(int orderID) {
         for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
             for (ArrayList<Order> list : innerMap.values()) {
                 for (Order order : list) {
@@ -257,11 +229,6 @@ final class Database {
             }
         }
         return null;
-    }
-
-    double getPrice(String foodName, int restaurantID) {
-        MenuList menuList = listOfRestaurant.get(restaurantID).getMenuList();
-        return menuList.getPrice(foodName);
     }
 
 }

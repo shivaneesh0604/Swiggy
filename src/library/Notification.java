@@ -12,14 +12,14 @@ public class Notification {
         cancelledRiderIds = new ArrayList<>();
     }
 
-    public boolean checkCancelledRiderIds(String userID) {
+    boolean checkCancelledRiderIds(String userID) {
         if (cancelledRiderIds.contains(userID)) {
             return true;
         }
         return false;
     }
 
-    public ArrayList<String> getCancelledRiderIds() {
+    ArrayList<String> getCancelledRiderIds() {
         return cancelledRiderIds;
     }
 
