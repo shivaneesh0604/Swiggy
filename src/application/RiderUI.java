@@ -24,14 +24,14 @@ import java.util.Scanner;
         int acceptance = sc.nextInt();
         if (acceptance == 1) {
             for (Notification notification1 : notifications) {
-                if (notification1.getOrderList().getOrderID() == orderID) {
+                if (notification1.getOrder().getOrderID() == orderID) {
                     System.out.println(rider.acceptOrder(notification1));
                     break;
                 }
             }
         } else if (acceptance == 2) {
             for (Notification notification1 : notifications) {
-                if (notification1.getOrderList().getOrderID() == orderID) {
+                if (notification1.getOrder().getOrderID() == orderID) {
                     System.out.println(rider.declineOrder(notification1));
                     break;
                 }
@@ -43,7 +43,7 @@ import java.util.Scanner;
 
     private void showAvailableNotifications(ArrayList<Notification> notifications) {
         for (Notification notification : notifications) {
-            Order order = notification.getOrderList();
+            Order order = notification.getOrder();
             System.out.println(order.getOrderID() + " is the order ID " + order.getRestaurantID() + " is the restaurant ID " + order.getCustomerLocation() + " is the location of customer " + order.getRestaurantLocation() + " is the location of the restaurant " + order.getRestaurantName() + " is the name of the restaurant");
         }
     }

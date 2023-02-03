@@ -27,7 +27,7 @@ public class Notification {
         this.cancelledRiderIds.add(cancelledRiderIds);
     }
 
-    public Order getOrderList() {
+    public Order getOrder() {
         return order;
     }
 }

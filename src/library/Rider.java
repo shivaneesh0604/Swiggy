@@ -17,8 +17,8 @@ public final class Rider extends User {
     }
 
     public RiderFunctionalityStatus acceptOrder(Notification notification1) {
-        if (!notification1.getOrderList().getStatus().equals(OrderStatus.CANCELLED)) {
-            this.order = notification1.getOrderList();
+        if (!notification1.getOrder().getStatus().equals(OrderStatus.CANCELLED)) {
+            this.order = notification1.getOrder();
             System.out.println(order.getStatus());
             RiderFunctionalityStatus riderFunctionalityStatus = riderApplication.acceptOrder(order.getOrderID());
             if (riderFunctionalityStatus.equals(RiderFunctionalityStatus.ACCEPTED)) {
@@ -34,7 +34,7 @@ public final class Rider extends User {
     }
 
     public RiderFunctionalityStatus declineOrder(Notification notification) {
-        riderApplication.declineOrder(notification.getOrderList(), this,notification);
+        riderApplication.declineOrder(this,notification);
         this.notification.remove(notification);
         return RiderFunctionalityStatus.NOT_ACCEPTED;
     }
