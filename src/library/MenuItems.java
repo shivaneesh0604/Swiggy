@@ -3,30 +3,30 @@ package library;
 import java.util.Collection;
 import java.util.HashMap;
 
-class MenuList {
-    private HashMap<String, Item> totalItems;
+class MenuItems {
+    private HashMap<String, Item> menuItems;
 
-    MenuList() {
-        this.totalItems  = new HashMap<>();
+    MenuItems() {
+        this.menuItems = new HashMap<>();
     }
 
     void addMenusItems(Item items) {
-        totalItems.put(items.getFoodName(), items);
+        menuItems.put(items.getFoodName(), items);
     }
 
     void alterMenuItems(String foodName, int price) {
-        Item item = totalItems.get(foodName);
+        Item item = menuItems.get(foodName);
         if (item == null)
             return;
         item.setPrice(price);
     }
 
     void deleteMenuItems(String foodName) {
-        totalItems.remove(foodName);
+        menuItems.remove(foodName);
     }
 
     boolean checkFoodAvailability(String foodName, Timing timing) {
-        Item item = totalItems.get(foodName);
+        Item item = menuItems.get(foodName);
         if (item == null) {
             return false;
         } else {
@@ -35,20 +35,20 @@ class MenuList {
     }
     
     void setTimingForFood(String foodName, Timing timing) {
-        Item item = totalItems.get(foodName);
+        Item item = menuItems.get(foodName);
         if (item == null)
             return;
         item.setTiming(timing);
     }
 
     double getPrice(String foodName){
-        Item item = totalItems.get(foodName);
+        Item item = menuItems.get(foodName);
         return item.getPrice();
     }
 
     HashMap<String, Item> getItems(Timing timing) {
         HashMap<String, Item> availableTimingItems = new HashMap<>();
-        Collection<Item> menuItems_values = totalItems.values();
+        Collection<Item> menuItems_values = menuItems.values();
         for (Item item : menuItems_values) {
             if (item.checkTiming(timing)) {
                 availableTimingItems.put(item.getFoodName(), item);
@@ -58,6 +58,6 @@ class MenuList {
     }
 
     HashMap<String, Item> getItems() {
-        return totalItems;
+        return menuItems;
     }
 }

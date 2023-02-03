@@ -137,7 +137,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public OrderStatus cancelOrder(int orderID) {
-        Order order = Database.getInstanceDatabase().cancelOrder(orderID);
+        Order order = Database.getInstanceDatabase().getOrder(orderID);
         order.setStatus(OrderStatus.CANCELLED);
         ArrayList<Rider> riders = Database.getInstanceDatabase().getAllRiders();
         for (Rider rider : riders) {

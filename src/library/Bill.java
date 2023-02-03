@@ -8,7 +8,7 @@ public class Bill {
         public int quantity;
         public final double price;
 
-        public BillItem(String itemName, int quantity, double price) {
+        BillItem(String itemName, int quantity, double price) {
             this.itemName = itemName;
             this.quantity = quantity;
             this.price = price;

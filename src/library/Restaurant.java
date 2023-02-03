@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Restaurant {
     private final Location location;
-    private final MenuList menuList;
+    private final MenuItems menuItems;
     private final String restaurantName;
     private final int restaurantID;
     private final HashMap<Integer, ArrayList<LineOrder>> ordersGot;//orderID mapped with orders
@@ -16,7 +16,7 @@ public class Restaurant {
         this.location = location;
         this.restaurantName = restaurantName;
         this.restaurantID = restaurantID;
-        this.menuList = new MenuList();
+        this.menuItems = new MenuItems();
         this.ordersGot = new HashMap<>();
         this.ordersCompleted = new HashMap<>();
         this.restaurantStatus= RestaurantStatus.AVAILABLE;
@@ -34,8 +34,8 @@ public class Restaurant {
         return location;
     }
 
-    public MenuList getMenuList() {
-        return menuList;
+    public MenuItems getMenuList() {
+        return menuItems;
     }
 
     public String getRestaurantName() {

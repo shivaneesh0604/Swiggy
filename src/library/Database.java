@@ -112,19 +112,6 @@ final class Database {
         }
     }
 
-    Order cancelOrder( int orderID) {
-        for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
-            for (ArrayList<Order> list : innerMap.values()) {
-                for (Order order : list) {
-                    if (order.getOrderID() == orderID) {
-                        return order;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
     ArrayList<Order> getOrdersPlaced(String customerID) {
         Collection<Order> collection = new ArrayList<>();
         for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
