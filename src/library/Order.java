@@ -37,26 +37,27 @@ public class Order {
         LineOrder lineOrder1 = orders.get(item.getFoodName());
         if(lineOrder1!= null){
             lineOrder1.setQuantity(lineOrder1.getQuantity()+quantity);
+            return;
         }
         this.orders.put(item.getFoodName(), new LineOrder(item,quantity));
     }
 
-    String deleteOrder(Item item, int quantity1) {
+    OrderDeletion deleteOrder(Item item, int quantity1) {
         LineOrder lineOrder1 = orders.get(item.getFoodName());
         if(lineOrder1!=null){
             if (lineOrder1.getQuantity()>quantity1){
                 lineOrder1.setQuantity(lineOrder1.getQuantity()-quantity1);
-                return "changed the quantity to "+lineOrder1;
+                return OrderDeletion.CHANGED_QUANTITY;
             }
             else if(lineOrder1.getQuantity()==quantity1) {
                 orders.remove(item.getFoodName());
-                return item.getFoodName()+" is totally deleted";
+                return OrderDeletion.TOTALLY_DELETED;
             }
             else if(lineOrder1.getQuantity()<quantity1){
-                return "cant delete since already given order is "+ lineOrder1;
+                return OrderDeletion.CANT_DELETE;
             }
         }
-        return "no order found with this foodName";
+        return OrderDeletion.NO_ORDER_FOUND;
     }
 
     public Location getCustomerLocation() {

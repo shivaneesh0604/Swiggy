@@ -48,7 +48,7 @@ public final class Rider extends User {
                 this.order = null;
                 this.riderStatus = RiderStatus.AVAILABLE;
                 return "that order is cancelled so cant process";
-            } else if (orderStatus.equals(OrderStatus.PREPARING)) {
+            } else if (orderStatus.equals(OrderStatus.PLACED)) {
                 return "wait till the order is prepared";
             }
         }

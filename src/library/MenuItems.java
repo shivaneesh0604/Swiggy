@@ -41,11 +41,6 @@ class MenuItems {
         item.setTiming(timing);
     }
 
-    double getPrice(String foodName){
-        Item item = menuItems.get(foodName);
-        return item.getPrice();
-    }
-
     HashMap<String, Item> getItems(Timing timing) {
         HashMap<String, Item> availableTimingItems = new HashMap<>();
         Collection<Item> menuItems_values = menuItems.values();

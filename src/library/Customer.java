@@ -1,5 +1,7 @@
 package library;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 //todo: customer can acd orders only that are available in particular location
@@ -20,12 +22,12 @@ public final class Customer extends User {
         return customerApplication.enterRestaurant(restaurant, timing);
     }
 
-    public String addOrder(Item item, int quantity, Restaurant restaurant) {
-        return customerApplication.takeOrder(item, quantity, this.getUserID(), restaurant);
+    public OrderAddition addOrder(Item item, Restaurant restaurant) {
+        return customerApplication.takeOrder(item, this.getUserID(), restaurant);
     }
 
-    public String removeOrder(Item item, int quantity, Restaurant restaurant) {
-        return customerApplication.removeOrder(item, quantity, this.getUserID(), restaurant);
+    public OrderDeletion removeOrder(Item item, Restaurant restaurant) {
+        return customerApplication.removeOrder(item, this.getUserID(), restaurant);
     }
     public HashMap<Integer, Order> viewItemsInCart() {
         return customerApplication.viewItemsInCart(this.getUserID());
@@ -36,13 +38,10 @@ public final class Customer extends User {
     }
 
     public OrderStatus placeOrder(Restaurant restaurant) {
-        if(this.location==null){
-            return null;
-        }
         return customerApplication.placeOrder(this.getUserID(), restaurant,this.location);
     }
 
-    public ArrayList<Order> viewOrdersPlaced() {
+    public HashMap<Integer, ArrayList<Order>> viewOrdersPlaced() {
         return customerApplication.viewOrdersPlaced(this.getUserID());
     }
 

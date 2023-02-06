@@ -7,16 +7,16 @@ import java.util.HashMap;
 final class Application implements CustomerApplication, RiderApplication, RestaurantManagerApplication {
 
     private final HashMap<String, HashMap<Integer, Order>> cartItems = new HashMap<>();//customerID->restaurantID,orderList
-    Database database = Database.getInstanceDatabase();
+
     Application() {
     }
 
     @Override
     public HashMap<Integer, Restaurant> getAllRestaurant(Location location) {
-        HashMap<Integer, Restaurant> listOfRestaurant = database.getAllRestaurant();
+        HashMap<Integer, Restaurant> listOfRestaurant = Database.getInstanceDatabase().getAllRestaurant();
         HashMap<Integer, Restaurant> restaurants = new HashMap<>();
         Collection<Restaurant> restaurants1 = listOfRestaurant.values();
-        ArrayList<Location> locations = database.getLocations();
+        ArrayList<Location> locations = Database.getInstanceDatabase().getLocations();
         int index = locations.indexOf(location);
         Location previousIndex = index < 1 ? null : locations.get(index - 1);
         Location nextIndex = index > locations.size() - 2 ? null : locations.get(index + 1);
@@ -29,7 +29,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
                 if ((restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && (restaurant.getLocation().equals(location) || restaurant.getLocation().equals(previousIndex)))) {
                     restaurants.put(restaurant.getRestaurantID(), restaurant);
                 }
-            } else if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE)) {
+            } else if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && ((restaurant.getLocation().equals(location)) || restaurant.getLocation().equals(previousIndex)) || restaurant.getLocation().equals(nextIndex)) {
                 restaurants.put(restaurant.getRestaurantID(), restaurant);
             }
         }
@@ -42,35 +42,35 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     }
 
     @Override
-    public String takeOrder(Item item, int quantity, String customerID, Restaurant restaurant) {
+    public OrderAddition takeOrder(Item item, String customerID, Restaurant restaurant) {
         HashMap<Integer, Order> customerOrder = cartItems.get(customerID);
-        CustomerDetails customerDetails = database.getCustomerDetails(customerID);
+        CustomerDetails customerDetails = Database.getInstanceDatabase().getCustomerDetails(customerID);
         if (customerOrder != null) {
             Order restaurantOrder = customerOrder.get(restaurant.getRestaurantID());
             if (restaurantOrder != null) {
-                restaurantOrder.addOrders(item, quantity);
+                restaurantOrder.addOrders(item, 1);
             } else {
                 Order order2 = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
-                order2.addOrders(item, quantity);
+                order2.addOrders(item, 1);
                 customerOrder.put(restaurant.getRestaurantID(), order2);
             }
         } else {
             HashMap<Integer, Order> orderList2 = new HashMap<>();
             Order order = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
-            order.addOrders(item, quantity);
+            order.addOrders(item, 1);
             orderList2.put(restaurant.getRestaurantID(), order);
             cartItems.put(customerID, orderList2);
         }
-        return "order added with name " + item.getFoodName() + " with quantity " + quantity;
+        return OrderAddition.ORDER_ADDED;
     }
 
     @Override
-    public String removeOrder(Item item, int quantity, String customerID, Restaurant restaurant) {
+    public OrderDeletion removeOrder(Item item, String customerID, Restaurant restaurant) {
         Order orders = cartItems.get(customerID).get(restaurant.getRestaurantID());
         if (orders != null) {
-            return orders.deleteOrder(item, quantity);
+            return orders.deleteOrder(item, 1);
         }
-        return "no orders found in this restaurant for this customer";
+        return OrderDeletion.NO_ORDER_FOUND_IN_THIS_RESTAURANT;
     }
 
     @Override
@@ -97,9 +97,9 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     public OrderStatus placeOrder(String customerID, Restaurant restaurant, Location location) {
         Order order2 = cartItems.get(customerID).get(restaurant.getRestaurantID());
         if (order2 != null) {
-            database.addOrder(customerID, order2, restaurant.getRestaurantID());
-            Collection<User> users1 = database.getAllUsers();
-            ArrayList<Location> locations = database.getLocations();
+            Database.getInstanceDatabase().addOrder(customerID, order2, restaurant.getRestaurantID());
+            Collection<User> users1 = Database.getInstanceDatabase().getAllUsers();
+            ArrayList<Location> locations = Database.getInstanceDatabase().getLocations();
             int index = locations.indexOf(location);
             Location previousIndex = index < 1 ? null : locations.get(index - 1);
             Location nextIndex = index > locations.size() - 2 ? null : locations.get(index + 1);
@@ -114,9 +114,11 @@ final class Application implements CustomerApplication, RiderApplication, Restau
                     } else if (nextIndex == null) {
                         if (rider.getLocation().equals(location) || rider.getLocation().equals(previousIndex)) {
                             rider.addNotification(new Notification(order2));
+                            break;
                         }
                     } else {
                         rider.addNotification(new Notification(order2));
+                        break;
                     }
                 }
             }
@@ -124,22 +126,22 @@ final class Application implements CustomerApplication, RiderApplication, Restau
             HashMap<String, LineOrder> orderInOrderList = order2.getOrders();
             ArrayList<LineOrder> lineOrderCollection = new ArrayList<>(orderInOrderList.values());
             restaurant.receiveOrders(order2.getOrderID(), lineOrderCollection);
-            order2.setStatus(OrderStatus.PREPARING);
-            return OrderStatus.PREPARING;
+            order2.setStatus(OrderStatus.PLACED);
+            return OrderStatus.PLACED;
         }
         return null;
     }
 
     @Override
-    public ArrayList<Order> viewOrdersPlaced(String customerID) {
-        return database.getOrdersPlaced(customerID);
+    public HashMap<Integer, ArrayList<Order>> viewOrdersPlaced(String customerID) {
+        return Database.getInstanceDatabase().getOrdersPlaced(customerID);
     }
 
     @Override
     public OrderStatus cancelOrder(int orderID) {
-        Order order = database.getOrder(orderID);
+        Order order = Database.getInstanceDatabase().getOrder(orderID);
         order.setStatus(OrderStatus.CANCELLED);
-        ArrayList<Rider> riders = database.getAllRiders();
+        ArrayList<Rider> riders = Database.getInstanceDatabase().getAllRiders();
         for (Rider rider : riders) {
             ArrayList<Notification> notifications = rider.getNotification();
             for (Notification notification : notifications) {
@@ -153,7 +155,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public String checkStatusOfOrder(int orderID) {
-        Order order = database.getOrder(orderID);
+        Order order = Database.getInstanceDatabase().getOrder(orderID);
         if (order != null) {
             if (!order.getStatus().equals(OrderStatus.CANCELLED)) {
                 return "the status of food is " + order.getStatus() + " and the rider Acceptance status is " + order.getRiderFunctionalityStatus();
@@ -166,7 +168,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public RiderFunctionalityStatus acceptOrder(int orderID) {
-        Order order = database.getOrder(orderID);
+        Order order = Database.getInstanceDatabase().getOrder(orderID);
         if (order.getOrderID() == orderID && !order.getStatus().equals(OrderStatus.CANCELLED)) {
             order.setRiderAcceptance(RiderFunctionalityStatus.ACCEPTED);
             return order.getRiderFunctionalityStatus();
@@ -176,8 +178,8 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public RiderFunctionalityStatus declineOrder(Rider rider, Notification notification) {
-        ArrayList<Rider> riders = database.getAllRiders();
-        ArrayList<Location> locations = database.getLocations();
+        ArrayList<Rider> riders = Database.getInstanceDatabase().getAllRiders();
+        ArrayList<Location> locations = Database.getInstanceDatabase().getLocations();
         notification.setCancelledRiderIds(rider.getUserID());
         int index = locations.indexOf(notification.getOrder().getRestaurantLocation());
         Location previousIndex = index < 1 ? null : locations.get(index - 1);
@@ -206,25 +208,25 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public RiderFunctionalityStatus changeStatusToPicked(int orderID) {
-        OrderStatus orderStatus = database.getStatus(orderID);
+        OrderStatus orderStatus = Database.getInstanceDatabase().getStatus(orderID);
         if (!orderStatus.equals(OrderStatus.CANCELLED)) {
-            return database.setStatusByRider(RiderFunctionalityStatus.PICKED, orderID);
+            return Database.getInstanceDatabase().setStatusByRider(RiderFunctionalityStatus.PICKED, orderID);
         }
         return null;
     }
 
     @Override
     public RiderFunctionalityStatus changeStatusToDelivered(int orderID) {
-        OrderStatus orderStatus = database.getStatus(orderID);
+        OrderStatus orderStatus = Database.getInstanceDatabase().getStatus(orderID);
         if (!orderStatus.equals(OrderStatus.CANCELLED)) {
-            return database.setStatusByRider(RiderFunctionalityStatus.DELIVERED, orderID);
+            return Database.getInstanceDatabase().setStatusByRider(RiderFunctionalityStatus.DELIVERED, orderID);
         }
         return null;
     }
 
     @Override
     public OrderStatus setStatusPrepared(int orderID) {
-        return database.setStatus(OrderStatus.PREPARED, orderID);
+        return Database.getInstanceDatabase().setStatus(OrderStatus.PREPARED, orderID);
     }
 
 }

@@ -37,13 +37,9 @@ public class Item {
         return course;
     }
 
-    public ArrayList<Timing> getTiming() {
-        return timing;
-    }
-
     public boolean checkTiming(Timing timing) {
         for (Timing timing1 : this.timing) {
-            if (timing1 == timing) {
+            if (timing1.equals(timing)) {
                 return true;
             }
         }

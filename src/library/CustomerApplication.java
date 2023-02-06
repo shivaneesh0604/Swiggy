@@ -8,9 +8,9 @@ interface CustomerApplication {
 
     HashMap<String, Item> enterRestaurant(Restaurant restaurant, Timing timing);
 
-    String takeOrder(Item item, int quantity, String customerID, Restaurant restaurant);
+    OrderAddition takeOrder(Item item, String customerID, Restaurant restaurant);
 
-    String removeOrder(Item item, int quantity, String customerID,Restaurant restaurant);
+    OrderDeletion removeOrder(Item item, String customerID,Restaurant restaurant);
 
     HashMap<Integer, Order> viewItemsInCart(String customerID);
 
@@ -20,7 +20,7 @@ interface CustomerApplication {
 
     String checkStatusOfOrder(int orderID);
 
-    ArrayList<Order> viewOrdersPlaced(String customerID);
+    HashMap<Integer,ArrayList<Order>> viewOrdersPlaced(String customerID);
 
     OrderStatus cancelOrder(int orderID);
 }

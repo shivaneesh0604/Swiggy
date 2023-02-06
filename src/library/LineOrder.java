@@ -19,6 +19,7 @@ public class LineOrder {
 
     void setQuantity(int quantity) {
         this.quantity = quantity;
+        System.out.println("quantity here in Line order class is "+this.quantity);
     }
 
 }

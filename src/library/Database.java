@@ -112,18 +112,9 @@ final class Database {
         }
     }
 
-    ArrayList<Order> getOrdersPlaced(String customerID) {
-        Collection<Order> collection = new ArrayList<>();
-        for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
-            for (ArrayList<Order> list : innerMap.values()) {
-                for (Order order : list) {
-                    if (order.getCustomerID().equals(customerID) && !order.getStatus().equals(OrderStatus.CANCELLED) && !order.getRiderFunctionalityStatus().equals(RiderFunctionalityStatus.DELIVERED)) {
-                        collection.add(order);
-                    }
-                }
-            }
-        }
-        return (ArrayList<Order>) collection;
+    HashMap<Integer, ArrayList<Order>> getOrdersPlaced(String customerID) {
+        return  (HashMap<Integer, ArrayList<Order>>) orders.values();
+
     }
 
     RiderFunctionalityStatus setStatusByRider(RiderFunctionalityStatus riderFunctionalityStatus, int orderID) {
