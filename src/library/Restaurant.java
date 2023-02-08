@@ -30,6 +30,12 @@ public class Restaurant {
         return ordersGot;
     }
 
+    void setOrdersCompleted(int orderID){
+        ArrayList<LineOrder> orders = ordersGot.get(orderID);
+        ordersCompleted.put(orderID,orders);
+        ordersGot.remove(orderID);
+    }
+
     public Location getLocation() {
         return location;
     }
@@ -46,7 +52,7 @@ public class Restaurant {
         return restaurantID;
     }
 
-    RestaurantStatus getRestaurantStatus() {
+    public RestaurantStatus getRestaurantStatus() {
         return restaurantStatus;
     }
 

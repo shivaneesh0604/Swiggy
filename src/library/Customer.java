@@ -41,16 +41,12 @@ public final class Customer extends User {
         return customerApplication.placeOrder(this.getUserID(), restaurant,this.location);
     }
 
-    public HashMap<Integer, ArrayList<Order>> viewOrdersPlaced() {
+    public ArrayList<Order> viewOrdersPlaced() {
         return customerApplication.viewOrdersPlaced(this.getUserID());
     }
 
     public OrderStatus cancelOrder(int orderID) {
         return customerApplication.cancelOrder(orderID);
-    }
-
-    public String checkStatusOfOrder(int orderID) {
-        return customerApplication.checkStatusOfOrder(orderID);
     }
 
     public Location getLocation() {

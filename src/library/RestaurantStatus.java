@@ -1,5 +1,5 @@
 package library;
 
-enum RestaurantStatus {
+public enum RestaurantStatus {
     AVAILABLE,NOT_AVAILABLE;
 }

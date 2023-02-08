@@ -1,8 +1,8 @@
 package library;
 
 interface RiderApplication {
-     RiderFunctionalityStatus acceptOrder(int orderID);
+     void setNotificationToAnotherRider(Rider rider);
+     RiderFunctionalityStatus acceptOrder(Rider rider,int orderID);
      RiderFunctionalityStatus declineOrder(Rider rider,Notification notification);
-     RiderFunctionalityStatus changeStatusToPicked(int orderID);
-     RiderFunctionalityStatus changeStatusToDelivered(int orderID);
+     RiderFunctionalityStatus changeStatusByRider(Order order,RiderFunctionalityStatus riderFunctionalityStatus);
 }

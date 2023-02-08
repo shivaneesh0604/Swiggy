@@ -18,8 +18,8 @@ public final class RestaurantManager extends User {
         restaurant.getMenuList().addMenusItems(item);
     }
 
-    public void alterMenuItems(String foodName, int price) {
-        restaurant.getMenuList().alterMenuItems(foodName, price);
+    public void alterMenuItems(Item item, int price) {
+        restaurant.getMenuList().alterMenuItems(item, price);
     }
 
     public void checkFoodAvailability(String foodName, Timing timing) {
@@ -30,8 +30,8 @@ public final class RestaurantManager extends User {
         restaurant.getMenuList().setTimingForFood(foodName, timing);
     }
 
-    public void deleteMenuItems(String foodName) {
-        restaurant.getMenuList().deleteMenuItems(foodName);
+    public void deleteMenuItems(Item item) {
+        restaurant.getMenuList().deleteMenuItems(item);
     }
 
     public HashMap<String, Item> getItems(Timing timing) {
@@ -50,12 +50,12 @@ public final class RestaurantManager extends User {
         return restaurant.viewOrderGot();
     }
 
-    public String setStatusOfOrder(int orderID) {
-        OrderStatus orderStatus = applicationRestaurantManagerController.setStatusPrepared(orderID);
+    public String setStatus(int orderID,OrderStatus orderStatus) {
+        OrderStatus orderStatus1 = applicationRestaurantManagerController.setStatusPrepared(orderID,orderStatus);
         if(orderStatus !=null){
-            return "status updated as " + orderStatus;
+            restaurant.setOrdersCompleted(orderID);
+            return "status updated as " + orderStatus1;
         }
         return "wrong OrderID";
     }
-
 }

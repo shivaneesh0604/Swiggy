@@ -18,9 +18,7 @@ interface CustomerApplication {
 
     OrderStatus placeOrder(String customerID, Restaurant restaurant, Location location);
 
-    String checkStatusOfOrder(int orderID);
-
-    HashMap<Integer,ArrayList<Order>> viewOrdersPlaced(String customerID);
+    ArrayList<Order> viewOrdersPlaced(String customerID);
 
     OrderStatus cancelOrder(int orderID);
 }

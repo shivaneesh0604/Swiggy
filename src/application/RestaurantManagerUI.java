@@ -1,7 +1,9 @@
 package application;
 
 import library.LineOrder;
+import library.OrderStatus;
 import library.RestaurantManager;
+import library.RestaurantStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,12 +19,14 @@ import java.util.Scanner;
     }
 
     public void entersUI() {
+//        System.out.println(restaurantManager.setRestaurantStatus(RestaurantStatus.NOT_AVAILABLE));
         HashMap<Integer, ArrayList<LineOrder>> order = restaurantManager.viewOrderGot();
         System.out.println("orders got are");
         viewOrder(order);
         System.out.println("enter orderID to prepared");
         int orderID = sc.nextInt();
-        System.out.println(restaurantManager.setStatusOfOrder(orderID));
+        System.out.println(restaurantManager.setStatus(orderID, OrderStatus.PREPARING));
+        System.out.println(restaurantManager.setStatus(orderID,OrderStatus.PREPARED));
     }
 
     private void viewOrder(HashMap<Integer, ArrayList<LineOrder>> order) {

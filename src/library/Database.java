@@ -1,5 +1,7 @@
 package library;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,7 +28,7 @@ final class Database {
         users.put(new UserCredential("dd1234", "123456789", "RIDER_1003"), rider1);
         Rider rider2 = new Rider("RIDER_1004", ApplicationFactory.getRiderApplication(), Role.RIDER, "devi");
         rider2.setLocation(Location.AREA2);
-        users.put(new UserCredential("devi1234", "123456789", "RIDER_1003"), rider2);
+        users.put(new UserCredential("devi1234", "123456789", "RIDER_1004"), rider2);
         Item item = new Item("rice", 100, Dietary.VEG, Course.MAINCOURSE, Timing.AFTERNOON);
         Item item2 = new Item("chicken", 120, Dietary.NON_VEG, Course.MAINCOURSE, Timing.AFTERNOON);
         locations.add(Location.AREA1);
@@ -39,7 +41,7 @@ final class Database {
     }
 
     ArrayList<Location> getLocations() {
-        return this.locations;
+        return locations;
     }
 
     static Database getInstanceDatabase() {
@@ -50,7 +52,7 @@ final class Database {
     }
 
     User addUser(User user, String userName, String passWord) {
-        this.users.put(new UserCredential(userName, passWord, user.getUserID()), user);
+        users.put(new UserCredential(userName, passWord, user.getUserID()), user);
         return user;
     }
 
@@ -67,7 +69,7 @@ final class Database {
     }
 
     HashMap<Integer, Restaurant> getAllRestaurant() {
-        return listOfRestaurant;
+        return new HashMap<>(listOfRestaurant);
     }
 
     CustomerDetails getCustomerDetails(String customerID) {
@@ -86,10 +88,6 @@ final class Database {
             return listOfRestaurant.get(restaurantID);
         }
         return null;
-    }
-
-    Collection<User> getAllUsers() {
-        return users.values();
     }
 
     void addOrder(String customerID, Order tempOrders, int restaurantID) {
@@ -113,8 +111,11 @@ final class Database {
     }
 
     HashMap<Integer, ArrayList<Order>> getOrdersPlaced(String customerID) {
-        return  (HashMap<Integer, ArrayList<Order>>) orders.values();
-
+        HashMap<Integer, ArrayList<Order>> orderPlaced = orders.get(customerID);
+        if (orderPlaced != null) {
+            return new HashMap<>(orderPlaced);
+        }
+        return null;
     }
 
     RiderFunctionalityStatus setStatusByRider(RiderFunctionalityStatus riderFunctionalityStatus, int orderID) {
@@ -147,29 +148,29 @@ final class Database {
 
     ArrayList<Rider> getAllRiders() {
         Collection<User> users1 = users.values();
-        Collection<Rider> users2 = new ArrayList<>();
+        ArrayList<Rider> users2 = new ArrayList<>();
         for (User user : users1) {
             if (user.getRole().equals(Role.RIDER)) {
                 users2.add((Rider) user);
             }
         }
-        return (ArrayList<Rider>) users2;
+        return users2;
     }
 
-    OrderStatus getStatus(int orderID) {
-        for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
-            for (ArrayList<Order> list : innerMap.values()) {
-                for (Order order : list) {
-                    if (order.getOrderID() == orderID) {
-                        return order.getStatus();
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-
+//    OrderStatus getStatus(int orderID) {
+//        for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
+//            for (ArrayList<Order> list : innerMap.values()) {
+//                for (Order order : list) {
+//                    if (order.getOrderID() == orderID) {
+//                        return order.getStatus();
+//                    }
+//                }
+//            }
+//        }
+//        return null;
+//    }
+//
+//
 //    public Restaurant findRestaurant(int orderID){
 //        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
 //            for (ArrayList<OrderList> list : innerMap.values()) {

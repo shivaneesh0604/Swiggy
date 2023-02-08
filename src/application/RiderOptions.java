@@ -1,0 +1,11 @@
+package application;
+
+enum RiderOptions {
+    SET_RIDER_STATUS,
+    SHOW_AVAILABLE_NOTIFICATIONS,
+    ACCEPT_ORDER,
+    DECLINE_ORDER,
+    CHANGE_STATUS_TO_PICKED,
+    CHANGE_STATUS_TO_DELIVERED,
+    BACK;
+}

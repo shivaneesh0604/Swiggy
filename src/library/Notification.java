@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Notification {
     private final Order order;
-
     private ArrayList<String> cancelledRiderIds;
 
     Notification(Order order) {

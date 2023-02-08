@@ -13,85 +13,91 @@ public final class Rider extends User {
         super(userID, role, name);
         this.riderApplication = application;
         this.riderStatus = RiderStatus.AVAILABLE;
-        notification= new ArrayList<>();
+        notification = new ArrayList<>();
     }
 
     public RiderFunctionalityStatus acceptOrder(Notification notification1) {
-        if (!notification1.getOrder().getStatus().equals(OrderStatus.CANCELLED)) {
-            this.order = notification1.getOrder();
-            System.out.println(order.getStatus());
-            RiderFunctionalityStatus riderFunctionalityStatus = riderApplication.acceptOrder(order.getOrderID());
-            if (riderFunctionalityStatus.equals(RiderFunctionalityStatus.ACCEPTED)) {
-                this.notification.clear();
-                this.riderStatus = RiderStatus.NOT_AVAILABLE;
-                System.out.println(order.getStatus());
-                return order.getRiderFunctionalityStatus();
-            } else {
-                return RiderFunctionalityStatus.NOT_ACCEPTED;
-            }
+        this.order = notification1.getOrder();
+        RiderFunctionalityStatus riderFunctionalityStatus = riderApplication.acceptOrder(this, order.getOrderID());
+        if (riderFunctionalityStatus.equals(RiderFunctionalityStatus.ACCEPTED)) {
+            this.riderStatus = RiderStatus.NOT_AVAILABLE;
+            this.notification = null;
+            return order.getRiderFunctionalityStatus();
+        } else {
+            return RiderFunctionalityStatus.NOT_ACCEPTED;
         }
-        return null;
     }
 
     public RiderFunctionalityStatus declineOrder(Notification notification) {
-        riderApplication.declineOrder(this,notification);
-        this.notification.remove(notification);
-        return RiderFunctionalityStatus.NOT_ACCEPTED;
+        return riderApplication.declineOrder(this, notification);
     }
 
-    public String changeStatusToPicked() {
+    public RiderReturnFunctionalities changeStatusToPicked() {
         if (order != null) {
             OrderStatus orderStatus = order.getStatus();
             if (orderStatus.equals(OrderStatus.PREPARED)) {
-                return "Status changed to " + riderApplication.changeStatusToPicked(order.getOrderID());
+                riderApplication.changeStatusByRider(order, RiderFunctionalityStatus.PICKED);
+                return RiderReturnFunctionalities.PICKED;
             } else if (orderStatus.equals(OrderStatus.CANCELLED)) {
                 this.order = null;
                 this.riderStatus = RiderStatus.AVAILABLE;
-                return "that order is cancelled so cant process";
+                return RiderReturnFunctionalities.THAT_ORDER_IS_CANCELLED;
             } else if (orderStatus.equals(OrderStatus.PLACED)) {
-                return "wait till the order is prepared";
+                return RiderReturnFunctionalities.WAIT_TILL_ORDER_IS_PREPARED;
             }
         }
-        return "cant receive since no order is accepted by rider.... first accept an order";
+        return RiderReturnFunctionalities.CANT_RECEIVE_SINCE_NO_ORDER_IS_ACCEPTED;
     }
 
-    public String changedStatusToDelivered() {
+    public RiderReturnFunctionalities changeStatusToDelivered() {
         if (order != null) {
             RiderFunctionalityStatus riderFunctionalityStatus = order.getRiderFunctionalityStatus();
             if (riderFunctionalityStatus.equals(RiderFunctionalityStatus.PICKED)) {
-                RiderFunctionalityStatus riderFunctionalityStatus1 = riderApplication.changeStatusToDelivered(order.getOrderID());
+                riderApplication.changeStatusByRider(order, RiderFunctionalityStatus.DELIVERED);
                 this.riderStatus = RiderStatus.AVAILABLE;
                 this.order = null;
-                return riderFunctionalityStatus1 + " the food";
+                return RiderReturnFunctionalities.DELIVERED;
             } else if (order.getStatus().equals(OrderStatus.CANCELLED)) {
                 this.order = null;
                 this.riderStatus = RiderStatus.AVAILABLE;
-                return "order is cancelled  ";
+                return RiderReturnFunctionalities.THAT_ORDER_IS_CANCELLED;
             }
         }
-        return "cant deliver since no food picked by this rider...first accept an order";
+        return RiderReturnFunctionalities.CANT_RECEIVE_SINCE_NO_ORDER_IS_ACCEPTED;
     }
-//    public String cancelOrder() {
-//        if (orderList != null) {
-//            RiderAcceptance riderAcceptance = riderApplication.declineOrder(orderList);
-//            this.orderList = null;
-//            this.riderStatus = RiderStatus.AVAILABLE;
-//            return "the order is cancelled by the rider and changed rider acceptance to " + riderAcceptance;
-//        }
-//        return null;
-//    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
     void addNotification(Notification notification) {
         if (riderStatus.equals(RiderStatus.AVAILABLE))
             this.notification.add(notification);
     }
 
-    void setLocation(Location location) {
-        this.location = location;
+    public ArrayList<Notification> getNotification() {
+        return new ArrayList<>(notification);
     }
 
-    public ArrayList<Notification> getNotification() {
-        return notification;
+    void removeNotification(int orderID) {
+        notification.removeIf(notification1 -> notification1.getOrder().getOrderID() == orderID);
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public RiderStatus setRiderStatus(RiderStatus riderStatus) {
+        if (this.order == null) {
+            if(riderStatus.equals(RiderStatus.NOT_AVAILABLE)){
+                riderApplication.setNotificationToAnotherRider(this);
+            }
+            this.riderStatus = riderStatus;
+             return this.riderStatus;
+        }
+        else {
+            return RiderStatus.AVAILABLE;
+        }
     }
 
     public RiderStatus getRiderStatus() {

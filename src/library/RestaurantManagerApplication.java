@@ -1,5 +1,7 @@
 package library;
 
- interface RestaurantManagerApplication {
-    OrderStatus setStatusPrepared(int orderID);
+import com.sun.org.apache.xpath.internal.operations.Or;
+
+interface RestaurantManagerApplication {
+    OrderStatus setStatusPrepared(int orderID, OrderStatus orderStatus);
 }

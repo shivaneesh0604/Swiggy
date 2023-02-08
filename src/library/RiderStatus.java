@@ -1,5 +1,5 @@
 package library;
 
-enum RiderStatus {
+public enum RiderStatus {
     AVAILABLE,NOT_AVAILABLE;
 }

@@ -14,15 +14,12 @@ class MenuItems {
         menuItems.put(items.getFoodName(), items);
     }
 
-    void alterMenuItems(String foodName, int price) {
-        Item item = menuItems.get(foodName);
-        if (item == null)
-            return;
+    void alterMenuItems(Item item, int price) {
         item.setPrice(price);
     }
 
-    void deleteMenuItems(String foodName) {
-        menuItems.remove(foodName);
+    void deleteMenuItems(Item item) {
+        menuItems.remove(item.getFoodName());
     }
 
     boolean checkFoodAvailability(String foodName, Timing timing) {

@@ -11,7 +11,7 @@ public class Utils {
     }
     public static int inputVerification(int noOfOptions) {
         String input = sc.nextLine();
-        if (input.matches("[0-9]+") && (Integer.parseInt(input) <= noOfOptions)) {
+        if (input.matches("[0-9]+") && (Integer.parseInt(input) < noOfOptions)) {
             return Integer.parseInt(input);
         } else {
             System.out.println("enter in between 0 and "+noOfOptions);

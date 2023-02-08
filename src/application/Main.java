@@ -1,5 +1,6 @@
 package application;
 
+import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import library.DatabaseManager;
 
 import java.util.Scanner;
@@ -9,24 +10,28 @@ final class Main {
         Scanner sc = new Scanner(System.in);
         DatabaseManager databaseManager = new DatabaseManager();
         ApplicationUI applicationUI = new ApplicationUI(databaseManager);
-        Mainloop : while (true) {
+        Mainloop:
+        while (true) {
             while (true) {
                 System.out.println("enter 1 for login 2 for signup other number for exit");
-                int applicationUIAccess = sc.nextInt();
-                if (applicationUIAccess == 1) {
-                    System.out.println("enter user name");
-                    sc.nextLine();
-                    String userName = sc.nextLine();
-                    System.out.println("enter password");
-                    String passWord = sc.nextLine();
-                    applicationUI.logIN(userName, passWord);
-                    break;
-                } else if (applicationUIAccess == 2) {
-                    applicationUI.signUP();
-                    break;
+                String applicationUIAccess = sc.nextLine();
+                try {
+                    if (Integer.parseInt(applicationUIAccess) == 1) {
+                        System.out.println("enter user name");
+                        String userName = sc.nextLine();
+                        System.out.println("enter password");
+                        String passWord = sc.nextLine();
+                        applicationUI.logIN(userName, passWord);
+                        break;
+                    } else if (Integer.parseInt(applicationUIAccess) == 2) {
+                        applicationUI.signUP();
+                        break;
+                    } else {
+                        break Mainloop;
+                    }
                 }
-                else{
-                    break Mainloop;
+                catch (NumberFormatException e){
+                    System.out.println("enter 1 or 2");
                 }
             }
         }
