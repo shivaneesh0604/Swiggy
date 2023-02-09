@@ -5,5 +5,5 @@ public enum RiderReturnFunctionalities {
     THAT_ORDER_IS_CANCELLED,
     WAIT_TILL_ORDER_IS_PREPARED,
     PICKED,
-    DELIVERED;
+    DELIVERED
 }

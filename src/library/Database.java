@@ -9,24 +9,24 @@ final class Database {
 
     private static Database database = null;
     private static final HashMap<UserCredential, User> users = new HashMap<>();
-    private static final HashMap<Integer, Restaurant> listOfRestaurant = new HashMap<Integer, Restaurant>();
+    private static final HashMap<Integer, Restaurant> listOfRestaurant = new HashMap<>();
     private static final HashMap<String, HashMap<Integer, ArrayList<Order>>> orders = new HashMap<>();// customerID->restaurantID,orderList
-    static final ArrayList<Location> locations = new ArrayList<Location>();
+    static final ArrayList<Location> locations = new ArrayList<>();
 
     private Database() {
         Restaurant restaurant = new Restaurant(Location.AREA2, "anandha bhavan", 1);
         listOfRestaurant.put(1, restaurant);
-        users.put(new UserCredential("shiva1234", "123456789", "CUSTOMER_1001"), new Customer("CUSTOMER_1001", ApplicationFactory.getCustomerApplication(), Role.CUSTOMER, "shiva"));
+        users.put(new UserCredential("shiva1234", "123456789"), new Customer("CUSTOMER_1001", ApplicationFactory.getCustomerApplication(), Role.CUSTOMER, "shiva"));
         Rider rider = new Rider("RIDER_1000", ApplicationFactory.getRiderApplication(), Role.RIDER, "sathya");
         rider.setLocation(Location.AREA1);
-        users.put(new UserCredential("sathya1234", "123456789", "RIDER_1000"), rider);
-        users.put(new UserCredential("sankar1234", "123456789", "RESTAURANT_MANAGER_1002"), new RestaurantManager("RESTAURANT_MANAGER_1002", restaurant, ApplicationFactory.getRestaurantManagerApplication(), Role.RESTAURANT_MANAGER, "sankar"));
+        users.put(new UserCredential("sathya1234", "123456789"), rider);
+        users.put(new UserCredential("sankar1234", "123456789"), new RestaurantManager("RESTAURANT_MANAGER_1002", restaurant, ApplicationFactory.getRestaurantManagerApplication(), Role.RESTAURANT_MANAGER, "sankar"));
         Rider rider1 = new Rider("RIDER_1003", ApplicationFactory.getRiderApplication(), Role.RIDER, "durga_devi");
         rider1.setLocation(Location.AREA2);
-        users.put(new UserCredential("dd1234", "123456789", "RIDER_1003"), rider1);
+        users.put(new UserCredential("dd1234", "123456789"), rider1);
         Rider rider2 = new Rider("RIDER_1004", ApplicationFactory.getRiderApplication(), Role.RIDER, "devi");
         rider2.setLocation(Location.AREA2);
-        users.put(new UserCredential("devi1234", "123456789", "RIDER_1004"), rider2);
+        users.put(new UserCredential("devi1234", "123456789"), rider2);
         Item item = new Item("rice", 100, Dietary.VEG, Course.MAINCOURSE, Timing.AFTERNOON);
         Item item2 = new Item("chicken", 120, Dietary.NON_VEG, Course.MAINCOURSE, Timing.AFTERNOON);
         locations.add(Location.AREA1);
@@ -55,7 +55,7 @@ final class Database {
             if (userCredential.getUserName().equals(userName))
                 return null;
         }
-        users.put(new UserCredential(userName, passWord, user.getUserID()), user);
+        users.put(new UserCredential(userName, passWord), user);
         return user;
     }
 
@@ -86,13 +86,6 @@ final class Database {
         return null;
     }
 
-    Restaurant getRestaurant(int restaurantID) {
-        if (listOfRestaurant.containsKey(restaurantID)) {
-            return listOfRestaurant.get(restaurantID);
-        }
-        return null;
-    }
-
     void addOrder(String customerID, Order tempOrders, int restaurantID) {
         HashMap<Integer, ArrayList<Order>> orderList1 = orders.get(customerID);
         if (orderList1 != null) {
@@ -100,14 +93,14 @@ final class Database {
             if (order2 != null) {
                 order2.add(tempOrders);
             } else {
-                orderList1.put(restaurantID, new ArrayList<Order>());
+                orderList1.put(restaurantID, new ArrayList<>());
                 ArrayList<Order> order3 = orderList1.get(restaurantID);
                 order3.add(tempOrders);
             }
         } else {
-            orders.put(customerID, new HashMap<Integer, ArrayList<Order>>());
+            orders.put(customerID, new HashMap<>());
             HashMap<Integer, ArrayList<Order>> orders1 = orders.get(customerID);
-            orders1.put(restaurantID, new ArrayList<Order>());
+            orders1.put(restaurantID, new ArrayList<>());
             ArrayList<Order> orders3 = orders1.get(restaurantID);
             orders3.add(tempOrders);
         }
@@ -159,46 +152,6 @@ final class Database {
         }
         return users2;
     }
-
-//    OrderStatus getStatus(int orderID) {
-//        for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {
-//            for (ArrayList<Order> list : innerMap.values()) {
-//                for (Order order : list) {
-//                    if (order.getOrderID() == orderID) {
-//                        return order.getStatus();
-//                    }
-//                }
-//            }
-//        }
-//        return null;
-//    }
-//
-//
-//    public Restaurant findRestaurant(int orderID){
-//        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
-//            for (ArrayList<OrderList> list : innerMap.values()) {
-//                for (OrderList orderList : list) {
-//                    if(orderList.getOrderID()==orderID){
-//                        return getRestaurant(orderList.getRestaurantID());
-//                    }
-//                }
-//            }
-//        }
-//        return null;
-//    }
-
-//    ArrayList<OrderList> getAllOrders() {
-//        Collection<OrderList> collection = new ArrayList<>();
-//        for (HashMap<Integer, ArrayList<OrderList>> innerMap : orders.values()) {
-//            for (ArrayList<OrderList> list : innerMap.values()) {
-//                for (OrderList orderList : list) {
-//                    if (orderList.getRiderAcceptance().equals(RiderAcceptance.NOT_ACCEPTED))
-//                        collection.add(orderList);
-//                }
-//            }
-//        }
-//        return (ArrayList<OrderList>) collection;
-//    }
 
     Order getOrder(int orderID) {
         for (HashMap<Integer, ArrayList<Order>> innerMap : orders.values()) {

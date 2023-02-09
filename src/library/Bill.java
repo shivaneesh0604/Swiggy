@@ -2,7 +2,7 @@ package library;
 
 import java.util.ArrayList;
 
-public class Bill {
+public final class Bill {
     public class BillItem {
         public final String itemName;
         public int quantity;
@@ -20,10 +20,6 @@ public class Bill {
 
         public int getQuantity() {
             return quantity;
-        }
-
-        void setQuantity(int quantity){
-            this.quantity = quantity;
         }
 
         public double getPrice() {

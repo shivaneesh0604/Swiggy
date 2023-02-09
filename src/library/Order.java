@@ -17,7 +17,7 @@ public class Order {
     private RiderFunctionalityStatus riderFunctionalityStatus;
     private String riderName;
 
-    Order(String restaurantName, int restaurantID, Location restaurantLocation, Location customerLocation, String customerID) {
+    Order(String restaurantName, int restaurantID, Location restaurantLocation, String customerID,Location customerLocation) {
         this.orders = new HashMap<>();
         this.restaurantID = restaurantID;
         this.restaurantName = restaurantName;
@@ -34,27 +34,27 @@ public class Order {
         return bill;
     }
 
-    void addOrders(Item item,int quantity) {
+    void addOrders(Item item) {
         LineOrder lineOrder1 = orders.get(item.getFoodName());
         if(lineOrder1!= null){
-            lineOrder1.setQuantity(lineOrder1.getQuantity()+quantity);
+            lineOrder1.setQuantity(lineOrder1.getQuantity()+1);
             return;
         }
-        this.orders.put(item.getFoodName(), new LineOrder(item,quantity));
+        this.orders.put(item.getFoodName(), new LineOrder(item,1));
     }
 
-    OrderDeletion deleteOrder(Item item, int quantity1) {
+    OrderDeletion deleteOrder(Item item) {
         LineOrder lineOrder1 = orders.get(item.getFoodName());
         if(lineOrder1!=null){
-            if (lineOrder1.getQuantity()>quantity1){
-                lineOrder1.setQuantity(lineOrder1.getQuantity()-quantity1);
+            if (lineOrder1.getQuantity()>1){
+                lineOrder1.setQuantity(lineOrder1.getQuantity()-1);
                 return OrderDeletion.CHANGED_QUANTITY;
             }
-            else if(lineOrder1.getQuantity()==quantity1) {
+            else if(lineOrder1.getQuantity()==1) {
                 orders.remove(item.getFoodName());
                 return OrderDeletion.TOTALLY_DELETED;
             }
-            else if(lineOrder1.getQuantity()<quantity1){
+            else if(lineOrder1.getQuantity()<1){
                 return OrderDeletion.CANT_DELETE;
             }
         }

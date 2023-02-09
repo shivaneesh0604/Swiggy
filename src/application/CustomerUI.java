@@ -1,5 +1,6 @@
 package application;
 
+import javafx.application.Application;
 import library.*;
 
 import java.util.*;
@@ -221,8 +222,9 @@ final class CustomerUI implements UI {
 
     private void showBill(Bill bill) {
         ArrayList<Bill.BillItem> items = bill.getItems();
+        System.out.println("food name    quantity   price");
         for (Bill.BillItem billItem : items) {
-            System.out.println(billItem.getItemName() + " " + billItem.getQuantity());
+            System.out.println(billItem.getItemName() + " " + billItem.getQuantity()+" "+billItem.getPrice());
         }
         System.out.println("the total is " + bill.total());
     }
@@ -248,46 +250,3 @@ final class CustomerUI implements UI {
     }
 
 }
-//        Location location = Location.AREA1;
-//        customer.setLocation(location);
-//        MainLoop:while (true) {
-//            HashMap<Integer, Restaurant> listOfRestaurants = customer.getAllRestaurant(location);
-//            showAllRestaurant(listOfRestaurants);
-//            System.out.println("enter which restaurantID to enter");
-//            int restaurantID = 1;
-//            if (listOfRestaurants.containsKey(restaurantID)) {
-//                System.out.println("enter Which Timing you are entering");
-//                Timing timing = Timing.AFTERNOON;
-//                HashMap<String, Item> items = customer.enterRestaurant(listOfRestaurants.get(restaurantID), timing);
-//                Collection<Item> items2 = items.values();
-//                showAvailableMenu(items2);
-//                String foodName = "chicken";
-//                String foodName2 = "rice";
-//                int quantity = 2;
-//                for (Item item : items2) {
-//                    if (item.getFoodName().equals(foodName.toUpperCase())) {
-//                        System.out.println(customer.addOrder(item, quantity, listOfRestaurants.get(restaurantID)));
-//                    }
-//                }
-//                for (Item item : items2) {
-//                    if (item.getFoodName().equals(foodName2.toUpperCase())) {
-//                        System.out.println(customer.addOrder(item, quantity, listOfRestaurants.get(restaurantID)));
-//                    }
-//                }
-//                System.out.println("deleting orders");
-//                for (Item item : items2) {
-//                    if (item.getFoodName().equals(foodName.toUpperCase())) {
-//                        System.out.println(customer.removeOrder(item, quantity, listOfRestaurants.get(restaurantID)));
-//                    }
-//                }
-//                System.out.println("bill is");
-//                Bill bill = customer.confirmOrder(listOfRestaurants.get(restaurantID));
-//                showBill(bill);
-//                System.out.println(customer.placeOrder(listOfRestaurants.get(restaurantID)));
-//                ArrayList<Order> orders = customer.viewOrdersPlaced();
-//                viewOrder(orders);
-//                break;
-//            }
-//        System.out.println("enter orderID to cancel");
-//        int orderID = sc.nextLine();
-//        System.out.println(customer.cancelOrder(orderID));

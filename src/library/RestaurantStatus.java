@@ -1,5 +1,5 @@
 package library;
 
 public enum RestaurantStatus {
-    AVAILABLE,NOT_AVAILABLE;
+    AVAILABLE,NOT_AVAILABLE
 }

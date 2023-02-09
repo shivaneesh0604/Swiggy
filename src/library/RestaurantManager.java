@@ -22,10 +22,6 @@ public final class RestaurantManager extends User {
         return restaurant.getMenuList().alterMenuItems(item, price);
     }
 
-//    public void checkFoodAvailability(String foodName, Timing timing) {
-//        restaurant.getMenuList().checkFoodAvailability(foodName, timing);
-//    }
-
     public RestaurantManagerReturnFunctions setTimingForFood(String foodName, Timing timing) {
         return restaurant.getMenuList().setTimingForFood(foodName, timing);
     }

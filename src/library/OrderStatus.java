@@ -1,6 +1,6 @@
 package library;
 
 public enum OrderStatus {
-    ORDER_PLACED,PREPARING,PREPARED,CANCELLED;
+    ORDER_PLACED,PREPARING,PREPARED,CANCELLED
 }
 

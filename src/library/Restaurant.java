@@ -9,7 +9,7 @@ public class Restaurant {
     private final String restaurantName;
     private final int restaurantID;
     private final HashMap<Integer, ArrayList<LineOrder>> ordersGot;//orderID mapped with orders
-    private HashMap<Integer,ArrayList<LineOrder>> ordersCompleted;
+    private final HashMap<Integer,ArrayList<LineOrder>> ordersCompleted;
     private RestaurantStatus restaurantStatus;
 
     Restaurant(Location location, String restaurantName, int restaurantID) {
@@ -40,7 +40,7 @@ public class Restaurant {
         return location;
     }
 
-    public MenuItems getMenuList() {
+    MenuItems getMenuList() {
         return menuItems;
     }
 

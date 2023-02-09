@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 class MenuItems {
-    private HashMap<String, Item> menuItems;
+    private final HashMap<String, Item> menuItems;
 
     MenuItems() {
         this.menuItems = new HashMap<>();
@@ -24,15 +24,6 @@ class MenuItems {
         return RestaurantManagerReturnFunctions.ITEM_DELETED;
     }
 
-//    boolean checkFoodAvailability(String foodName, Timing timing) {
-//        Item item = menuItems.get(foodName);
-//        if (item == null) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
-    
     RestaurantManagerReturnFunctions setTimingForFood(String foodName, Timing timing) {
         Item item = menuItems.get(foodName);
         if (item == null)

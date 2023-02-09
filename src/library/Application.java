@@ -15,12 +15,11 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     public HashMap<Integer, Restaurant> getAllRestaurant(Location location) {
         HashMap<Integer, Restaurant> listOfRestaurant = Database.getInstanceDatabase().getAllRestaurant();
         HashMap<Integer, Restaurant> restaurants = new HashMap<>();
-        Collection<Restaurant> restaurants1 = listOfRestaurant.values();
         ArrayList<Location> locations = Database.getInstanceDatabase().getLocations();
         int index = locations.indexOf(location);
         Location previousIndex = index < 1 ? null : locations.get(index - 1);
         Location nextIndex = index > locations.size() - 2 ? null : locations.get(index + 1);
-        for (Restaurant restaurant : restaurants1) {
+        for (Restaurant restaurant : listOfRestaurant.values()) {
             if (previousIndex == null) {
                 if (restaurant.getRestaurantStatus().equals(RestaurantStatus.AVAILABLE) && (restaurant.getLocation().equals(location) || restaurant.getLocation().equals(nextIndex))) {
                     restaurants.put(restaurant.getRestaurantID(), restaurant);
@@ -48,17 +47,17 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         if (customerOrder != null) {
             Order restaurantOrder = customerOrder.get(restaurant.getRestaurantID());
             if (restaurantOrder != null) {
-                restaurantOrder.addOrders(item, 1);
+                restaurantOrder.addOrders(item);
             } else {
                 customerOrder.clear();
-                Order order2 = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
-                order2.addOrders(item, 1);
+                Order order2 = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getUserID(), customerDetails.getLocation());
+                order2.addOrders(item);
                 customerOrder.put(restaurant.getRestaurantID(), order2);
             }
         } else {
             HashMap<Integer, Order> orderList2 = new HashMap<>();
-            Order order = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getLocation(), customerDetails.getUserID());
-            order.addOrders(item, 1);
+            Order order = new Order(restaurant.getRestaurantName(), restaurant.getRestaurantID(), restaurant.getLocation(), customerDetails.getUserID(), customerDetails.getLocation());
+            order.addOrders(item);
             orderList2.put(restaurant.getRestaurantID(), order);
             cartItems.put(customerID, orderList2);
         }
@@ -69,7 +68,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     public OrderDeletion removeOrder(Item item, String customerID, Restaurant restaurant) {
         Order orders = cartItems.get(customerID).get(restaurant.getRestaurantID());
         if (orders != null) {
-            return orders.deleteOrder(item, 1);
+            return orders.deleteOrder(item);
         }
         return OrderDeletion.NO_ORDER_FOUND_IN_THIS_RESTAURANT;
     }
@@ -84,9 +83,9 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         Order order = cartItems.get(customerID).get(restaurant.getRestaurantID());
         if (order != null) {
             Bill bill = order.getBill();
-            HashMap<String, LineOrder> orderInOrderList = order.getOrders();
-            Collection<LineOrder> lineOrderCollection = orderInOrderList.values();
-            for (LineOrder lineOrder : lineOrderCollection) {
+            HashMap<String, LineOrder> orders = order.getOrders();
+            Collection<LineOrder> lineOrders = orders.values();
+            for (LineOrder lineOrder : lineOrders) {
                 bill.addItem(lineOrder.getItem().getFoodName(), lineOrder.getQuantity(), lineOrder.getItem().getPrice());
             }
             return bill;
@@ -96,16 +95,16 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public OrderStatus placeOrder(String customerID, Restaurant restaurant, Location location) {
-        Order order2 = cartItems.containsKey(customerID) ? (cartItems.get(customerID).getOrDefault(restaurant.getRestaurantID(), null)) : null;
-        if (order2 != null) {
-            Database.getInstanceDatabase().addOrder(customerID, order2, restaurant.getRestaurantID());
+        Order order = cartItems.containsKey(customerID) ? (cartItems.get(customerID).getOrDefault(restaurant.getRestaurantID(), null)) : null;
+        if (order != null) {
+            Database.getInstanceDatabase().addOrder(customerID, order, restaurant.getRestaurantID());
             Collection<Rider> allRiders = Database.getInstanceDatabase().getAllRiders();
-            setNotification(allRiders, location, new Notification(order2));
+            setNotification(allRiders, location, new Notification(order));
             cartItems.remove(customerID);
-            HashMap<String, LineOrder> orderInOrderList = order2.getOrders();
-            ArrayList<LineOrder> lineOrderCollection = new ArrayList<>(orderInOrderList.values());
-            restaurant.receiveOrders(order2.getOrderID(), lineOrderCollection);
-            order2.setStatus(OrderStatus.ORDER_PLACED);
+            HashMap<String, LineOrder> orders = order.getOrders();
+            ArrayList<LineOrder> lineOrders = new ArrayList<>(orders.values());
+            restaurant.receiveOrders(order.getOrderID(), lineOrders);
+            order.setStatus(OrderStatus.ORDER_PLACED);
             return OrderStatus.ORDER_PLACED;
         }
         return null;
@@ -113,20 +112,19 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public ArrayList<Order> viewOrdersPlaced(String customerID) {
-        ArrayList<Order> ordersPlaced1 = new ArrayList<>();
-        HashMap<Integer, ArrayList<Order>> ordersPlaced2 = Database.getInstanceDatabase().getOrdersPlaced(customerID);
-        if (ordersPlaced2 != null) {
-            HashMap<Integer, ArrayList<Order>> ordersPlaced = getNonCancelledOrders(ordersPlaced2);
-            if (ordersPlaced.size() > 0) {
-                Collection<ArrayList<Order>> orders = ordersPlaced.values();
-                for (ArrayList<Order> orders1 : orders) {
+        ArrayList<Order> ordersPlaced = new ArrayList<>();
+        HashMap<Integer, ArrayList<Order>> ordersPlacedByCustomer = Database.getInstanceDatabase().getOrdersPlaced(customerID);
+        if (ordersPlacedByCustomer != null) {
+            HashMap<Integer, ArrayList<Order>> nonCancelledOrders = getNonCancelledOrders(ordersPlacedByCustomer);
+            if (nonCancelledOrders.size() > 0) {
+                for (ArrayList<Order> orders1 : nonCancelledOrders.values()) {
                     for (Order order : orders1) {
                         if (!order.getStatus().equals(OrderStatus.CANCELLED)) {
-                            ordersPlaced1.add(order);
+                            ordersPlaced.add(order);
                         }
                     }
                 }
-                return ordersPlaced1;
+                return ordersPlaced;
             }
         }
         return null;
@@ -186,8 +184,8 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     }
 
     @Override
-    public RiderFunctionalityStatus changeStatusByRider(Order order, RiderFunctionalityStatus riderFunctionalityStatus) {
-        return Database.getInstanceDatabase().setStatusByRider(riderFunctionalityStatus, order.getOrderID());
+    public void changeStatusByRider(Order order, RiderFunctionalityStatus riderFunctionalityStatus) {
+        Database.getInstanceDatabase().setStatusByRider(riderFunctionalityStatus, order.getOrderID());
     }
 
     @Override
@@ -195,22 +193,21 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         return Database.getInstanceDatabase().setStatus(orderStatus, orderID);
     }
 
-    private HashMap<Integer, ArrayList<Order>> getNonCancelledOrders(HashMap<Integer, ArrayList<Order>> ordersPlaced) {
-        HashMap<Integer, ArrayList<Order>> orderPlaced1 = new HashMap<>();
-        Collection<ArrayList<Order>> ordersCollection = ordersPlaced.values();
-        for (ArrayList<Order> orders1 : ordersCollection) {
+    private HashMap<Integer, ArrayList<Order>> getNonCancelledOrders(HashMap<Integer, ArrayList<Order>> ordersPlacedByCustomer) {
+        HashMap<Integer, ArrayList<Order>> ordersPlaced = new HashMap<>();
+        for (ArrayList<Order> orders1 : ordersPlacedByCustomer.values()) {
             for (Order order : orders1) {
                 if (!order.getStatus().equals(OrderStatus.CANCELLED)) {
-                    if (orderPlaced1.containsKey(order.getOrderID())) {
-                        orderPlaced1.get(order.getOrderID()).add(order);
+                    if (ordersPlaced.containsKey(order.getOrderID())) {
+                        ordersPlaced.get(order.getOrderID()).add(order);
                     } else {
-                        orderPlaced1.put(order.getOrderID(), new ArrayList<>());
-                        orderPlaced1.get(order.getOrderID()).add(order);
+                        ordersPlaced.put(order.getOrderID(), new ArrayList<>());
+                        ordersPlaced.get(order.getOrderID()).add(order);
                     }
                 }
             }
         }
-        return orderPlaced1;
+        return ordersPlaced;
     }
 
     private void setNotification(Collection<Rider> riders, Location location, Notification notification) {
@@ -220,18 +217,18 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         Location nextIndex = index > locations.size() - 2 ? null : locations.get(index + 1);
         for (Rider rider : riders) {
             if (previousIndex == null) {
-                if ((rider.getLocation().equals(location) || rider.getLocation().equals(nextIndex)) && !notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
+                if ((rider.getLocation().equals(location) || rider.getLocation().equals(nextIndex)) && notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
                     System.out.println(rider.getUserID());
                     rider.addNotification(notification);
                     break;
                 }
             } else if (nextIndex == null) {
-                if ((rider.getLocation().equals(location) || rider.getLocation().equals(previousIndex)) && !notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
+                if ((rider.getLocation().equals(location) || rider.getLocation().equals(previousIndex)) && notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
                     System.out.println(rider.getUserID());
                     rider.addNotification(notification);
                     break;
                 }
-            } else if (!notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE) && ((rider.getLocation().equals(location) || rider.getLocation().equals(previousIndex) || rider.getLocation().equals(nextIndex)))) {
+            } else if (notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE) && ((rider.getLocation().equals(location) || rider.getLocation().equals(previousIndex) || rider.getLocation().equals(nextIndex)))) {
                 rider.addNotification(notification);
                 System.out.println(rider.getUserID());
                 break;

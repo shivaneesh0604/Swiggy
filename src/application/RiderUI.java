@@ -124,7 +124,7 @@ final class RiderUI implements UI {
         if ((notifications != null) && (notifications.size() > 0)) {
             for (Notification notification : notifications) {
                 Order order = notification.getOrder();
-                System.out.println(order.getOrderID() + " is the order ID " + order.getRestaurantID() + " is the restaurant ID " + order.getCustomerLocation() + " is the location of customer " + order.getRestaurantLocation() + " is the location of the restaurant " + order.getRestaurantName() + " is the name of the restaurant");
+                System.out.println(order.getOrderID() + " is the order ID " + order.getRestaurantID() + " is the restaurant ID " + order.getCustomerLocation() + " is the location of customer " +order.getCustomerID()+" is the customer ID "+ order.getRestaurantLocation() + " is the location of the restaurant " + order.getRestaurantName() + " is the name of the restaurant");
             }
         } else {
             System.out.println("no orders available");

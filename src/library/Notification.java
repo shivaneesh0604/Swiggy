@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Notification {
     private final Order order;
-    private ArrayList<String> cancelledRiderIds;
+    private final ArrayList<String> cancelledRiderIds;
 
     Notification(Order order) {
         this.order = order;
@@ -12,14 +12,7 @@ public class Notification {
     }
 
     boolean checkCancelledRiderIds(String userID) {
-        if (cancelledRiderIds.contains(userID)) {
-            return true;
-        }
-        return false;
-    }
-
-    ArrayList<String> getCancelledRiderIds() {
-        return cancelledRiderIds;
+        return !cancelledRiderIds.contains(userID);
     }
 
     void setCancelledRiderIds(String cancelledRiderIds) {
