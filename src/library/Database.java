@@ -1,7 +1,5 @@
 package library;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,6 +50,9 @@ final class Database {
     }
 
     User addUser(User user, String userName, String passWord) {
+        if(users.containsKey(userName)){
+            return null;
+        }
         users.put(new UserCredential(userName, passWord, user.getUserID()), user);
         return user;
     }

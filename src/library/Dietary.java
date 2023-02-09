@@ -1,5 +1,5 @@
 package library;
 
-enum Dietary {
+public enum Dietary {
     VEG, NON_VEG;
 }

@@ -1,22 +1,24 @@
 package application;
 
 
-import library.Customer;
-import library.DatabaseManager;
-import library.RestaurantManager;
-import library.Rider;
-import library.User;
-import library.Role;
+import library.*;
 
- final class ApplicationUI {
+import java.util.Scanner;
 
+final class ApplicationUI {
+
+    Scanner sc = new Scanner(System.in);
     private final DatabaseManager databaseManager;
 
     public ApplicationUI(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
 
-    public void logIN(String userName, String passWord) {
+    public void logIN() {
+        System.out.println("enter user name");
+        String userName = sc.nextLine();
+        System.out.println("enter password");
+        String passWord = sc.nextLine();
         User user = databaseManager.getUser(userName, passWord);
         if (user != null) {
             Role role = user.getRole();
@@ -41,27 +43,35 @@ import library.Role;
     }
 
     public void signUP() {
-        String userName = "shiva123";
-        String passWord = "password";
-        Role role = Role.CUSTOMER;
-        String name = "shiva";
+        System.out.println("welcome to login page");
+        System.out.println("enter user name");
+        String userName = sc.nextLine();
+        System.out.println("enter password");
+        String passWord = sc.nextLine();
+        System.out.println("enter name");
+        String name = sc.nextLine();
+        System.out.println("enter which role you need to register");
+        Utils.print(Role.values());
+        int registerRole = Utils.inputVerification(Role.values().length);
+        Role role = Role.values()[registerRole];
         switch (role) {
             case CUSTOMER:
-                Customer user = (Customer) databaseManager.addCustomer(userName, passWord, role, name);
-                UI ui = new CustomerUI(user);
-                ui.entersUI();
+                UserAddition userAddition = databaseManager.addCustomer(userName, passWord, role, name);
+                if(userAddition.equals(UserAddition.USER_ADDED)){
+                    logIN();
+                }
+                else {
+                    System.out.println(userAddition);
+                }
                 break;
             case RIDER:
-                Rider rider = (Rider) databaseManager.addRider(userName, passWord, role, name);
-                UI ui1 = new RiderUI(rider);
-                ui1.entersUI();
-                break;
-
-            case RESTAURANT_MANAGER:
-                int restaurantID = 1;
-                RestaurantManager restaurantManager = (RestaurantManager) databaseManager.addRestaurantManager(userName, passWord, role, name, restaurantID);
-                UI ui2 = new RestaurantManagerUI(restaurantManager);
-                ui2.entersUI();
+                UserAddition userAddition1 =  databaseManager.addRider(userName, passWord, role, name);
+                if (userAddition1.equals(UserAddition.USER_ADDED)){
+                    logIN();
+                }
+                else {
+                    System.out.println(userAddition1);
+                }
                 break;
         }
         System.out.println("added successfully");

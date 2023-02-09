@@ -42,7 +42,7 @@ public final class Rider extends User {
                 this.order = null;
                 this.riderStatus = RiderStatus.AVAILABLE;
                 return RiderReturnFunctionalities.THAT_ORDER_IS_CANCELLED;
-            } else if (orderStatus.equals(OrderStatus.PLACED)) {
+            } else if (orderStatus.equals(OrderStatus.ORDER_PLACED)) {
                 return RiderReturnFunctionalities.WAIT_TILL_ORDER_IS_PREPARED;
             }
         }

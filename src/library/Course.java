@@ -1,5 +1,5 @@
 package library;
 
-enum Course {
+public enum Course {
     STARTER, MAINCOURSE, DESSERT;
 }

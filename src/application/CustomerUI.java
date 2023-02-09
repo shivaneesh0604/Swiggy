@@ -1,12 +1,7 @@
 package application;
 
-import com.sun.deploy.ui.UITextArea;
-import com.sun.org.apache.xpath.internal.operations.Or;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import library.*;
-import org.xml.sax.helpers.AttributesImpl;
 
-import javax.sound.sampled.Line;
 import java.util.*;
 
 final class CustomerUI implements UI {
@@ -180,7 +175,7 @@ final class CustomerUI implements UI {
                             System.out.println(customer.cancelOrder(Integer.parseInt(orderID)));
                         }
                         break;
-                    } else if (order1.getStatus().equals(OrderStatus.PLACED)) {
+                    } else if (order1.getStatus().equals(OrderStatus.ORDER_PLACED)) {
                         System.out.println(customer.cancelOrder(Integer.parseInt(orderID)));
                     }
                 }

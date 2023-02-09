@@ -1,10 +1,7 @@
 package library;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.HashMap;
 
 final class Application implements CustomerApplication, RiderApplication, RestaurantManagerApplication {
@@ -108,8 +105,8 @@ final class Application implements CustomerApplication, RiderApplication, Restau
             HashMap<String, LineOrder> orderInOrderList = order2.getOrders();
             ArrayList<LineOrder> lineOrderCollection = new ArrayList<>(orderInOrderList.values());
             restaurant.receiveOrders(order2.getOrderID(), lineOrderCollection);
-            order2.setStatus(OrderStatus.PLACED);
-            return OrderStatus.PLACED;
+            order2.setStatus(OrderStatus.ORDER_PLACED);
+            return OrderStatus.ORDER_PLACED;
         }
         return null;
     }

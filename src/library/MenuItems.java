@@ -10,32 +10,41 @@ class MenuItems {
         this.menuItems = new HashMap<>();
     }
 
-    void addMenusItems(Item items) {
+    RestaurantManagerReturnFunctions addMenusItems(Item items) {
         menuItems.put(items.getFoodName(), items);
+        return RestaurantManagerReturnFunctions.ITEM_ADDED;
     }
 
-    void alterMenuItems(Item item, int price) {
-        item.setPrice(price);
+    RestaurantManagerReturnFunctions alterMenuItems(Item item, double price) {
+        return item.setPrice(price);
     }
 
-    void deleteMenuItems(Item item) {
+    RestaurantManagerReturnFunctions deleteMenuItems(Item item) {
         menuItems.remove(item.getFoodName());
+        return RestaurantManagerReturnFunctions.ITEM_DELETED;
     }
 
-    boolean checkFoodAvailability(String foodName, Timing timing) {
-        Item item = menuItems.get(foodName);
-        if (item == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+//    boolean checkFoodAvailability(String foodName, Timing timing) {
+//        Item item = menuItems.get(foodName);
+//        if (item == null) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
     
-    void setTimingForFood(String foodName, Timing timing) {
+    RestaurantManagerReturnFunctions setTimingForFood(String foodName, Timing timing) {
         Item item = menuItems.get(foodName);
         if (item == null)
-            return;
-        item.setTiming(timing);
+            return null;
+        return item.setTiming(timing);
+    }
+
+    RestaurantManagerReturnFunctions removeTimingForFood(String foodName,Timing timing){
+        Item item = menuItems.get(foodName);
+        if (item == null)
+            return null;
+        return item.removeTiming(timing);
     }
 
     HashMap<String, Item> getItems(Timing timing) {
@@ -50,6 +59,6 @@ class MenuItems {
     }
 
     HashMap<String, Item> getItems() {
-        return menuItems;
+        return new HashMap<>(menuItems);
     }
 }

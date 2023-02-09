@@ -17,6 +17,10 @@ public class Item {
         this.timing.add(timing);
     }
 
+    public ArrayList<Timing> getTiming() {
+        return new ArrayList<>(timing);
+    }
+
     public String getFoodName() {
         return foodName;
     }
@@ -25,8 +29,9 @@ public class Item {
         return price;
     }
 
-    void setPrice(int price) {
+    RestaurantManagerReturnFunctions setPrice(double price) {
         this.price = price;
+        return RestaurantManagerReturnFunctions.PRICE_CHANGED;
     }
 
     public Dietary getDietary() {
@@ -46,7 +51,13 @@ public class Item {
         return false;
     }
 
-    void setTiming(Timing timing) {
+    RestaurantManagerReturnFunctions setTiming(Timing timing) {
         this.timing.add(timing);
+        return RestaurantManagerReturnFunctions.TIMING_ADDED;
+    }
+
+    RestaurantManagerReturnFunctions removeTiming(Timing timing){
+        this.timing.remove(timing);
+        return RestaurantManagerReturnFunctions.TIMING_REMOVED;
     }
 }

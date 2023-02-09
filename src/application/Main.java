@@ -17,11 +17,7 @@ final class Main {
                 String applicationUIAccess = sc.nextLine();
                 try {
                     if (Integer.parseInt(applicationUIAccess) == 1) {
-                        System.out.println("enter user name");
-                        String userName = sc.nextLine();
-                        System.out.println("enter password");
-                        String passWord = sc.nextLine();
-                        applicationUI.logIN(userName, passWord);
+                        applicationUI.logIN();
                         break;
                     } else if (Integer.parseInt(applicationUIAccess) == 2) {
                         applicationUI.signUP();

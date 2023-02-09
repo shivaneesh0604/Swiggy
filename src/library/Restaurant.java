@@ -27,7 +27,7 @@ public class Restaurant {
     }
 
     HashMap<Integer, ArrayList<LineOrder>> viewOrderGot() {
-        return ordersGot;
+        return new HashMap<>(ordersGot);
     }
 
     void setOrdersCompleted(int orderID){
