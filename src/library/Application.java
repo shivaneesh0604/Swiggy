@@ -163,6 +163,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         Order order = Database.getInstanceDatabase().getOrder(orderID);
         if (order != null && order.getOrderID() == orderID && !order.getStatus().equals(OrderStatus.CANCELLED)) {
             order.setRiderAcceptance(RiderFunctionalityStatus.ACCEPTED);
+            order.setRiderName(rider.getName());
             Collection<Rider> allRiders = Database.getInstanceDatabase().getAllRiders();
             allRiders.remove(rider);
             rider.removeNotification(orderID);

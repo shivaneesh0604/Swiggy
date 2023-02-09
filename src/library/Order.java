@@ -15,6 +15,7 @@ public class Order {
     private final String customerID;
     private final Bill bill;
     private RiderFunctionalityStatus riderFunctionalityStatus;
+    private String riderName;
 
     Order(String restaurantName, int restaurantID, Location restaurantLocation, Location customerLocation, String customerID) {
         this.orders = new HashMap<>();
@@ -102,6 +103,14 @@ public class Order {
 
     public RiderFunctionalityStatus getRiderFunctionalityStatus() {
         return riderFunctionalityStatus;
+    }
+
+    public String getRiderName() {
+        return riderName;
+    }
+
+    public void setRiderName(String riderName) {
+        this.riderName = riderName;
     }
 
 }

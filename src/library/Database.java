@@ -50,8 +50,10 @@ final class Database {
     }
 
     User addUser(User user, String userName, String passWord) {
-        if(users.containsKey(userName)){
-            return null;
+        Collection<UserCredential> userCredentials = users.keySet();
+        for (UserCredential userCredential : userCredentials) {
+            if (userCredential.getUserName().equals(userName))
+                return null;
         }
         users.put(new UserCredential(userName, passWord, user.getUserID()), user);
         return user;

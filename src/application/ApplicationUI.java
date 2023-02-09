@@ -23,21 +23,23 @@ final class ApplicationUI {
         if (user != null) {
             Role role = user.getRole();
             switch (role) {
-                case CUSTOMER:
+                case CUSTOMER: {
                     UI ui = new CustomerUI((Customer) user);
                     ui.entersUI();
                     break;
-                case RIDER:
-                    UI ui2 = new RiderUI((Rider) user);
-                    ui2.entersUI();
+                }
+                case RIDER: {
+                    UI ui = new RiderUI((Rider) user);
+                    ui.entersUI();
                     break;
-                case RESTAURANT_MANAGER:
-                    UI ui3 = new RestaurantManagerUI((RestaurantManager) user);
-                    ui3.entersUI();
+                }
+                case RESTAURANT_MANAGER: {
+                    UI ui = new RestaurantManagerUI((RestaurantManager) user);
+                    ui.entersUI();
                     break;
+                }
             }
-        }
-        else {
+        } else {
             System.out.println("invalid credentials");
         }
     }
@@ -57,23 +59,22 @@ final class ApplicationUI {
         switch (role) {
             case CUSTOMER:
                 UserAddition userAddition = databaseManager.addCustomer(userName, passWord, role, name);
-                if(userAddition.equals(UserAddition.USER_ADDED)){
+                if (userAddition.equals(UserAddition.USER_ADDED)) {
+                    System.out.println("added successfully");
                     logIN();
-                }
-                else {
+                } else {
                     System.out.println(userAddition);
                 }
                 break;
             case RIDER:
-                UserAddition userAddition1 =  databaseManager.addRider(userName, passWord, role, name);
-                if (userAddition1.equals(UserAddition.USER_ADDED)){
+                UserAddition userAddition1 = databaseManager.addRider(userName, passWord, role, name);
+                if (userAddition1.equals(UserAddition.USER_ADDED)) {
+                    System.out.println("added successfully");
                     logIN();
-                }
-                else {
+                } else {
                     System.out.println(userAddition1);
                 }
                 break;
         }
-        System.out.println("added successfully");
     }
 }

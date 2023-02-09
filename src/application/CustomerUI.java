@@ -26,28 +26,24 @@ final class CustomerUI implements UI {
             Timing timing = Timing.values()[timingOption];
             SecondLoop:
             while (true) {
-                CustomerOption:
-                while (true) {
-                    Utils.print(CustomerOptions.values());
-                    int customerOption = Utils.inputVerification(CustomerOptions.values().length);
-                    CustomerOptions customerOptions1 = CustomerOptions.values()[customerOption];
-                    switch (customerOptions1) {
-                        case ENTERS_RESTAURANT:
-                            enterRestaurant(location, timing);
-                            break;
-                        case VIEW_ORDER_PLACED:
-                            viewOrder(customer.viewOrdersPlaced());
-                            break;
-                        case CANCEL_ORDER:
-                            viewCancelledOrder();
-                            break;
-                        case GO_BACK:
-                            break SecondLoop;
-
-                    }
+                Utils.print(CustomerOptions.values());
+                int customerOption = Utils.inputVerification(CustomerOptions.values().length);
+                CustomerOptions customerOptions1 = CustomerOptions.values()[customerOption];
+                switch (customerOptions1) {
+                    case ENTERS_RESTAURANT:
+                        enterRestaurant(location, timing);
+                        break;
+                    case VIEW_ORDER_PLACED:
+                        viewOrder(customer.viewOrdersPlaced());
+                        break;
+                    case CANCEL_ORDER:
+                        viewCancelledOrder();
+                        break;
+                    case GO_BACK:
+                        break SecondLoop;
                 }
             }
-            System.out.println("press 1 to go back of application");
+            System.out.println("press 1 to go back of application press another number to go back again to customer Options");
             String back = sc.nextLine();
             if (Integer.parseInt(back) == 1) {
                 break MainLoop;
@@ -56,59 +52,66 @@ final class CustomerUI implements UI {
     }
 
     private void enterRestaurant(Location location, Timing timing) {
-        HashMap<Integer, Restaurant> listOfRestaurants = customer.getAllRestaurant(location);
-        showAllRestaurant(listOfRestaurants);
-        System.out.println("enter which restaurantID to enter");
-        String restaurantID = sc.nextLine();
-        if (!listOfRestaurants.containsKey(Integer.parseInt(restaurantID))) {
-            System.out.println("wrong restaurantID");
-            return;
-        }
-        CustomerOrderOptions:
-        while (true) {
-            HashMap<String, Item> items = customer.enterRestaurant(listOfRestaurants.get(Integer.parseInt(restaurantID)), timing);
-            Collection<Item> items2 = items.values();
-            Utils.print(CustomerOrderOptions.values());
-            int customerOrderOptions = Utils.inputVerification(CustomerOrderOptions.values().length);
-            CustomerOrderOptions customerOrderOptions1 = CustomerOrderOptions.values()[customerOrderOptions];
-            switch (customerOrderOptions1) {
-                case ADD_ORDER:
-                    showAvailableMenu(items2);
-                    System.out.println("food items ordered are");
-                    HashMap<Integer, Order> cartItems1 = customer.viewItemsInCart();
-                    if (cartItems1 == null) {
-                        System.out.println("no cart items found");
-                    } else {
-                        showCartItems(cartItems1.get(Integer.parseInt(restaurantID)));
-                    }
-                    System.out.println("enter which food to add");
-                    String foodName = sc.nextLine().toUpperCase();
-                    if (items.containsKey(foodName)) {
-                        Order order = cartItems1 != null ? cartItems1.get(Integer.parseInt(restaurantID)) : null;
-                        if (order == null || order.getRestaurantID() == Integer.parseInt(restaurantID)) {
-                            System.out.println(customer.addOrder(items.get(foodName), listOfRestaurants.get(Integer.parseInt(restaurantID))));
-                        } else {
-                            System.out.println("your cart contains dishes from  " + order.getRestaurantID() + " do you want to discard that selection and add dishes from" + restaurantID + "... if yes press 1 else other");
-                            String orderConfirmation = sc.nextLine();
-                            if (Integer.parseInt(orderConfirmation) == 1) {
-                                System.out.println(customer.addOrder(items.get(foodName), listOfRestaurants.get(Integer.parseInt(restaurantID))));
-                            } else {
-                                System.out.println("you cant order in this restaurant");
-                                break;
-                            }
-                        }
-                    } else {
-                        System.out.println("wrong foodName to add");
-                    }
-                    break;
+        try {
+            HashMap<Integer, Restaurant> listOfRestaurants = customer.getAllRestaurant(location);
+            showAllRestaurant(listOfRestaurants);
+            System.out.println("enter which restaurantID to enter");
+            String restaurantID = sc.nextLine();
+            if (!listOfRestaurants.containsKey(Integer.parseInt(restaurantID))) {
+                System.out.println("wrong restaurantID");
+                return;
+            }
+            CustomerOrderOptions:
+            while (true) {
+                HashMap<String, Item> items = customer.enterRestaurant(listOfRestaurants.get(Integer.parseInt(restaurantID)), timing);
+                Utils.print(CustomerOrderOptions.values());
+                int customerOrderInput = Utils.inputVerification(CustomerOrderOptions.values().length);
+                CustomerOrderOptions customerOrderOptions = CustomerOrderOptions.values()[customerOrderInput];
+                switch (customerOrderOptions) {
+                    case ADD_ORDER: {
 
-                case REMOVE_ORDER:
-                    HashMap<Integer, Order> cartItems2 = customer.viewItemsInCart();
-                    if (cartItems2 != null) {
-                        System.out.println("food items ordered are");
-                        Order cartItems = cartItems2.get(Integer.parseInt(restaurantID));
-                        showCartItems(cartItems);
-                        showCartItems(cartItems);
+                        showAvailableMenu(items.values());
+                        HashMap<Integer, Order> cartItems = customer.viewItemsInCart();
+
+                        if (cartItems == null || cartItems.size() == 0) {
+                            System.out.println("no cart items found");
+                        } else {
+                            showCartItems(cartItems.get(Integer.parseInt(restaurantID)));
+                        }
+                        System.out.println("enter which food to add");
+                        String foodName = sc.nextLine().toUpperCase();
+
+                        if (!items.containsKey(foodName)) {
+                            System.out.println("wrong foodName to add");
+                            continue;
+                        }
+                        if (cartItems == null) {
+                            System.out.println(customer.addOrder(items.get(foodName), listOfRestaurants.get(Integer.parseInt(restaurantID))));
+                            break;
+                        }
+
+                        Order order = cartItems.get(Integer.parseInt(restaurantID));
+
+                        System.out.println("your cart contains dishes from  " + order.getRestaurantID() + " do you want to discard that selection and add dishes from" + restaurantID + "... if yes press 1 else other");
+                        String orderConfirmation = sc.nextLine();
+                        if (Integer.parseInt(orderConfirmation) == 1) {
+                            System.out.println(customer.addOrder(items.get(foodName), listOfRestaurants.get(Integer.parseInt(restaurantID))));
+                            break;
+                        }
+
+                        System.out.println("you cant order in this restaurant");
+                        break;
+
+                    }
+
+                    case REMOVE_ORDER: {
+                        HashMap<Integer, Order> cartItems = customer.viewItemsInCart();
+                        if (cartItems == null || cartItems.size() == 0) {
+                            System.out.println("no items in cart");
+                            break;
+                        }
+                        Order order = cartItems.get(Integer.parseInt(restaurantID));
+                        showCartItems(order);
                         System.out.println("enter which food to delete");
                         String foodName1 = sc.nextLine().toUpperCase();
                         if (items.containsKey(foodName1)) {
@@ -116,47 +119,57 @@ final class CustomerUI implements UI {
                         } else {
                             System.out.println("wrong foodName to delete");
                         }
-                    } else {
-                        System.out.println("no items in cart");
+                        break;
                     }
-                    break;
 
-                case VIEW_ITEMS_IN_CART:
-                    HashMap<Integer, Order> cartItems4 = customer.viewItemsInCart();
-                    if (cartItems4 == null) {
-                        System.out.println("no cart items found");
-                    } else {
-                        showCartItems(cartItems4.get(Integer.parseInt(restaurantID)));
+                    case VIEW_ITEMS_IN_CART: {
+                        HashMap<Integer, Order> cartItems4 = customer.viewItemsInCart();
+                        if (cartItems4 == null || cartItems4.size() == 0) {
+                            System.out.println("no cart items found");
+                        } else {
+                            showCartItems(cartItems4.get(Integer.parseInt(restaurantID)));
+                        }
+                        break;
                     }
-                    break;
 
-                case CONFIRM_ORDER:
-                    HashMap<Integer, Order> cartItems5 = customer.viewItemsInCart();
-                    if (cartItems5 == null) {
-                        System.out.println("no orders found first add an order");
-                        break ;
-                    }
-                    Bill bill = customer.confirmOrder(listOfRestaurants.get(Integer.parseInt(restaurantID)));
-                    showBill(bill);
-                    System.out.println("press 1 to place order");
-                    String pay_bill = sc.nextLine();
-                    if(Integer.parseInt(pay_bill)==1){
-                        HashMap<Integer, Order> cartItems6 = customer.viewItemsInCart();
-                        if (cartItems6 == null) {
+                    case CONFIRM_ORDER: {
+                        HashMap<Integer, Order> cartItems = customer.viewItemsInCart();
+                        if (cartItems == null) {
                             System.out.println("no orders found first add an order");
                             break;
                         }
-                        OrderStatus orderstatus = customer.placeOrder(listOfRestaurants.get(Integer.parseInt(restaurantID)));
-                        System.out.println("order placed and status of food is " + orderstatus);
-                    }
-                    else {
-                        System.out.println("not placed the order");
-                    }
-                    break;
 
-                case BACK:
-                    break CustomerOrderOptions;
+                        Bill bill = customer.confirmOrder(listOfRestaurants.get(Integer.parseInt(restaurantID)));
+                        showBill(bill);
+
+                        System.out.println("press 1 to place order");
+                        String pay_Bill = sc.nextLine();
+                        try {
+                            if (Integer.parseInt(pay_Bill) != 1) {
+                                System.out.println("not placed the order");
+                                break;
+                            }
+
+                            HashMap<Integer, Order> cartItems6 = customer.viewItemsInCart();
+                            if (cartItems6 == null) {
+                                System.out.println("no orders found first add an order");
+                                break;
+                            }
+                            OrderStatus orderstatus = customer.placeOrder(listOfRestaurants.get(Integer.parseInt(restaurantID)));
+                            System.out.println("order placed and status of food is " + orderstatus);
+                        } catch (NumberFormatException e) {
+                            System.out.println("enter numbers to process");
+                            continue;
+                        }
+                        break;
+                    }
+
+                    case BACK:
+                        break CustomerOrderOptions;
+                }
             }
+        } catch (NumberFormatException e) {
+            System.out.println("wrong restaurant ID entered enter the available numbers");
         }
     }
 
@@ -197,6 +210,7 @@ final class CustomerUI implements UI {
     }
 
     private void showCartItems(Order cartItems) {
+        System.out.println("food items ordered are");
         HashMap<String, LineOrder> lineOrders = cartItems.getOrders();
         Collection<LineOrder> lineOrders1 = lineOrders.values();
         for (LineOrder lineOrder : lineOrders1) {
@@ -221,7 +235,12 @@ final class CustomerUI implements UI {
                 for (LineOrder lineOrder : lineOrderCollection) {
                     System.out.println(" ordered food are " + lineOrder.getItem().getFoodName() + " quantity is " + lineOrder.getQuantity());
                 }
-                System.out.println("ordered shop name is " + order.getRestaurantName() + " status of food is " + order.getStatus() + " rider acceptance status is " + order.getRiderFunctionalityStatus());
+                if (order.getRiderName() == null) {
+                    System.out.println("ordered shop name is " + order.getRestaurantName() + " status of food is " + order.getStatus() + " rider acceptance status is " + order.getRiderFunctionalityStatus());
+                }
+                else {
+                    System.out.println("ordered shop name is " + order.getRestaurantName() + " status of food is " + order.getStatus() + " rider acceptance status is " + order.getRiderFunctionalityStatus()+" rider name is "+ order.getRiderName());
+                }
             }
         } else {
             System.out.println("no orders found");

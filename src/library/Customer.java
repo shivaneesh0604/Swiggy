@@ -2,7 +2,6 @@ package library;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-//todo: customer can acd orders only that are available in particular location
 public final class Customer extends User {
     private final CustomerApplication customerApplication;
     private Location location;

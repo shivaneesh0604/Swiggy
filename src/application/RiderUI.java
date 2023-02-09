@@ -80,6 +80,7 @@ final class RiderUI implements UI {
                                 break;
                             }
                         }
+                        System.out.println("wrong orderID");
                     } else if (rider.getOrder() != null) {
                         System.out.println("you have already chosen an order complete that order first");
                     } else {
