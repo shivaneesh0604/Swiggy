@@ -86,7 +86,7 @@ final class CustomerUI implements UI {
                             System.out.println("wrong foodName to add");
                             continue;
                         }
-                        if (cartItems == null) {
+                        if (cartItems == null || cartItems.size()==0) {
                             System.out.println(customer.addOrder(items.get(foodName), listOfRestaurants.get(Integer.parseInt(restaurantID))));
                             break;
                         }
@@ -137,12 +137,16 @@ final class CustomerUI implements UI {
 
                     case CONFIRM_ORDER: {
                         HashMap<Integer, Order> cartItems = customer.viewItemsInCart();
-                        if (cartItems == null) {
+                        if (cartItems == null || cartItems.size()==0) {
                             System.out.println("no orders found first add an order");
                             break;
                         }
 
                         Bill bill = customer.confirmOrder(listOfRestaurants.get(Integer.parseInt(restaurantID)));
+                        if(bill==null){
+                            System.out.println("no orders found first add an order");
+                            break ;
+                        }
                         showBill(bill);
 
                         System.out.println("press 1 to place order");
@@ -200,6 +204,10 @@ final class CustomerUI implements UI {
     }
 
     private void showAllRestaurant(HashMap<Integer, Restaurant> listOfRestaurant) {
+        if(listOfRestaurant.size() == 0){
+            System.out.println("no restaurants found in this timing");
+            return;
+        }
         for (Restaurant restaurant : listOfRestaurant.values()) {
             System.out.println(restaurant.getRestaurantID() + " " + restaurant.getRestaurantName() + " " + restaurant.getLocation());
         }
@@ -214,8 +222,7 @@ final class CustomerUI implements UI {
     private void showCartItems(Order cartItems) {
         System.out.println("food items ordered are");
         HashMap<String, LineOrder> lineOrders = cartItems.getOrders();
-        Collection<LineOrder> lineOrders1 = lineOrders.values();
-        for (LineOrder lineOrder : lineOrders1) {
+        for (LineOrder lineOrder : lineOrders.values()) {
             System.out.println("foodName is " + lineOrder.getItem().getFoodName() + " quantity is " + lineOrder.getQuantity());
         }
     }

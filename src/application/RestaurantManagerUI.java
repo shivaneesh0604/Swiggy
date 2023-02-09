@@ -237,6 +237,8 @@ final class RestaurantManagerUI implements UI {
     }
 
     private void setStatus(OrderStatus orderStatus){
+        HashMap<Integer, ArrayList<LineOrder>> order = restaurantManager.viewOrderGot();
+        viewOrder(order);
         System.out.println("enter orderID to set order as preparing");
         int orderID = sc.nextInt();
         OrderStatus orderStatusChanged = restaurantManager.setStatus(orderID,orderStatus);

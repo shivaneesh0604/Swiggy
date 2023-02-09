@@ -19,7 +19,7 @@ final class Main {
                     applicationUI.logIN();
                 } else if (Integer.parseInt(applicationUIAccess) == 2) {
                     applicationUI.signUP();
-                } else {
+         } else {
                     break Mainloop;
                 }
             } catch (NumberFormatException e) {

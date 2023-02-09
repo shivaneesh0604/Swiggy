@@ -68,14 +68,22 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     public OrderDeletion removeOrder(Item item, String customerID, Restaurant restaurant) {
         Order orders = cartItems.get(customerID).get(restaurant.getRestaurantID());
         if (orders != null) {
-            return orders.deleteOrder(item);
+            OrderDeletion orderDeletion = orders.deleteOrder(item);
+            if(orderDeletion.equals(OrderDeletion.TOTALLY_DELETED)){
+                cartItems.get(customerID).clear();
+                System.out.println(cartItems.size());
+                return orderDeletion;
+            }
         }
         return OrderDeletion.NO_ORDER_FOUND_IN_THIS_RESTAURANT;
     }
 
     @Override
     public HashMap<Integer, Order> viewItemsInCart(String customerID) {
-        return cartItems.get(customerID);
+        if(cartItems.get(customerID)==null){
+            return null;
+        }
+        return new HashMap<>(cartItems.get(customerID));
     }
 
     @Override
