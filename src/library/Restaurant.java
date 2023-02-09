@@ -58,6 +58,6 @@ public class Restaurant {
 
     RestaurantStatus setRestaurantStatus(RestaurantStatus restaurantStatus) {
         this.restaurantStatus = restaurantStatus;
-        return restaurantStatus;
+        return this.restaurantStatus;
     }
 }

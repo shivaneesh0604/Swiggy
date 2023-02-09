@@ -27,15 +27,7 @@ final class RiderUI implements UI {
             RiderOptions riderOptions1 = RiderOptions.values()[riderOption];
             switch (riderOptions1) {
                 case SET_RIDER_STATUS:
-                    System.out.println("your status now is " + rider.getRiderStatus());
-                    Utils.print(RiderStatus.values());
-                    int riderStatus = Utils.inputVerification(RiderStatus.values().length);
-                    RiderStatus riderStatus1 = RiderStatus.values()[riderStatus];
-                    if (rider.getOrder() == null) {
-                        System.out.println("the status is"+rider.setRiderStatus(riderStatus1));
-                    } else {
-                        System.out.println("cant change because you have picked an order first deliver that order and change status");
-                    }
+                    setRiderStatus();
                     break;
 
                 case SHOW_AVAILABLE_NOTIFICATIONS:
@@ -50,42 +42,11 @@ final class RiderUI implements UI {
                     break;
 
                 case ACCEPT_ORDER:
-                    if (rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
-                        ArrayList<Notification> notifications = rider.getNotification();
-                        showAvailableNotifications(notifications);
-                        System.out.println("enter orderID to accept");
-                        String orderID = sc.nextLine();
-                        for (Notification notification1 : notifications) {
-                            if (notification1.getOrder().getOrderID() == Integer.parseInt(orderID)) {
-                                System.out.println(rider.acceptOrder(notification1));
-                                break;
-                            }
-                        }
-                    } else if (rider.getOrder() != null) {
-                        System.out.println("you have already chosen an order complete that order first");
-                    } else {
-                        System.out.println("you cant do any functions since you had set you status as " + rider.getRiderStatus());
-                    }
+                    acceptOrder();
                     break;
 
                 case DECLINE_ORDER:
-                    if (rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
-                        ArrayList<Notification> notifications1 = rider.getNotification();
-                        showAvailableNotifications(notifications1);
-                        System.out.println("enter orderID to decline order");
-                        String orderID1 = sc.nextLine();
-                        for (Notification notification1 : notifications1) {
-                            if (notification1.getOrder().getOrderID() == Integer.parseInt(orderID1)) {
-                                System.out.println("this order is " + rider.declineOrder(notification1));
-                                break;
-                            }
-                        }
-                        System.out.println("wrong orderID");
-                    } else if (rider.getOrder() != null) {
-                        System.out.println("you have already chosen an order complete that order first");
-                    } else {
-                        System.out.println("you cant do any functions since you had set you status as " + rider.getRiderStatus() + " change your status to " + RiderStatus.AVAILABLE);
-                    }
+                    declineOrder();
                     break;
 
                 case CHANGE_STATUS_TO_PICKED:
@@ -107,31 +68,57 @@ final class RiderUI implements UI {
             }
         }
     }
-//        showAvailableNotifications(notifications);
-//        ArrayList<Notification> notifications = rider.getNotification();
-//        showAvailableNotifications(notifications);
-//        System.out.println("enter orderID to accept");
-//        int orderID = sc.nextInt();
-//        System.out.println("press 1 to accept and 2 to decline");
-//        int acceptance = sc.nextInt();
-//        if (acceptance == 1) {
-//            for (Notification notification1 : notifications) {
-//                if (notification1.getOrder().getOrderID() == orderID) {
-//                    System.out.println(rider.acceptOrder(notification1));
-//                    break;
-//                }
-//            }
-//        } else if (acceptance == 2) {
-//            for (Notification notification1 : notifications) {
-//                if (notification1.getOrder().getOrderID() == orderID) {
-//                    System.out.println(rider.declineOrder(notification1));
-//                    break;
-//                }
-//            }
-//        }
-//        System.out.println(rider.changeStatusToPicked());
-//        System.out.println(rider.changedStatusToDelivered());
 
+    private void setRiderStatus(){
+        System.out.println("your status now is " + rider.getRiderStatus());
+        Utils.print(RiderStatus.values());
+        int riderStatusOption = Utils.inputVerification(RiderStatus.values().length);
+        RiderStatus riderStatus = RiderStatus.values()[riderStatusOption];
+        if (rider.getOrder() == null) {
+            System.out.println("the status is "+rider.setRiderStatus(riderStatus));
+        } else {
+            System.out.println("cant change because you have picked an order first deliver that order and change status");
+        }
+    }
+
+    private void acceptOrder(){
+        if (rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
+            ArrayList<Notification> notifications = rider.getNotification();
+            showAvailableNotifications(notifications);
+            System.out.println("enter orderID to accept");
+            String orderID = sc.nextLine();
+            for (Notification notification1 : notifications) {
+                if (notification1.getOrder().getOrderID() == Integer.parseInt(orderID)) {
+                    System.out.println(rider.acceptOrder(notification1));
+                    break;
+                }
+            }
+        } else if (rider.getOrder() != null) {
+            System.out.println("you have already chosen an order complete that order first");
+        } else {
+            System.out.println("you cant do any functions since you had set you status as " + rider.getRiderStatus());
+        }
+    }
+
+    private void declineOrder(){
+        if (rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
+            ArrayList<Notification> notifications = rider.getNotification();
+            showAvailableNotifications(notifications);
+            System.out.println("enter orderID to decline order");
+            String orderID = sc.nextLine();
+            for (Notification notification1 : notifications) {
+                if (notification1.getOrder().getOrderID() == Integer.parseInt(orderID)) {
+                    System.out.println("this order is " + rider.declineOrder(notification1));
+                    break;
+                }
+            }
+            System.out.println("WRONG ORDER_ID");
+        } else if (rider.getOrder() != null) {
+            System.out.println("you have already chosen an order complete that order first");
+        } else {
+            System.out.println("you cant do any functions since you had set you status as " + rider.getRiderStatus() + " change your status to " + RiderStatus.AVAILABLE);
+        }
+    }
 
     private void showAvailableNotifications(ArrayList<Notification> notifications) {
         if ((notifications != null) && (notifications.size() > 0)) {

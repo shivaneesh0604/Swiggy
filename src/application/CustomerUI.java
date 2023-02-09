@@ -27,9 +27,9 @@ final class CustomerUI implements UI {
             SecondLoop:
             while (true) {
                 Utils.print(CustomerOptions.values());
-                int customerOption = Utils.inputVerification(CustomerOptions.values().length);
-                CustomerOptions customerOptions1 = CustomerOptions.values()[customerOption];
-                switch (customerOptions1) {
+                int customerInput = Utils.inputVerification(CustomerOptions.values().length);
+                CustomerOptions customerOptions = CustomerOptions.values()[customerInput];
+                switch (customerOptions) {
                     case ENTERS_RESTAURANT:
                         enterRestaurant(location, timing);
                         break;
@@ -46,8 +46,8 @@ final class CustomerUI implements UI {
             System.out.println("press 1 to go back of application press another number to go back again to customer Options");
             String back = sc.nextLine();
             if (Integer.parseInt(back) == 1) {
-                break MainLoop;
-            } else continue;
+                break;
+            }
         }
     }
 
@@ -90,10 +90,12 @@ final class CustomerUI implements UI {
                             break;
                         }
 
+                        System.out.println(OrderAddition.ANOTHER_ORDER_ADDED_IN_A_RESTAURANT);
                         Order order = cartItems.get(Integer.parseInt(restaurantID));
 
                         System.out.println("your cart contains dishes from  " + order.getRestaurantID() + " do you want to discard that selection and add dishes from" + restaurantID + "... if yes press 1 else other");
                         String orderConfirmation = sc.nextLine();
+
                         if (Integer.parseInt(orderConfirmation) == 1) {
                             System.out.println(customer.addOrder(items.get(foodName), listOfRestaurants.get(Integer.parseInt(restaurantID))));
                             break;
@@ -123,11 +125,11 @@ final class CustomerUI implements UI {
                     }
 
                     case VIEW_ITEMS_IN_CART: {
-                        HashMap<Integer, Order> cartItems4 = customer.viewItemsInCart();
-                        if (cartItems4 == null || cartItems4.size() == 0) {
+                        HashMap<Integer, Order> cartItems = customer.viewItemsInCart();
+                        if (cartItems == null || cartItems.size() == 0) {
                             System.out.println("no cart items found");
                         } else {
-                            showCartItems(cartItems4.get(Integer.parseInt(restaurantID)));
+                            showCartItems(cartItems.get(Integer.parseInt(restaurantID)));
                         }
                         break;
                     }
@@ -181,8 +183,8 @@ final class CustomerUI implements UI {
             String orderID = sc.nextLine();
             for (Order order1 : ordersPlaced1) {
                 if (order1.getOrderID() == Integer.parseInt(orderID)) {
-                    if (order1.getStatus().equals(OrderStatus.PREPARED) || order1.getStatus().equals(OrderStatus.PREPARING)) {
-                        System.out.println("you will be charged with 10% of bill amount press 1 to cancel the order other value to wait");
+                    if (order1.getStatus().equals(OrderStatus.PREPARED)) {
+                        System.out.println("you will be charged with 50% of bill amount press 1 to cancel the order other value to wait");
                         String orderDeletion = sc.nextLine();
                         if (Integer.parseInt(orderDeletion) == 1) {
                             System.out.println(customer.cancelOrder(Integer.parseInt(orderID)));
@@ -197,8 +199,7 @@ final class CustomerUI implements UI {
     }
 
     private void showAllRestaurant(HashMap<Integer, Restaurant> listOfRestaurant) {
-        Collection<Restaurant> listOfRestaurants = listOfRestaurant.values();
-        for (Restaurant restaurant : listOfRestaurants) {
+        for (Restaurant restaurant : listOfRestaurant.values()) {
             System.out.println(restaurant.getRestaurantID() + " " + restaurant.getRestaurantName() + " " + restaurant.getLocation());
         }
     }
@@ -237,9 +238,8 @@ final class CustomerUI implements UI {
                 }
                 if (order.getRiderName() == null) {
                     System.out.println("ordered shop name is " + order.getRestaurantName() + " status of food is " + order.getStatus() + " rider acceptance status is " + order.getRiderFunctionalityStatus());
-                }
-                else {
-                    System.out.println("ordered shop name is " + order.getRestaurantName() + " status of food is " + order.getStatus() + " rider acceptance status is " + order.getRiderFunctionalityStatus()+" rider name is "+ order.getRiderName());
+                } else {
+                    System.out.println("ordered shop name is " + order.getRestaurantName() + " status of food is " + order.getStatus() + " rider acceptance status is " + order.getRiderFunctionalityStatus() + " rider name is " + order.getRiderName());
                 }
             }
         } else {

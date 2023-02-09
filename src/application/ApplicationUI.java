@@ -60,7 +60,7 @@ final class ApplicationUI {
             case CUSTOMER:
                 UserAddition userAddition = databaseManager.addCustomer(userName, passWord, role, name);
                 if (userAddition.equals(UserAddition.USER_ADDED)) {
-                    System.out.println("added successfully");
+                    System.out.println(userAddition);
                     logIN();
                 } else {
                     System.out.println(userAddition);
