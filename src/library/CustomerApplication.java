@@ -16,7 +16,7 @@ interface CustomerApplication {
 
     Bill confirmOrder(String customerID, Restaurant restaurant);
 
-    OrderStatus placeOrder(String customerID, Restaurant restaurant, Location location);
+    OrderStatus placeOrder(String customerID, Restaurant restaurant);
 
     ArrayList<Order> viewOrdersPlaced(String customerID);
 

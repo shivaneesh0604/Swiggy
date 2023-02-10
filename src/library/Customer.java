@@ -35,7 +35,7 @@ public final class Customer extends User {
     }
 
     public OrderStatus placeOrder(Restaurant restaurant) {
-        return customerApplication.placeOrder(this.getUserID(), restaurant,this.location);
+        return customerApplication.placeOrder(this.getUserID(), restaurant);
     }
 
     public ArrayList<Order> viewOrdersPlaced() {

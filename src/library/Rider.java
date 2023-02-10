@@ -12,7 +12,7 @@ public final class Rider extends User {
     Rider(String userID, RiderApplication application, Role role, String name) {
         super(userID, role, name);
         this.riderApplication = application;
-        this.riderStatus = RiderStatus.AVAILABLE;
+        this.riderStatus = RiderStatus.NOT_AVAILABLE;
         notification = new ArrayList<>();
     }
 
@@ -46,7 +46,7 @@ public final class Rider extends User {
                 return RiderReturnFunctionalities.WAIT_TILL_ORDER_IS_PREPARED;
             }
         }
-        return RiderReturnFunctionalities.CANT_RECEIVE_SINCE_NO_ORDER_IS_ACCEPTED;
+        return RiderReturnFunctionalities.CANT_PROCESS_SINCE_NO_ORDER_IS_ACCEPTED;
     }
 
     public RiderReturnFunctionalities changeStatusToDelivered() {
@@ -63,7 +63,7 @@ public final class Rider extends User {
                 return RiderReturnFunctionalities.THAT_ORDER_IS_CANCELLED;
             }
         }
-        return RiderReturnFunctionalities.CANT_RECEIVE_SINCE_NO_ORDER_IS_ACCEPTED;
+        return RiderReturnFunctionalities.CANT_PROCESS_SINCE_NO_ORDER_IS_ACCEPTED;
     }
 
     public void setLocation(Location location) {
@@ -89,13 +89,11 @@ public final class Rider extends User {
 
     public RiderStatus setRiderStatus(RiderStatus riderStatus) {
         if (this.order == null) {
-            if(riderStatus.equals(RiderStatus.NOT_AVAILABLE)){
-                riderApplication.setNotificationToAnotherRider(this);
-            }
             this.riderStatus = riderStatus;
-             return this.riderStatus;
-        }
-        else {
+            riderApplication.setNotification(this);
+            return this.riderStatus;
+        } else {
+            System.out.println("hi in rider");
             return RiderStatus.AVAILABLE;
         }
     }

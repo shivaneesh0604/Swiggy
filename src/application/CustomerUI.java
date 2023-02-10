@@ -1,6 +1,5 @@
 package application;
 
-import javafx.application.Application;
 import library.*;
 
 import java.util.*;
@@ -38,7 +37,7 @@ final class CustomerUI implements UI {
                         viewOrder(customer.viewOrdersPlaced());
                         break;
                     case CANCEL_ORDER:
-                        viewCancelledOrder();
+                        cancelOrder();
                         break;
                     case GO_BACK:
                         break SecondLoop;
@@ -86,7 +85,7 @@ final class CustomerUI implements UI {
                             System.out.println("wrong foodName to add");
                             continue;
                         }
-                        if (cartItems == null || cartItems.size()==0) {
+                        if (cartItems == null || cartItems.size() == 0 || cartItems.containsKey(Integer.parseInt(restaurantID))) {
                             System.out.println(customer.addOrder(items.get(foodName), listOfRestaurants.get(Integer.parseInt(restaurantID))));
                             break;
                         }
@@ -137,15 +136,15 @@ final class CustomerUI implements UI {
 
                     case CONFIRM_ORDER: {
                         HashMap<Integer, Order> cartItems = customer.viewItemsInCart();
-                        if (cartItems == null || cartItems.size()==0) {
+                        if (cartItems == null || cartItems.size() == 0) {
                             System.out.println("no orders found first add an order");
                             break;
                         }
 
                         Bill bill = customer.confirmOrder(listOfRestaurants.get(Integer.parseInt(restaurantID)));
-                        if(bill==null){
+                        if (bill == null) {
                             System.out.println("no orders found first add an order");
-                            break ;
+                            break;
                         }
                         showBill(bill);
 
@@ -180,7 +179,7 @@ final class CustomerUI implements UI {
         }
     }
 
-    private void viewCancelledOrder() {
+    private void cancelOrder() {
         ArrayList<Order> ordersPlaced1 = customer.viewOrdersPlaced();
         viewOrder(ordersPlaced1);
         if (ordersPlaced1 != null) {
@@ -194,17 +193,19 @@ final class CustomerUI implements UI {
                         if (Integer.parseInt(orderDeletion) == 1) {
                             System.out.println(customer.cancelOrder(Integer.parseInt(orderID)));
                         }
-                        break;
+                        return;
                     } else if (order1.getStatus().equals(OrderStatus.ORDER_PLACED)) {
                         System.out.println(customer.cancelOrder(Integer.parseInt(orderID)));
+                        return;
                     }
                 }
             }
+            System.out.println("WRONG_ORDER_ID");
         }
     }
 
     private void showAllRestaurant(HashMap<Integer, Restaurant> listOfRestaurant) {
-        if(listOfRestaurant.size() == 0){
+        if (listOfRestaurant.size() == 0) {
             System.out.println("no restaurants found in this timing");
             return;
         }
@@ -231,7 +232,7 @@ final class CustomerUI implements UI {
         ArrayList<Bill.BillItem> items = bill.getItems();
         System.out.println("food name    quantity   price");
         for (Bill.BillItem billItem : items) {
-            System.out.println(billItem.getItemName() + " " + billItem.getQuantity()+" "+billItem.getPrice());
+            System.out.println(billItem.getItemName() + " " + billItem.getQuantity() + " " + billItem.getPrice());
         }
         System.out.println("the total is " + bill.total());
     }

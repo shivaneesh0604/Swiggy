@@ -7,6 +7,7 @@ import java.util.HashMap;
 final class Application implements CustomerApplication, RiderApplication, RestaurantManagerApplication {
 
     private final HashMap<String, HashMap<Integer, Order>> cartItems = new HashMap<>();//customerID->restaurantID,orderList
+    private static final ArrayList<Notification> tempNotifications = new ArrayList<>();
 
     Application() {
     }
@@ -69,7 +70,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         Order orders = cartItems.get(customerID).get(restaurant.getRestaurantID());
         if (orders != null) {
             OrderDeletion orderDeletion = orders.deleteOrder(item);
-            if(orderDeletion.equals(OrderDeletion.TOTALLY_DELETED)){
+            if (orderDeletion.equals(OrderDeletion.TOTALLY_DELETED)) {
                 cartItems.get(customerID).clear();
                 System.out.println(cartItems.size());
                 return orderDeletion;
@@ -80,7 +81,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
 
     @Override
     public HashMap<Integer, Order> viewItemsInCart(String customerID) {
-        if(cartItems.get(customerID)==null){
+        if (cartItems.get(customerID) == null) {
             return null;
         }
         return new HashMap<>(cartItems.get(customerID));
@@ -102,12 +103,12 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     }
 
     @Override
-    public OrderStatus placeOrder(String customerID, Restaurant restaurant, Location location) {
+    public OrderStatus placeOrder(String customerID, Restaurant restaurant) {
         Order order = cartItems.containsKey(customerID) ? (cartItems.get(customerID).getOrDefault(restaurant.getRestaurantID(), null)) : null;
         if (order != null) {
             Database.getInstanceDatabase().addOrder(customerID, order, restaurant.getRestaurantID());
             Collection<Rider> allRiders = Database.getInstanceDatabase().getAllRiders();
-            setNotification(allRiders, location, new Notification(order));
+            setNotification(allRiders, order.getRestaurantLocation(), new Notification(order));
             cartItems.remove(customerID);
             HashMap<String, LineOrder> orders = order.getOrders();
             ArrayList<LineOrder> lineOrders = new ArrayList<>(orders.values());
@@ -155,8 +156,16 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     // rider starts//
 
     @Override
-    public void setNotificationToAnotherRider(Rider rider) {
+    public void setNotification(Rider rider) {
         ArrayList<Rider> riders = Database.getInstanceDatabase().getAllRiders();
+        if (rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
+            System.out.println(tempNotifications);
+            for (Notification notification : tempNotifications) {
+                setNotification(riders, notification.getOrder().getRestaurantLocation(), notification);
+            }
+            tempNotifications.clear();
+            return;
+        }
         riders.remove(rider);
         for (Notification notification : rider.getNotification()) {
             setNotification(riders, notification.getOrder().getRestaurantLocation(), notification);
@@ -173,7 +182,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
             Collection<Rider> allRiders = Database.getInstanceDatabase().getAllRiders();
             allRiders.remove(rider);
             rider.removeNotification(orderID);
-            ArrayList<Notification> notifications = new ArrayList<>(rider.getNotification());
+            ArrayList<Notification> notifications = rider.getNotification();
             for (Notification notification1 : notifications) {
                 setNotification(allRiders, order.getRestaurantLocation(), notification1);
             }
@@ -226,22 +235,22 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         for (Rider rider : riders) {
             if (previousIndex == null) {
                 if ((rider.getLocation().equals(location) || rider.getLocation().equals(nextIndex)) && notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
-                    System.out.println(rider.getUserID());
+                    System.out.println(rider.getName() +" is the rider");
                     rider.addNotification(notification);
-                    break;
+                    return;
                 }
             } else if (nextIndex == null) {
                 if ((rider.getLocation().equals(location) || rider.getLocation().equals(previousIndex)) && notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
-                    System.out.println(rider.getUserID());
+                    System.out.println(rider.getName()+" is the rider");
                     rider.addNotification(notification);
-                    break;
+                    return;
                 }
             } else if (notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE) && ((rider.getLocation().equals(location) || rider.getLocation().equals(previousIndex) || rider.getLocation().equals(nextIndex)))) {
                 rider.addNotification(notification);
-                System.out.println(rider.getUserID());
-                break;
+                System.out.println(rider.getName()+" is the rider");
+                return;
             }
         }
+        tempNotifications.add(notification);
     }
-
 }

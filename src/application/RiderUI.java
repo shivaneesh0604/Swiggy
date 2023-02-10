@@ -50,16 +50,10 @@ final class RiderUI implements UI {
                     break;
 
                 case CHANGE_STATUS_TO_PICKED:
-                    if (rider.getOrder() == null) {
-                        System.out.println("accept and order first ");
-                    }
                     System.out.println(rider.changeStatusToPicked());
                     break;
 
                 case CHANGE_STATUS_TO_DELIVERED:
-                    if (rider.getOrder() == null) {
-                        System.out.println("accept and order first ");
-                    }
                     System.out.println(rider.changeStatusToDelivered());
                     break ;
 
@@ -90,9 +84,10 @@ final class RiderUI implements UI {
             for (Notification notification1 : notifications) {
                 if (notification1.getOrder().getOrderID() == Integer.parseInt(orderID)) {
                     System.out.println(rider.acceptOrder(notification1));
-                    break;
+                    return;
                 }
             }
+            System.out.println("WRONG_ORDER_ID");
         } else if (rider.getOrder() != null) {
             System.out.println("you have already chosen an order complete that order first");
         } else {
@@ -109,7 +104,7 @@ final class RiderUI implements UI {
             for (Notification notification1 : notifications) {
                 if (notification1.getOrder().getOrderID() == Integer.parseInt(orderID)) {
                     System.out.println("this order is " + rider.declineOrder(notification1));
-                    break;
+                    return;
                 }
             }
             System.out.println("WRONG ORDER_ID");
