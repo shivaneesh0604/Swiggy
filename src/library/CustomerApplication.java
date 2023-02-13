@@ -20,5 +20,5 @@ interface CustomerApplication {
 
     ArrayList<Order> viewOrdersPlaced(String customerID);
 
-    OrderStatus cancelOrder(int orderID);
+    OrderStatus cancelOrder(int orderID,int restaurantID);
 }

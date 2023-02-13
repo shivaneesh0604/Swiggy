@@ -21,7 +21,7 @@ public final class Rider extends User {
         RiderFunctionalityStatus riderFunctionalityStatus = riderApplication.acceptOrder(this, order.getOrderID());
         if (riderFunctionalityStatus.equals(RiderFunctionalityStatus.ACCEPTED)) {
             this.riderStatus = RiderStatus.NOT_AVAILABLE;
-            this.notification = null;
+            this.notification = new ArrayList<>();
             return order.getRiderFunctionalityStatus();
         } else {
             return RiderFunctionalityStatus.NOT_ACCEPTED;
@@ -80,7 +80,9 @@ public final class Rider extends User {
     }
 
     void removeNotification(int orderID) {
-        notification.removeIf(notification1 -> notification1.getOrder().getOrderID() == orderID);
+        if (notification != null) {
+            notification.removeIf(notification1 -> notification1.getOrder().getOrderID() == orderID);
+        }
     }
 
     public Order getOrder() {
@@ -88,14 +90,9 @@ public final class Rider extends User {
     }
 
     public RiderStatus setRiderStatus(RiderStatus riderStatus) {
-        if (this.order == null) {
-            this.riderStatus = riderStatus;
-            riderApplication.setNotification(this);
-            return this.riderStatus;
-        } else {
-            System.out.println("hi in rider");
-            return RiderStatus.AVAILABLE;
-        }
+        this.riderStatus = riderStatus;
+        riderApplication.setNotification(this);
+        return this.riderStatus;
     }
 
     public RiderStatus getRiderStatus() {

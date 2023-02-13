@@ -9,7 +9,7 @@ public class Restaurant {
     private final String restaurantName;
     private final int restaurantID;
     private final HashMap<Integer, ArrayList<LineOrder>> ordersGot;//orderID mapped with orders
-    private final HashMap<Integer,ArrayList<LineOrder>> ordersCompleted;
+    private final HashMap<Integer, ArrayList<LineOrder>> ordersCompleted;
     private RestaurantStatus restaurantStatus;
 
     Restaurant(Location location, String restaurantName, int restaurantID) {
@@ -19,10 +19,10 @@ public class Restaurant {
         this.menuItems = new MenuItems();
         this.ordersGot = new HashMap<>();
         this.ordersCompleted = new HashMap<>();
-        this.restaurantStatus= RestaurantStatus.AVAILABLE;
+        this.restaurantStatus = RestaurantStatus.AVAILABLE;
     }
 
-    void  receiveOrders(int orderID, ArrayList<LineOrder> lineOrders) {
+    void receiveOrders(int orderID, ArrayList<LineOrder> lineOrders) {
         this.ordersGot.put(orderID, lineOrders);
     }
 
@@ -30,10 +30,16 @@ public class Restaurant {
         return new HashMap<>(ordersGot);
     }
 
-    void setOrdersCompleted(int orderID){
+    void setOrdersCompleted(int orderID) {
         ArrayList<LineOrder> orders = ordersGot.get(orderID);
-        ordersCompleted.put(orderID,orders);
+        ordersCompleted.put(orderID, orders);
         ordersGot.remove(orderID);
+    }
+
+    void removeOrder(int orderID) {
+        if (ordersGot.containsKey(orderID)) {
+            this.ordersGot.remove(orderID);
+        }
     }
 
     public Location getLocation() {

@@ -42,8 +42,8 @@ public final class Customer extends User {
         return customerApplication.viewOrdersPlaced(this.getUserID());
     }
 
-    public OrderStatus cancelOrder(int orderID) {
-        return customerApplication.cancelOrder(orderID);
+    public OrderStatus cancelOrder(int orderID,int restaurantID) {
+        return customerApplication.cancelOrder(orderID,restaurantID);
     }
 
     public Location getLocation() {

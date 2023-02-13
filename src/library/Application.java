@@ -72,7 +72,6 @@ final class Application implements CustomerApplication, RiderApplication, Restau
             OrderDeletion orderDeletion = orders.deleteOrder(item);
             if (orderDeletion.equals(OrderDeletion.TOTALLY_DELETED)) {
                 cartItems.get(customerID).clear();
-                System.out.println(cartItems.size());
                 return orderDeletion;
             }
         }
@@ -140,7 +139,7 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     }
 
     @Override
-    public OrderStatus cancelOrder(int orderID) {
+    public OrderStatus cancelOrder(int orderID,int restaurantID) {
         Order order = Database.getInstanceDatabase().getOrder(orderID);
         if (order != null) {
             order.setStatus(OrderStatus.CANCELLED);
@@ -148,6 +147,8 @@ final class Application implements CustomerApplication, RiderApplication, Restau
             for (Rider rider : riders) {
                 rider.removeNotification(orderID);
             }
+            Restaurant restaurant = Database.getInstanceDatabase().getAllRestaurant().get(restaurantID);
+            restaurant.removeOrder(orderID);
             return OrderStatus.CANCELLED;
         }
         return null;
@@ -159,7 +160,6 @@ final class Application implements CustomerApplication, RiderApplication, Restau
     public void setNotification(Rider rider) {
         ArrayList<Rider> riders = Database.getInstanceDatabase().getAllRiders();
         if (rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
-            System.out.println(tempNotifications);
             for (Notification notification : tempNotifications) {
                 setNotification(riders, notification.getOrder().getRestaurantLocation(), notification);
             }
@@ -235,19 +235,16 @@ final class Application implements CustomerApplication, RiderApplication, Restau
         for (Rider rider : riders) {
             if (previousIndex == null) {
                 if ((rider.getLocation().equals(location) || rider.getLocation().equals(nextIndex)) && notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
-                    System.out.println(rider.getName() +" is the rider");
                     rider.addNotification(notification);
                     return;
                 }
             } else if (nextIndex == null) {
                 if ((rider.getLocation().equals(location) || rider.getLocation().equals(previousIndex)) && notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
-                    System.out.println(rider.getName()+" is the rider");
                     rider.addNotification(notification);
                     return;
                 }
             } else if (notification.checkCancelledRiderIds(rider.getUserID()) && rider.getRiderStatus().equals(RiderStatus.AVAILABLE) && ((rider.getLocation().equals(location) || rider.getLocation().equals(previousIndex) || rider.getLocation().equals(nextIndex)))) {
                 rider.addNotification(notification);
-                System.out.println(rider.getName()+" is the rider");
                 return;
             }
         }

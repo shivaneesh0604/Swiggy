@@ -55,7 +55,7 @@ final class RiderUI implements UI {
 
                 case CHANGE_STATUS_TO_DELIVERED:
                     System.out.println(rider.changeStatusToDelivered());
-                    break ;
+                    break;
 
                 case BACK:
                     break MainLoop;
@@ -63,31 +63,33 @@ final class RiderUI implements UI {
         }
     }
 
-    private void setRiderStatus(){
+    private void setRiderStatus() {
         System.out.println("your status now is " + rider.getRiderStatus());
         Utils.print(RiderStatus.values());
         int riderStatusOption = Utils.inputVerification(RiderStatus.values().length);
         RiderStatus riderStatus = RiderStatus.values()[riderStatusOption];
         if (rider.getOrder() == null) {
-            System.out.println("the status is "+rider.setRiderStatus(riderStatus));
+            System.out.println("the status is " + rider.setRiderStatus(riderStatus));
         } else {
             System.out.println("cant change because you have picked an order first deliver that order and change status");
         }
     }
 
-    private void acceptOrder(){
+    private void acceptOrder() {
         if (rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
             ArrayList<Notification> notifications = rider.getNotification();
             showAvailableNotifications(notifications);
             System.out.println("enter orderID to accept");
             String orderID = sc.nextLine();
-            for (Notification notification1 : notifications) {
-                if (notification1.getOrder().getOrderID() == Integer.parseInt(orderID)) {
-                    System.out.println(rider.acceptOrder(notification1));
-                    return;
+            if (notifications.size() > 0) {
+                for (Notification notification1 : notifications) {
+                    if (notification1.getOrder().getOrderID() == Integer.parseInt(orderID)) {
+                        System.out.println(rider.acceptOrder(notification1));
+                        return;
+                    }
                 }
+                System.out.println("WRONG_ORDER_ID");
             }
-            System.out.println("WRONG_ORDER_ID");
         } else if (rider.getOrder() != null) {
             System.out.println("you have already chosen an order complete that order first");
         } else {
@@ -95,19 +97,21 @@ final class RiderUI implements UI {
         }
     }
 
-    private void declineOrder(){
+    private void declineOrder() {
         if (rider.getRiderStatus().equals(RiderStatus.AVAILABLE)) {
             ArrayList<Notification> notifications = rider.getNotification();
             showAvailableNotifications(notifications);
             System.out.println("enter orderID to decline order");
             String orderID = sc.nextLine();
-            for (Notification notification1 : notifications) {
-                if (notification1.getOrder().getOrderID() == Integer.parseInt(orderID)) {
-                    System.out.println("this order is " + rider.declineOrder(notification1));
-                    return;
+            if (notifications.size() > 0) {
+                for (Notification notification1 : notifications) {
+                    if (notification1.getOrder().getOrderID() == Integer.parseInt(orderID)) {
+                        System.out.println("this order is " + rider.declineOrder(notification1));
+                        return;
+                    }
                 }
+                System.out.println("WRONG ORDER_ID");
             }
-            System.out.println("WRONG ORDER_ID");
         } else if (rider.getOrder() != null) {
             System.out.println("you have already chosen an order complete that order first");
         } else {
@@ -119,7 +123,7 @@ final class RiderUI implements UI {
         if ((notifications != null) && (notifications.size() > 0)) {
             for (Notification notification : notifications) {
                 Order order = notification.getOrder();
-                System.out.println(order.getOrderID() + " is the order ID " + order.getRestaurantID() + " is the restaurant ID " + order.getCustomerLocation() + " is the location of customer " +order.getCustomerID()+" is the customer ID "+ order.getRestaurantLocation() + " is the location of the restaurant " + order.getRestaurantName() + " is the name of the restaurant");
+                System.out.println(order.getOrderID() + " is the order ID " + order.getRestaurantID() + " is the restaurant ID " + order.getCustomerLocation() + " is the location of customer " + order.getCustomerID() + " is the customer ID " + order.getRestaurantLocation() + " is the location of the restaurant " + order.getRestaurantName() + " is the name of the restaurant");
             }
         } else {
             System.out.println("no orders available");

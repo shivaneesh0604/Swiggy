@@ -222,7 +222,7 @@ final class RestaurantManagerUI implements UI {
     }
 
     private void viewOrder(HashMap<Integer, ArrayList<LineOrder>> order) {
-        if (order == null) {
+        if (order == null || order.size()==0) {
             System.out.println("no orders found ");
             return;
         }

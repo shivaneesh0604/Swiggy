@@ -1,6 +1,5 @@
 package application;
 
-import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import library.DatabaseManager;
 
 import java.util.Scanner;
@@ -19,7 +18,7 @@ final class Main {
                     applicationUI.logIN();
                 } else if (Integer.parseInt(applicationUIAccess) == 2) {
                     applicationUI.signUP();
-         } else {
+                } else {
                     break Mainloop;
                 }
             } catch (NumberFormatException e) {
