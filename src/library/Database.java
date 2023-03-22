@@ -11,7 +11,7 @@ final class Database {
     private static final HashMap<UserCredential, User> users = new HashMap<>();
     private static final HashMap<Integer, Restaurant> listOfRestaurant = new HashMap<>();
     private static final HashMap<String, HashMap<Integer, ArrayList<Order>>> orders = new HashMap<>();// customerID->restaurantID,orderList
-    static final ArrayList<Location> locations = new ArrayList<>();
+    private static final ArrayList<Location> locations = new ArrayList<>();
 
     private Database() {
         Restaurant restaurant = new Restaurant(Location.AREA2, "anandha bhavan", 1);

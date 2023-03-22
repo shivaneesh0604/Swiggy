@@ -6,7 +6,6 @@ import java.util.HashMap;
 public final class RestaurantManager extends User {
     private final Restaurant restaurant;
     private final RestaurantManagerApplication applicationRestaurantManagerController;
-
     RestaurantManager(String userID, Restaurant restaurant, RestaurantManagerApplication applicationUI, Role role, String name) {
         super(userID, role, name);
         this.restaurant = restaurant;

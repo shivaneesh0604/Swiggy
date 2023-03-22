@@ -21,7 +21,7 @@ final class RestaurantManagerUI implements UI {
             RestaurantManagerOptions restaurantManagerOptions1 = RestaurantManagerOptions.values()[restaurantManagerOptions];
             switch (restaurantManagerOptions1) {
                 case ADD_FOOD_TO_RESTAURANT: {
-                    addFoodToRestaurant(items);
+                    addFoodToRestaurant();
                     break;
                 }
 
@@ -90,7 +90,7 @@ final class RestaurantManagerUI implements UI {
 //        System.out.println(restaurantManager.setStatus(orderID, OrderStatus.PREPARING));
 //        System.out.println(restaurantManager.setStatus(orderID,OrderStatus.PREPARED));
 
-    private void addFoodToRestaurant(HashMap<String,Item> items){
+    private void addFoodToRestaurant(){
         System.out.println("enter food name to add");
         String foodName = sc.nextLine();
         System.out.println("enter price for " + foodName);
